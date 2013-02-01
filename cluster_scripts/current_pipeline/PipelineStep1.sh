@@ -20,7 +20,7 @@ function SJM_JOB {
 	JOBNAME=$1
 	shift
 	echo "job_begin
-	name $GROUPLBL_$JOBNAME
+	name "$GROUPLBL"_$JOBNAME
 	memory 10G
 	module EversonLabBiotools/1.0
 	queue all.q
