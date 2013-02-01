@@ -27,6 +27,8 @@ proc setBiotoolPaths {name hasbin hasinclude haslib haslib64} {
 	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64
 }
 
+setBiotoolPaths subversion 1 1 1 0
+setBiotoolPaths sqlite 1 1 1 0
 setBiotoolPaths libJPEG 1 1 1 0
 setBiotoolPaths libXpm 1 1 1 0
 setBiotoolPaths annovar 1 0 0 0
