@@ -20,7 +20,7 @@ function SJM_JOB {
 	JOBNAME=$1
 	shift
 	echo "job_begin
-	name $GROUPLBL-$JOBNAME
+	name $GROUPLBL_$JOBNAME
 	memory 10G
 	module EversonLabBiotools/1.0
 	queue all.q
@@ -51,14 +51,14 @@ function SJM_JOB_AFTER {
 #$2
 #}
 function BWA_ALN {
-	SJM_JOB BWA_ALN-$1_$2 "bwa aln -t 10 $GENOME $1_$2.fq -f $1_$2.fq.aligned"
-	SJM_JOB_AFTER $GROUPLBL-BWA_ALN-$1_$2 $GROUPLBL-LINKFILE-$1_$2
+	SJM_JOB BWA_ALN_$1_$2 "bwa aln -t 10 $GENOME $1_$2.fq -f $1_$2.fq.aligned"
+	SJM_JOB_AFTER "$GROUPLBL"_BWA_ALN_$1_$2 "$GROUPLBL"_LINKFILE_$1_$2
 }
 
 function BWA_SAMPE {
-	SJM_JOB BWA_SAMPE-$1 "bwa sampe -P $GENOME $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam"
-	SJM_JOB_AFTER $GROUPLBL-BWA_SAMPE-$1 $GROUPLBL-BWA_ALN-$1_1
-	SJM_JOB_AFTER $GROUPLBL-BWA_SAMPE-$1 $GROUPLBL-BWA_ALN-$1_2
+	SJM_JOB BWA_SAMPE_$1 "bwa sampe -P $GENOME $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam"
+	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_1
+	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_2
 }
 
 function createSJMfile_BWA {
@@ -73,8 +73,8 @@ function runSJMfile {
 }
 
 function linkfiles {
-	SJM_JOB LINKFILE-$1_1 "ln -s $2 ./$1_1.fq"
-	SJM_JOB LINKFILE-$1_2 "ln -s $3 ./$1_2.fq"
+	SJM_JOB LINKFILE_$1_1 "ln -s $2 ./$1_1.fq"
+	SJM_JOB LINKFILE_$1_2 "ln -s $3 ./$1_2.fq"
 }
 #Step1:  (separate step)
 #	create softlinks to fastq files in working directory
