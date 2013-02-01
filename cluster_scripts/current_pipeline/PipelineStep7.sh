@@ -45,13 +45,13 @@ SJM_JOB MPILEUP_PAIR_$FNAME "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 >
 function runVarscan {
 	FNAME=$2
 	FNAME=${FNAME//./_}
-SJM_JOB VARSCAN_$FNAME java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1
+SJM_JOB VARSCAN_$FNAME "java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1"
 }
 
 function runShimmer {
 	FNAME=$3
 	FNAME=${FNAME//./_}
-SJM_JOB $FNAME shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
+SJM_JOB $FNAME "shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE"
 }
 rm $SJM_FILE
 touch $SJM_FILE
