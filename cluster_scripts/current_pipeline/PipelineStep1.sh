@@ -73,8 +73,8 @@ function runSJMfile {
 }
 
 function linkfiles {
-	SJM_JOB LINKFILE_$1_1 "ln -fs $2 ./$1_1.fq; fi"
-	SJM_JOB LINKFILE_$1_2 "ln -fs $3 ./$1_2.fq; fi"
+	SJM_JOB LINKFILE_$1_1 "ln -fs $2 ./$1_1.fq"
+	SJM_JOB LINKFILE_$1_2 "ln -fs $3 ./$1_2.fq"
 }
 #Step1:  (separate step)
 #	create softlinks to fastq files in working directory
