@@ -7,68 +7,74 @@ DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.v
 MINQUAL=30
 MAPQUAL=40
 GENOME_TYPE=hg19
+NC=$(echo $1 | tr "," "\n")
+NF=$(echo $2 | tr "," "\n")
+TC=$(echo $3 | tr "," "\n")
+TF=$(echo $4 | tr "," "\n")
+GROUPLBL=$5
+HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
+SJM_FILE=./Step1.sjm
+CURDIR=`pwd`
 
-function runBWA {
-bwa aln -t 10 $GENOME \
-$1. \
--f $1.aligned \
-&>./logs/$1.bwa.aln.log
+function SJM_JOB {
+	JOBNAME=$1
+	shift
+	echo "job_begin
+	name $GROUPLBL-$JOBNAME
+	memory 10G
+	module EversonLabBiotools/1.0
+	queue all.q
+	directory $CURDIR
+	cmd $HANDLER_SCRIPT $@
+job_end" >> $SJM_FILE
+}
 
-bwa aln -t 10 $GENOME \
-$2 \
--f $2.aligned \
-&>./logs/$2.bwa.aln.log
+function SJM_JOB_AFTER {
+	echo "order $1 after $2" >> $SJM_FILE
+}
 
-bwa sampe -P $GENOME \
-$1.aligned \
-$2.aligned \
-$1 \
-$2
+#function runBWA {
+#bwa aln -t 10 $GENOME \
+#$1. \
+#-f $1.aligned \
+#&>./logs/$1.bwa.aln.log
+#
+#bwa aln -t 10 $GENOME \
+#$2 \
+#-f $2.aligned \
+#&>./logs/$2.bwa.aln.log
+#
+#bwa sampe -P $GENOME \
+#$1.aligned \
+#$2.aligned \
+#$1 \
+#$2
+#}
+function BWA_ALN {
+	SJM_JOB BWA_ALN-$1_$2 "bwa aln -t 10 $GENOME $1_$2.fq -f $1_$2.fq.aligned"
+	SJM_JOB_AFTER $GROUPLBL-BWA_ALN-$1_$2 $GROUPLBL-LINKFILE-$1_$2
+}
+
+function BWA_SAMPE {
+	SJM_JOB BWA_SAMPE-$1 "bwa sampe -P $GENOME $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam"
+	SJM_JOB_AFTER $GROUPLBL-BWA_SAMPE-$1 $GROUPLBL-BWA_ALN-$1_1
+	SJM_JOB_AFTER $GROUPLBL-BWA_SAMPE-$1 $GROUPLBL-BWA_ALN-$1_2
 }
 
 function createSJMfile_BWA {
-CURDIR=`pwd`
-echo "job_begin
-	name $1_bwa_align_1
-	#module EversonLabBiotools/1.0
-	#parallel_env mpi
-	#slots 10
-	memory 10G
-	queue all.q
-	directory $CURDIR
-	cmd /UCHC/HPC/Everson_HPC/custom_scripts/bin/bwa_aln.sh $1 1
-job_end" > $1.job.sjm
-echo "job_begin
-	name $1_bwa_align_2
-	#module EversonLabBiotools/1.0
-	#parallel_env mpi
-	#slots 10
-	memory 10G
-	queue all.q
-	directory $CURDIR
-	cmd /UCHC/HPC/Everson_HPC/custom_scripts/bin/bwa_aln.sh $1 2
-job_end" >> $1.job.sjm
-echo "job_begin
-	name $1_bwa_sampe
-	#module EversonLabBiotools/1.0
-	memory 10G
-	queue all.q
-	directory $CURDIR
-	cmd /UCHC/HPC/Everson_HPC/custom_scripts/bin/bwa_run.sh $1
-job_end" >> $1.job.sjm
-echo "order $1_bwa_sampe after $1_bwa_align_1
-order $1_bwa_sampe after $1_bwa_align_2" >> $1.job.sjm
-echo "log_dir $CURDIR/sjm_logs" >> $1.job.sjm
+BWA_ALN $1 1
+BWA_ALN $1 2
+BWA_SAMPE $1
 }
 
-function runSJMfile_BWA {
-	mkdir sjm_logs
-	sjm $1.job.sjm
+function runSJMfile {
+	mkdir -p sjm_logs
+	sjm $SJM_FILE
 }
 
 function linkfiles {
-	ln -s $2 ./$1_1.fq
-	ln -s $3 ./$1_2.fq
+	SJM_JOB LINKFILE-$1_1 "ln -s $2 ./$1_1.fq"
+	SJM_JOB LINKFILE-$1_2 "ln -s $3 ./$1_2.fq"
 }
 #Step1:  (separate step)
 #	create softlinks to fastq files in working directory
@@ -76,7 +82,17 @@ function linkfiles {
 #	bwa aln (files 1 & 2)->bwa sampe
 #	Change output to bam format (save file space)
 
+function BWA_per_file_pair {
+	linkfiles $1 $2 $3
+	createSJMfile_BWA $1
+	#runSJMfile_BWA $1
+}
 
-linkfiles $1 $2 $3
-createSJMfile_BWA $1
-runSJMfile_BWA $1
+rm $SJM_FILE
+touch $SJM_FILE
+BWA_per_file_pair $NC
+BWA_per_file_pair $NF
+BWA_per_file_pair $TC
+BWA_per_file_pair $TF
+
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE

@@ -15,6 +15,7 @@ GROUPLBL=$5
 HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
 SJM_FILE=./Step7.sjm
 CURDIR=`pwd`
+
 function SJM_JOB {
 	JOBNAME=$1
 	shift
@@ -53,6 +54,12 @@ function runShimmer {
 	FNAME=${FNAME//./_}
 SJM_JOB $FNAME "shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE"
 }
+
+function runSJMfile {
+	mkdir -p sjm_logs
+	sjm $SJM_FILE
+}
+
 rm $SJM_FILE
 touch $SJM_FILE
 
