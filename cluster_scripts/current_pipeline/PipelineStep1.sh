@@ -2,7 +2,7 @@
 source /etc/profile.d/modules.sh
 module load /UCHC/HPC/Everson_HPC/modulefiles/EversonLabBiotools/1.0
 
-GENOME=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fasta
+GENOME=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fasta
 DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf
 MINQUAL=30
 MAPQUAL=40
