@@ -11,6 +11,7 @@ NC=$1
 NF=$2
 TC=$3
 TF=$4
+GROUPLBL=$5
 HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
 SJM_FILE=./Step7.sjm
 CURDIR=`pwd`
@@ -18,7 +19,7 @@ function SJM_JOB {
 	JOBNAME=$1
 	shift
 	echo "job_begin
-	name $JOBNAME
+	name $GROUPLBL-$JOBNAME
 	memory 20G
 	module EversonLabBiotools/1.0
 	queue all.q
@@ -48,9 +49,9 @@ SJM_JOB VARSCAN_$FNAME java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.
 }
 
 function runShimmer {
-	FNAME=$1_$2
+	FNAME=$3
 	FNAME=${FNAME//./_}
-SJM_JOB SHIMMER_$FNAME shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
+SJM_JOB $FNAME shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
 }
 rm $SJM_FILE
 touch $SJM_FILE
@@ -88,11 +89,11 @@ runVarscan TC_TF.pileup TC_TF.somatic
 #adjusting for read count.
 #capseg??? (CopyN)
 
-SJM_JOB_AFTER VARSCAN_NC_TC_somatic MPILEUP_PAIR_NC_TC_pileup
-SJM_JOB_AFTER VARSCAN_NC_TF_somatic MPILEUP_PAIR_NC_TF_pileup
-SJM_JOB_AFTER VARSCAN_NF_TF_somatic MPILEUP_PAIR_NF_TF_pileup
-SJM_JOB_AFTER VARSCAN_NC_NF_somatic MPILEUP_PAIR_NC_NF_pileup
-SJM_JOB_AFTER VARSCAN_TC_TF_somatic MPILEUP_PAIR_TC_TF_pileup
+SJM_JOB_AFTER $GROUPLBL-VARSCAN_NC_TC_somatic $GROUPLBL-MPILEUP_PAIR_NC_TC_pileup
+SJM_JOB_AFTER $GROUPLBL-VARSCAN_NC_TF_somatic $GROUPLBL-MPILEUP_PAIR_NC_TF_pileup
+SJM_JOB_AFTER $GROUPLBL-VARSCAN_NF_TF_somatic $GROUPLBL-MPILEUP_PAIR_NF_TF_pileup
+SJM_JOB_AFTER $GROUPLBL-VARSCAN_NC_NF_somatic $GROUPLBL-MPILEUP_PAIR_NC_NF_pileup
+SJM_JOB_AFTER $GROUPLBL-VARSCAN_TC_TF_somatic $GROUPLBL-MPILEUP_PAIR_TC_TF_pileup
 
 mkdir -p sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
