@@ -30,19 +30,27 @@ function SJM_JOB_AFTER {
 	echo "order $1 after $2" >> $SJM_FILE
 }  
 function runPileupSingle {
-SJM_JOB MPILEUP.SINGLE.$2 "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2"
+	FNAME=$2
+	FNAME=${FNAME//./_}
+	SJM_JOB MPILEUP_SINGLE_$FNAME "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2"
 }
 
 function runPileupPair {
-SJM_JOB MPILEUP.PAIR.$3 "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3"
+	FNAME=$3
+	FNAME=${FNAME//./_}
+SJM_JOB MPILEUP_PAIR_$FNAME "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3"
 }
 
 function runVarscan {
-SJM_JOB VARSCAN.$2 java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1
+	FNAME=$2
+	FNAME=${FNAME//./_}
+SJM_JOB VARSCAN_$FNAME java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1
 }
 
 function runShimmer {
-SJM_JOB SHIMMER.$1.$2 shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
+	FNAME=$1_$2
+	FNAME=${FNAME//./_}
+SJM_JOB SHIMMER_$FNAME shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
 }
 rm $SJM_FILE
 touch $SJM_FILE
@@ -80,11 +88,11 @@ runVarscan TC_TF.pileup TC_TF.somatic
 #adjusting for read count.
 #capseg??? (CopyN)
 
-SJM_JOB_AFTER VARSCAN.NC_TC.somatic MPILEUP.PAIR.NC_TC.pileup
-SJM_JOB_AFTER VARSCAN.NC_TF.somatic MPILEUP.PAIR.NC_TF.pileup
-SJM_JOB_AFTER VARSCAN.NF_TF.somatic MPILEUP.PAIR.NF_TF.pileup
-SJM_JOB_AFTER VARSCAN.NC_NF.somatic MPILEUP.PAIR.NC_NF.pileup
-SJM_JOB_AFTER VARSCAN.TC_TF.somatic MPILEUP.PAIR.TC_TF.pileup
+SJM_JOB_AFTER VARSCAN_NC_TC_somatic MPILEUP_PAIR_NC_TC_pileup
+SJM_JOB_AFTER VARSCAN_NC_TF_somatic MPILEUP_PAIR_NC_TF_pileup
+SJM_JOB_AFTER VARSCAN_NF_TF_somatic MPILEUP_PAIR_NF_TF_pileup
+SJM_JOB_AFTER VARSCAN_NC_NF_somatic MPILEUP_PAIR_NC_NF_pileup
+SJM_JOB_AFTER VARSCAN_TC_TF_somatic MPILEUP_PAIR_TC_TF_pileup
 
 mkdir -p sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
