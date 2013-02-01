@@ -11,21 +11,41 @@ NC=$1
 NF=$2
 TC=$3
 TF=$4
+HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
+SJM_FILE=./Step7.sjm
+CURDIR=`pwd`
+function SJM_JOB {
+	JOBNAME=$1
+	shift
+	echo "job_begin
+	name $JOBNAME
+	memory 20G
+	module EversonLabBiotools/1.0
+	queue all.q
+	directory $CURDIR
+	cmd $HANDLER_SCRIPT $@
+job_end" >> $SJM_FILE
+}
+function SJM_JOB_AFTER {
+	echo "order $1 after $2" >> $SJM_FILE
+}  
 function runPileupSingle {
-samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2
+SJM_JOB MPILEUP.SINGLE.$2 "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2"
 }
 
 function runPileupPair {
-samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3
+SJM_JOB MPILEUP.PAIR.$3 "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3"
 }
 
 function runVarscan {
-java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1
+SJM_JOB VARSCAN.$2 java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1
 }
 
 function runShimmer {
-shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
+SJM_JOB SHIMMER.$1.$2 shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE
 }
+rm $SJM_FILE
+touch $SJM_FILE
 
 #Step7: (separate file)
 #	Shimmer (BQ 30)
@@ -59,3 +79,12 @@ runVarscan TC_TF.pileup TC_TF.somatic
 #Bioconductor DNACopy, 
 #adjusting for read count.
 #capseg??? (CopyN)
+
+SJM_JOB_AFTER VARSCAN.NC_TC.somatic MPILEUP.PAIR.NC_TC.pileup
+SJM_JOB_AFTER VARSCAN.NC_TF.somatic MPILEUP.PAIR.NC_TF.pileup
+SJM_JOB_AFTER VARSCAN.NF_TF.somatic MPILEUP.PAIR.NF_TF.pileup
+SJM_JOB_AFTER VARSCAN.NC_NF.somatic MPILEUP.PAIR.NC_NF.pileup
+SJM_JOB_AFTER VARSCAN.TC_TF.somatic MPILEUP.PAIR.TC_TF.pileup
+
+mkdir -p sjm_logs
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
