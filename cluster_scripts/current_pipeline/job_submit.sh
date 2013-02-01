@@ -5,6 +5,6 @@ JOBSCRIPT=$1
 shift
 JOBNAME=$1
 shift
-
+DATE=`date +"%Y-%m-%d-%H-%M"`
 #
-qsub -l h_vmem=40G -cwd -N $JOBNAME -o ./qsub_logs/$JOBNAME.step2-6.out -e ./qsub_logs/$JOBNAME.step2-6.err $HANDLER_SCRIPT -- $JOBSCRIPT $@
+qsub -l h_vmem=40G -cwd -N $JOBNAME -o ./qsub_logs/$JOBNAME.$DATE.out -e ./qsub_logs/$JOBNAME.$DATE.err $HANDLER_SCRIPT -- $JOBSCRIPT $@
