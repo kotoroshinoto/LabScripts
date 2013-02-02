@@ -33,13 +33,13 @@ function BWA_ALN {
 
 function BWA_SAMPE {
 	SJM_JOB BWA_SAMPE_$1 $BWA_RAM \"bwa sampe -P $BWAINDEX $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam\"
-	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_1
-	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_2
+	#SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_1
+	#SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_2
 }
 
 function createSJMfile_BWA {
-BWA_ALN $1 1
-BWA_ALN $1 2
+#BWA_ALN $1 1
+#BWA_ALN $1 2
 BWA_SAMPE $1
 }
 
@@ -60,7 +60,7 @@ function linkfiles {
 #	Change output to bam format (save file space)
 
 function BWA_per_file_pair {
-	linkfiles $1 $2 $3
+	#linkfiles $1 $2 $3
 	createSJMfile_BWA $1
 	#runSJMfile_BWA $1
 }
