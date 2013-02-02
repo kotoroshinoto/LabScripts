@@ -27,6 +27,7 @@ proc setBiotoolPaths {name hasbin hasinclude haslib haslib64} {
 	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64
 }
 
+setBiotoolPaths apr 1 1 1 0
 setBiotoolPaths subversion 1 1 1 0
 setBiotoolPaths sqlite 1 1 1 0
 setBiotoolPaths libJPEG 1 1 1 0
@@ -56,8 +57,8 @@ setBiotoolPaths StatGen 0 0 1 0
 setBiotoolPaths tclap 0 1 1 0
 setBiotoolPaths Trimmomatic 1 1 1 0
 setBiotoolPaths vcftools 1 0 1 0
-prepend-path PERL5LIB /home/CAM/mgooch/HPC/vcftools/lib/perl5/site_perl
-prepend-path PERL5LIB /home/CAM/mgooch/HPC/vcftools/perl
+prepend-path PERL5LIB /UCHC/HPC/Everson_HPC/vcftools/lib/perl5/site_perl
+prepend-path PERL5LIB /UCHC/HPC/Everson_HPC/vcftools/perl
 setBiotoolPaths tuxedo_tools/cufflinks 1 0 0 0
 setBiotoolPaths tuxedo_tools/bowtie 1 0 0 0
 setBiotoolPaths tuxedo_tools/bowtie2 1 0 0 0
@@ -89,6 +90,6 @@ prepend-path CPLUS_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path C_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path ROOTSYS /UCHC/HPC/Everson_HPC/ROOT
 
-#prepend-path MODULEPATH /home/CAM/mgooch/HPC/hugeseq/modulefiles
+#prepend-path MODULEPATH /UCHC/HPC/Everson_HPC/hugeseq/modulefiles
 #if { ! [is-loaded hugeseq/1.0] } { module load hugeseq/1.0 }
 
