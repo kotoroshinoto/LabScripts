@@ -1,58 +1,36 @@
 #!/bin/bash -x
-source /etc/profile.d/modules.sh
-module load /UCHC/HPC/Everson_HPC/modulefiles/EversonLabBiotools/1.0
+source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
+#source ./ScriptSettings.lib.sh
 
-GENOME=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fasta
-DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf
-MINQUAL=30
-MAPQUAL=40
-GENOME_TYPE=hg19
 NC=$1
 NF=$2
 TC=$3
 TF=$4
 GROUPLBL=$5
-HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
 SJM_FILE=./Step7.sjm
-CURDIR=`pwd`
 
-function SJM_JOB {
-	JOBNAME=$1
-	shift
-	echo "job_begin
-	name "$GROUPLBL"_$JOBNAME
-	memory 20G
-	module EversonLabBiotools/1.0
-	queue all.q
-	directory $CURDIR
-	cmd $HANDLER_SCRIPT $@
-job_end" >> $SJM_FILE
-}
-function SJM_JOB_AFTER {
-	echo "order $1 after $2" >> $SJM_FILE
-}  
 function runPileupSingle {
 	FNAME=$2
 	FNAME=${FNAME//./_}
-	SJM_JOB MPILEUP_SINGLE_$FNAME "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2"
+	SJM_JOB MPILEUP_SINGLE_$FNAME $GENERIC_JOB_RAM "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 > $2"
 }
 
 function runPileupPair {
 	FNAME=$3
 	FNAME=${FNAME//./_}
-SJM_JOB MPILEUP_PAIR_$FNAME "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3"
+SJM_JOB MPILEUP_PAIR_$FNAME $GENERIC_JOB_RAM "samtools mpileup -DS -q 10 -Q 20 -f $GENOME $1 $2 > $3"
 }
 
 function runVarscan {
 	FNAME=$2
 	FNAME=${FNAME//./_}
-SJM_JOB VARSCAN_$FNAME "java -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1"
+SJM_JOB VARSCAN_$FNAME $JAVA_JOB_RAM "java -Xms$JAVA_RAM -Xmx$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/VarScan/bin/VarScan.v2.3.2.jar somatic $1 $2 --mpileup 1"
 }
 
 function runShimmer {
 	FNAME=$3
 	FNAME=${FNAME//./_}
-SJM_JOB $FNAME "shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE"
+SJM_JOB $FNAME $SHIMMER_RAM "shimmer.pl --ref $GENOME $1 $2 --outdir $3 --mapqual $MAPQUAL --minqual $MINQUAL --buildver $GENOME_TYPE"
 }
 
 function runSJMfile {

@@ -1,20 +1,6 @@
 #!/bin/bash -x
-source /etc/profile.d/modules.sh
-module load /UCHC/HPC/Everson_HPC/modulefiles/EversonLabBiotools/1.0
-
-GENOME=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fasta
-DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf
-MINQUAL=30
-MAPQUAL=40
-GENOME_TYPE=hg19
-TARGET_BED=/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed
-#MEMORY SETTINGS
-#CURRENT JOB Memory: 40GiB -> 40960MiB
-JAVA_RAM=33G
-#250,000*33=8250000
-MRECORDS=8250000
-CURDIR=`pwd`
-
+source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
+#source ScriptSettings.lib.sh
 
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
