@@ -1,6 +1,6 @@
 #!/bin/bash -x
 #source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
-source ./ScriptSettings.lib.sh
+. ./ScriptSettings.lib.sh
 
 NC=$(echo $1 | tr "," "\n")
 NF=$(echo $2 | tr "," "\n")
