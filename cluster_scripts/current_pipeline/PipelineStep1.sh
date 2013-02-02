@@ -48,6 +48,7 @@ function runSJMfile {
 	sjm $SJM_FILE
 }
 
+#needs minimal ram, only making a softlink
 function linkfiles {
 	SJM_JOB LINKFILE_$1_1 1G "ln -fs $2 ./$1_1.fq"
 	SJM_JOB LINKFILE_$1_2 1G "ln -fs $3 ./$1_2.fq"

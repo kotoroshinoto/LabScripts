@@ -2,6 +2,13 @@
 source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 
+NC=$(echo $1 | tr "," "\n")
+NF=$(echo $2 | tr "," "\n")
+TC=$(echo $3 | tr "," "\n")
+TF=$(echo $4 | tr "," "\n")
+GROUPLBL=$5
+SJM_FILE=./Step2-6.sjm
+
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
 #O=File                        Output file (bam or sam).  Required.
@@ -188,7 +195,7 @@ O=$2 \
 SORT_ORDER=coordinate
 #rm ./filters/$1.*
 }
-
+function Prepare_N_Filter_per_file {
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
@@ -217,3 +224,12 @@ filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
 getStats $1.4GATK.recal.realn.filtered.bam
+}
+
+Prepare_N_Filter_per_file $NC
+Prepare_N_Filter_per_file $NF
+Prepare_N_Filter_per_file $TC
+Prepare_N_Filter_per_file $TF
+
+mkdir -p sjm_logs
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
