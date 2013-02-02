@@ -27,12 +27,12 @@ SJM_FILE=./Step1.sjm
 #$2
 #}
 function BWA_ALN {
-	SJM_JOB BWA_ALN_$1_$2 "bwa aln -t 10 $BWAINDEX $1_$2.fq -f $1_$2.fq.aligned"
+	SJM_JOB BWA_ALN_$1_$2 $BWA_RAM "bwa aln -t 10 $BWAINDEX $1_$2.fq -f $1_$2.fq.aligned"
 	SJM_JOB_AFTER "$GROUPLBL"_BWA_ALN_$1_$2 "$GROUPLBL"_LINKFILE_$1_$2
 }
 
 function BWA_SAMPE {
-	SJM_JOB BWA_SAMPE_$1 "bwa sampe -P $BWAINDEX $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam"
+	SJM_JOB BWA_SAMPE_$1 $BWA_RAM "bwa sampe -P $BWAINDEX $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam"
 	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_1
 	SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_2
 }
@@ -49,8 +49,8 @@ function runSJMfile {
 }
 
 function linkfiles {
-	SJM_JOB LINKFILE_$1_1 "ln -fs $2 ./$1_1.fq"
-	SJM_JOB LINKFILE_$1_2 "ln -fs $3 ./$1_2.fq"
+	SJM_JOB LINKFILE_$1_1 1G "ln -fs $2 ./$1_1.fq"
+	SJM_JOB LINKFILE_$1_2 1G "ln -fs $3 ./$1_2.fq"
 }
 #Step1:  (separate step)
 #	create softlinks to fastq files in working directory
