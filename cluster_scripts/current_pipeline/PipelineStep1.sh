@@ -32,7 +32,7 @@ function BWA_ALN {
 }
 
 function BWA_SAMPE {
-	SJM_JOB BWA_SAMPE_$1 $BWA_RAM \"bwa sampe -P $BWAINDEX $1_1.fq.aligned $1_2.fq.aligned $1_1.fq $1_2.fq | samtools view -bS /dev/stdin > $1.bam\"
+	SJM_JOB BWA_SAMPE_$1 $BWA_RAM "bwa_run.sh $1"
 	#SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_1
 	#SJM_JOB_AFTER "$GROUPLBL"_BWA_SAMPE_$1 "$GROUPLBL"_BWA_ALN_$1_2
 }
