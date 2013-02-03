@@ -203,11 +203,11 @@ SORT_ORDER=coordinate
 }
 function Prepare_N_Filter_per_file {
 	#echo $1
-	#echo $2
-	#echo $3
-	#echo $4
-	#echo $5
-	#echo $6
+	echo $2
+	echo $3
+	echo $4
+	echo $5
+	echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
