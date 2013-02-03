@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 
@@ -231,11 +231,15 @@ filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 #Step6: (repeat step 3 on filtered files)
 getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
 }
+echo $NC
+echo $NF
+echo $TC
+echo $TF
 
-Prepare_N_Filter_per_file $NC
-Prepare_N_Filter_per_file $NF
-Prepare_N_Filter_per_file $TC
-Prepare_N_Filter_per_file $TF
+#Prepare_N_Filter_per_file $NC
+#Prepare_N_Filter_per_file $NF
+#Prepare_N_Filter_per_file $TC
+#Prepare_N_Filter_per_file $TF
 
 mkdir -p sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
