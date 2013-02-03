@@ -35,22 +35,22 @@ SJM_FILE=./Step2-6.sjm
 function prepare4GATK {
 mkdir -p GATK_prep
 mkdir -p $CURDIR/GATK_prep/tmp
-	echo prepare4GATK
-	echo $1
-	echo $2
-	echo $3
-	echo $4
-	echo $5
-	echo $6
-	echo $7
-SJM_JOB Prep1_Clean_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+	#echo prepare4GATK
+	#echo $1
+	#echo $2
+	#echo $3
+	#echo $4
+	#echo $5
+	#echo $6
+	#echo $7
+SJM_JOB Prep1_Clean_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/CleanSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=$1 \
 O=./GATK_prep/$1.cleaned
 
-SJM_JOB Prep2_Reorder_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep2_Reorder_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/ReorderSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -58,7 +58,7 @@ I=./GATK_prep/$1.cleaned \
 O=./GATK_prep/$1.reordered \
 R=$GENOME
 
-SJM_JOB Prep3_AddReplReadGroups_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep3_AddReplReadGroups_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/AddOrReplaceReadGroups.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -71,14 +71,14 @@ PU=$6 \
 SM=$7 \
 SO=coordinate
 
-SJM_JOB Prep4_FixMateInfo_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep4_FixMateInfo_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/FixMateInformation.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=./GATK_prep/$1.addReadGroups \
 O=./GATK_prep/$1.fixMateInfo
 
-SJM_JOB Prep5_MarkDuplicates_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep5_MarkDuplicates_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/MarkDuplicates.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -100,7 +100,7 @@ AS=true
 #}
 
 function getStats {
-	SJM_MULTILINE_JOB_START $2_GetStats_$1 $JAVA_JOB_RAM
+	SJM_MULTILINE_JOB_START $2_GetStats_$SAMPLE $JAVA_JOB_RAM
 SJM_MULTILINE_JOB_CMD samtools flagstat $1 >$1.flagstat
 SJM_MULTILINE_JOB_CMD samtools index  $1
 SJM_MULTILINE_JOB_CMD samtools idxstats $1 >$1.idxstat
@@ -115,7 +115,7 @@ SJM_MULTILINE_JOB_END
 }
 
 function recalibrateBaseQual {
-	SJM_MULTILINE_JOB_START Prep6_Recalibrate_$1 $JAVA_JOB_RAM 
+	SJM_MULTILINE_JOB_START Prep6_Recalibrate_$SAMPLE $JAVA_JOB_RAM 
 SJM_MULTILINE_JOB_CMD samtools index $1
 SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T BaseRecalibrator \
@@ -135,7 +135,7 @@ SJM_MULTILINE_JOB_END
 
 
 function indelrealign {
-	SJM_MULTILINE_JOB_START Prep7_Realign_$1 $JAVA_JOB_RAM 
+	SJM_MULTILINE_JOB_START Prep7_Realign_$SAMPLE $JAVA_JOB_RAM 
 ##create target intervals file
 SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator \
@@ -180,16 +180,16 @@ function filterRegions {
 
 mkdir -p filters
 
-SJM_JOB Filter1_BEDtools_$1 $GENERIC_JOB_RAM bedtools intersect \
+SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM bedtools intersect \
 -u -abam $1 \
 -b $TARGET_BED \
 >./filters/$1.bedfiltered.bam
 
-SJM_JOB Filter2_SAMtools_$1 $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
+SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
 
 mkdir -p filters/tmp
 
-SJM_JOB Filter3_RMDuplicates_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Filter3_RMDuplicates_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/MarkDuplicates.jar \
 TMP_DIR=$CURDIR/filters/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -199,7 +199,7 @@ M=./filters/$1.dupmetrics \
 REMOVE_DUPLICATES=true \
 AS=true
 
-SJM_JOB Filter4_SORT_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Filter4_SORT_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/SortSam.jar \
 TMP_DIR=$CURDIR/filters/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -210,13 +210,14 @@ SORT_ORDER=coordinate
 }
 
 function Prepare_N_Filter_per_file {
-	echo Prepare_N_Filter_per_file
-	echo $1
-	echo $2
-	echo $3
-	echo $4
-	echo $5
-	echo $6
+SAMPLE=$1
+	#echo Prepare_N_Filter_per_file
+	#echo $1
+	#echo $2
+	#echo $3
+	#echo $4
+	#echo $5
+	#echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
