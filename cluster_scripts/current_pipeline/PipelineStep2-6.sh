@@ -265,7 +265,7 @@ filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
 getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
-SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE 
+SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
 
 }
 
