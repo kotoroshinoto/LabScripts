@@ -42,6 +42,7 @@ mkdir -p $CURDIR/GATK_prep/tmp
 	echo $4
 	echo $5
 	echo $6
+	echo $7
 SJM_JOB Prep1_Clean_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/CleanSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
@@ -251,7 +252,8 @@ getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
 #echo $NF
 #echo $TC
 #echo $TF
-
+rm $SJM_FILE
+touch $SJM_FILE
 Prepare_N_Filter_per_file $NC
 Prepare_N_Filter_per_file $NF
 Prepare_N_Filter_per_file $TC
