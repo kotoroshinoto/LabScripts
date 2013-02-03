@@ -33,15 +33,17 @@ SJM_FILE=./Step2-6.sjm
 #DT=Iso8601Date                Read Group run date  Default value: null.
 
 function prepare4GATK {
-mkdir GATK_prep
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+mkdir -p GATK_prep
+mkdir -p $CURDIR/GATK_prep/tmp
+ 
+SJM_JOB Prep1_Clean_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/CleanSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=$1 \
 O=./GATK_prep/$1.cleaned
 
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep2_Reorder_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/ReorderSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -49,7 +51,7 @@ I=./GATK_prep/$1.cleaned \
 O=./GATK_prep/$1.reordered \
 R=$GENOME
 
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep3_AddReplReadGroups_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/AddOrReplaceReadGroups.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -62,16 +64,14 @@ PU=$6 \
 SM=$7 \
 SO=coordinate
 
-mkdir $CURDIR/GATK_prep/tmp
-
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep4_FixMateInfo_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/FixMateInformation.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=./GATK_prep/$1.addReadGroups \
 O=./GATK_prep/$1.fixMateInfo
 
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Prep5_MarkDuplicates_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/MarkDuplicates.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -83,49 +83,54 @@ AS=true
 #rm ./GATK_prep/$1.*
 }
 
-function toBam {
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
--jar /UCHC/HPC/Everson_HPC/picard/bin/SamFormatConverter.jar \
-TMP_DIR=$CURDIR \
-MAX_RECORDS_IN_RAM=$MRECORDS \
-I=$1 \
-O=$2
-}
+#function toBam {
+#java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+#-jar /UCHC/HPC/Everson_HPC/picard/bin/SamFormatConverter.jar \
+#TMP_DIR=$CURDIR \
+#MAX_RECORDS_IN_RAM=$MRECORDS \
+#I=$1 \
+#O=$2
+#}
 
 function getStats {
-samtools flagstat $1 >$1.flagstat
-samtools index  $1
-samtools idxstats $1 >$1.idxstat
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+	SJM_MULTILINE_JOB_START $2_GetStats_$1 $JAVA_JOB_RAM
+SJM_MULTILINE_JOB_CMD samtools flagstat $1 >$1.flagstat
+SJM_MULTILINE_JOB_CMD samtools index  $1
+SJM_MULTILINE_JOB_CMD samtools idxstats $1 >$1.idxstat
+SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar ~/HPC/picard/bin/CollectAlignmentSummaryMetrics.jar \
 TMP_DIR=$CURDIR \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=$1 \
 O=$1.align_sum_metrics.txt \
 R=$GENOME
+SJM_MULTILINE_JOB_END
 }
 
 function recalibrateBaseQual {
-samtools index $1
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+	SJM_MULTILINE_JOB_START Prep6_Recalibrate_$1 $JAVA_JOB_RAM 
+SJM_MULTILINE_JOB_CMD samtools index $1
+SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T BaseRecalibrator \
 -I $1 \
 -R $GENOME \
 -knownSites $DBSNP \
 -o $1.grp
 
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T PrintReads \
 -I $1 \
 -R $GENOME \
 -BQSR $1.grp \
 -o $2
+SJM_MULTILINE_JOB_END
 }
 
 
 function indelrealign {
+	SJM_MULTILINE_JOB_START Prep7_Realign_$1 $JAVA_JOB_RAM 
 ##create target intervals file
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator \
 -R $GENOME \
 -I $1 \
@@ -139,13 +144,13 @@ java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnaly
 #-windowSize 	int 	10 	window size for calculating entropy or SNP clusters
 
 ##use target intervals file & realign
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T IndelRealigner \
 -R $GENOME \
 -I $1 \
 -targetIntervals $1.indel.intervals \
 -o $2
-
+SJM_MULTILINE_JOB_END
 #Optional
 #-consensusDeterminationModel 	ConsensusDeterminationModel 	USE_READS 	Determines how to compute the possible alternate consenses
 #-knownAlleles 	List[RodBinding[VariantContext]] 	[] 	Input VCF file(s) with known indels
@@ -166,17 +171,18 @@ java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnaly
 
 function filterRegions {
 
-mkdir filters
+mkdir -p filters
 
-bedtools intersect \
+SJM_JOB Filter1_BEDtools_$1 $GENERIC_JOB_RAM bedtools intersect \
 -u -abam $1 \
 -b $TARGET_BED \
 >./filters/$1.bedfiltered.bam
 
-samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
+SJM_JOB Filter2_SAMtools_$1 $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
 
-mkdir filters/tmp
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+mkdir -p filters/tmp
+
+SJM_JOB Filter3_RMDuplicates_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/MarkDuplicates.jar \
 TMP_DIR=$CURDIR/filters/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -186,7 +192,7 @@ M=./filters/$1.dupmetrics \
 REMOVE_DUPLICATES=true \
 AS=true
 
-java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+SJM_JOB Filter4_SORT_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/SortSam.jar \
 TMP_DIR=$CURDIR/filters/tmp \
 MAX_RECORDS_IN_RAM=$MRECORDS \
@@ -206,7 +212,7 @@ prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
 #	Post alignment summary statistics with Picard/samtools flagstat and idxstat
 #	Picard GC bias metrics
 
-getStats $1.4GATK.bam
+getStats $1.4GATK.bam PreFiltered
 
 #Step4: 
 #	GATK BaseRecalibration and the analyze covariates before and after
@@ -223,7 +229,7 @@ indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
 filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
-getStats $1.4GATK.recal.realn.filtered.bam
+getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
 }
 
 Prepare_N_Filter_per_file $NC
