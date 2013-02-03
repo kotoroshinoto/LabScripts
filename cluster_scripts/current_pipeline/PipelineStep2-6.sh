@@ -35,7 +35,12 @@ SJM_FILE=./Step2-6.sjm
 function prepare4GATK {
 mkdir -p GATK_prep
 mkdir -p $CURDIR/GATK_prep/tmp
- 
+	echo $1
+	echo $2
+	echo $3
+	echo $4
+	echo $5
+	echo $6
 SJM_JOB Prep1_Clean_$1 $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/CleanSam.jar \
 TMP_DIR=$CURDIR/GATK_prep/tmp \
@@ -203,11 +208,11 @@ SORT_ORDER=coordinate
 }
 function Prepare_N_Filter_per_file {
 	#echo $1
-	echo $2
-	echo $3
-	echo $4
-	echo $5
-	echo $6
+	#echo $2
+	#echo $3
+	#echo $4
+	#echo $5
+	#echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
