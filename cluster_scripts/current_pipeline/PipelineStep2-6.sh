@@ -202,44 +202,51 @@ SORT_ORDER=coordinate
 #rm ./filters/$1.*
 }
 function Prepare_N_Filter_per_file {
+	echo $1
+	echo $2
+	echo $3
+	echo $4
+	echo $5
+	echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
-prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
+#prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
 
 #Step3:
 #	samtools index
 #	Post alignment summary statistics with Picard/samtools flagstat and idxstat
 #	Picard GC bias metrics
 
-getStats $1.4GATK.bam PreFiltered
+#getStats $1.4GATK.bam PreFiltered
 
 #Step4: 
 #	GATK BaseRecalibration and the analyze covariates before and after
 #	GATK indelRealignment
 
-recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
-indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
+#recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
+#indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
 
 #Step5:
 #	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
 #	picard duplicate filter
 #	Bedools intersectBed region filter 
 
-filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
+#filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
-getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
+#getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
 }
-echo $NC
-echo $NF
-echo $TC
-echo $TF
 
-#Prepare_N_Filter_per_file $NC
-#Prepare_N_Filter_per_file $NF
-#Prepare_N_Filter_per_file $TC
-#Prepare_N_Filter_per_file $TF
+#echo $NC
+#echo $NF
+#echo $TC
+#echo $TF
+
+Prepare_N_Filter_per_file $NC
+Prepare_N_Filter_per_file $NF
+Prepare_N_Filter_per_file $TC
+Prepare_N_Filter_per_file $TF
 
 mkdir -p sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
