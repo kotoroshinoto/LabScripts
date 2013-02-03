@@ -54,5 +54,5 @@ function SJM_JOB {
 job_end" >> $SJM_FILE
 }
 function SJM_JOB_AFTER {
-	echo "order $GROUPLBL_$1 after $GROUPLBL_$2" >> $SJM_FILE
+	echo order "$GROUPLBL"_$1 after "$GROUPLBL"_$2 >> $SJM_FILE
 }
