@@ -35,6 +35,7 @@ SJM_FILE=./Step2-6.sjm
 function prepare4GATK {
 mkdir -p GATK_prep
 mkdir -p $CURDIR/GATK_prep/tmp
+	echo prepare4GATK
 	echo $1
 	echo $2
 	echo $3
@@ -206,13 +207,15 @@ O=$2 \
 SORT_ORDER=coordinate
 #rm ./filters/$1.*
 }
+
 function Prepare_N_Filter_per_file {
-	#echo $1
-	#echo $2
-	#echo $3
-	#echo $4
-	#echo $5
-	#echo $6
+	echo Prepare_N_Filter_per_file
+	echo $1
+	echo $2
+	echo $3
+	echo $4
+	echo $5
+	echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 
