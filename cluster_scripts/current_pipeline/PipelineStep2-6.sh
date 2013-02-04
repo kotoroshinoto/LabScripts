@@ -107,7 +107,7 @@ SJM_JOB_AFTER Prep5_MarkDuplicates_$SAMPLE Prep4_FixMateInfo_$SAMPLE
 #}
 
 function getStats {
-	SJM_JOB $2_GetStatsA_$SAMPLE $JAVA_JOB_RAM samtools index  $1
+	SJM_JOB $2_GetStatsA_$SAMPLE $JAVA_JOB_RAM index  $1
 	SJM_JOB $2_GetStatsB_$SAMPLE $JAVA_JOB_RAM samtools flagstat $1 >$1.flagstat
 	SJM_JOB $2_GetStatsC_$SAMPLE $JAVA_JOB_RAM samtools idxstats $1 >$1.idxstat
 	SJM_JOB $2_GetStatsD_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
@@ -196,14 +196,11 @@ mkdir -p filters
 
 mkdir -p filters/tmp
 
-SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM bedtools intersect \
--u -abam $1 \
--b $TARGET_BED \
->./filters/$1.bedfiltered.bam
+SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM PipelineFilter1.sh $1 $TARGET_BED ./filters/$1.bedfiltered.bam
 
 SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
 
-SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
+SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL -o ./filters/$1.samtools_filtered.bam ./filters/$1.bedfiltered
 
 SJM_JOB_AFTER Filter2_SAMtools_$SAMPLE Filter1_BEDtools_$SAMPLE
 
