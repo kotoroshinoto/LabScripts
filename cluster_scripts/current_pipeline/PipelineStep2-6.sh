@@ -107,18 +107,19 @@ SJM_JOB_AFTER Prep5_MarkDuplicates_$SAMPLE Prep4_FixMateInfo_$SAMPLE
 #}
 
 function getStats {
-	SJM_MULTILINE_JOB_START $2_GetStats_$SAMPLE $JAVA_JOB_RAM
-SJM_MULTILINE_JOB_CMD samtools flagstat $1 >$1.flagstat
-SJM_MULTILINE_JOB_CMD samtools index  $1
-SJM_MULTILINE_JOB_CMD samtools idxstats $1 >$1.idxstat
-SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+	SJM_JOB $2_GetStatsA_$SAMPLE $JAVA_JOB_RAM samtools index  $1
+	SJM_JOB $2_GetStatsB_$SAMPLE $JAVA_JOB_RAM samtools flagstat $1 >$1.flagstat
+	SJM_JOB $2_GetStatsC_$SAMPLE $JAVA_JOB_RAM samtools idxstats $1 >$1.idxstat
+	SJM_JOB $2_GetStatsD_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar ~/HPC/picard/bin/CollectAlignmentSummaryMetrics.jar \
 TMP_DIR=$CURDIR \
 MAX_RECORDS_IN_RAM=$MRECORDS \
 I=$1 \
 O=$1.align_sum_metrics.txt \
 R=$GENOME
-SJM_MULTILINE_JOB_END
+SJM_JOB_AFTER $2_GetStatsB_$SAMPLE $2_GetStatsA_$SAMPLE
+SJM_JOB_AFTER $2_GetStatsC_$SAMPLE $2_GetStatsA_$SAMPLE
+SJM_JOB_AFTER $2_GetStatsD_$SAMPLE $2_GetStatsA_$SAMPLE
 }
 
 function recalibrateBaseQual {
@@ -167,7 +168,7 @@ SJM_JOB Prep7B_Realign_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -j
 -I $1 \
 -targetIntervals $1.indel.intervals \
 -o $2
-SJM_MULTILINE_JOB_END
+
 SJM_JOB_AFTER Prep7A_Realign_$SAMPLE Prep6C_Recalibrate_$SAMPLE
 SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
 
