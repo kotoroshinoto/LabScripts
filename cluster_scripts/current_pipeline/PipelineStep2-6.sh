@@ -124,7 +124,7 @@ SJM_JOB_AFTER $2_GetStatsD_$SAMPLE $2_GetStatsA_$SAMPLE
 
 function recalibrateBaseQual {
 	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM samtools index $1
-	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
+	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
 -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T BaseRecalibrator \
 -I $1 \
