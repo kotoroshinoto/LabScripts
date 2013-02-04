@@ -107,7 +107,12 @@ SJM_JOB_AFTER Prep5_MarkDuplicates_$SAMPLE Prep4_FixMateInfo_$SAMPLE
 #}
 
 function getStats {
-	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM PipelineGetStats.sh $1
+	#1 filename
+#2 RAM
+#3 curdir
+#4 mrecords
+#5 genome
+	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM PipelineGetStats.sh $1 $JAVA_RAM $CURDIR $MRECORDS $GENOME
 }
 
 function recalibrateBaseQual {
