@@ -2,10 +2,10 @@
 source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 
-NC=$1
-NF=$2
-TC=$3
-TF=$4
+NC=$1.4GATK.recal.realn.filtered.bam
+NF=$2.4GATK.recal.realn.filtered.bam
+TC=$3.4GATK.recal.realn.filtered.bam
+TF=$4.4GATK.recal.realn.filtered.bam
 GROUPLBL=$5
 SJM_FILE=./Step7.sjm
 
