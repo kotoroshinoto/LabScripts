@@ -191,7 +191,7 @@ mkdir -p filters/tmp
 
 SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM PipelineFilter1.sh $1 $TARGET_BED ./filters/$1.bedfiltered.bam
 
-#SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
+SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
 
 SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL -o ./filters/$1.samtools_filtered.bam ./filters/$1.bedfiltered.bam
 
@@ -237,7 +237,7 @@ SJM_FILE=./Step2-6.$1.sjm
 rm -f $SJM_FILE
 touch $SJM_FILE
 
-#prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
+prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
 
 #Step3:
 #	samtools index
@@ -245,25 +245,25 @@ touch $SJM_FILE
 #	Picard GC bias metrics
 
 getStats $1.4GATK.bam PreFiltered
-#SJM_JOB_AFTER PreFiltered_GetStats_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
+SJM_JOB_AFTER PreFiltered_GetStats_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
 
 #Step4: 
 #	GATK BaseRecalibration and the analyze covariates before and after
 #	GATK indelRealignment
 
-#recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
-#indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
+recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
+indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
 
 #Step5:
 #	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
 #	picard duplicate filter
 #	Bedtools intersectBed region filter 
 
-##filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
+filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
 getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
-##SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
+SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
