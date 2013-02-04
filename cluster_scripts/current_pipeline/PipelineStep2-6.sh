@@ -242,7 +242,7 @@ SAMPLE=$1
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
 SJM_FILE=./Step2-6.$1.sjm
-rm $SJM_FILE
+rm -f $SJM_FILE
 touch $SJM_FILE
 
 prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
