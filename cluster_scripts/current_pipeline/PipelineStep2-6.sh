@@ -255,7 +255,7 @@ prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
 #	Picard GC bias metrics
 
 getStats $1.4GATK.bam PreFiltered
-SJM_JOB_AFTER PreFiltered_GetStats_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
+SJM_JOB_AFTER PreFiltered_GetStatsA_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
 
 #Step4: 
 #	GATK BaseRecalibration and the analyze covariates before and after
@@ -273,7 +273,7 @@ filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 
 #Step6: (repeat step 3 on filtered files)
 getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
-SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
+SJM_JOB_AFTER PostFiltered_GetStatsA_$SAMPLE Filter4_SORT_$SAMPLE
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
