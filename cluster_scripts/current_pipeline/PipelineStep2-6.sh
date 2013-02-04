@@ -7,7 +7,6 @@ NF=$(echo $2 | tr "," "\n")
 TC=$(echo $3 | tr "," "\n")
 TF=$(echo $4 | tr "," "\n")
 GROUPLBL=$5
-SJM_FILE=./Step2-6.sjm
 
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
@@ -123,30 +122,31 @@ SJM_MULTILINE_JOB_END
 }
 
 function recalibrateBaseQual {
-	SJM_MULTILINE_JOB_START Prep6_Recalibrate_$SAMPLE $JAVA_JOB_RAM 
-SJM_MULTILINE_JOB_CMD samtools index $1
-SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM samtools index $1
+	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM \ 
+-jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T BaseRecalibrator \
 -I $1 \
 -R $GENOME \
 -knownSites $DBSNP \
--o $1.grp
-
-SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+-o $1.grp 
+	SJM_JOB Prep6C_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \ 
+	-jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T PrintReads \
 -I $1 \
 -R $GENOME \
 -BQSR $1.grp \
 -o $2
-SJM_MULTILINE_JOB_END
-SJM_JOB_AFTER Prep6_Recalibrate_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
+
+SJM_JOB_AFTER Prep6A_Recalibrate_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
+SJM_JOB_AFTER Prep6B_Recalibrate_$SAMPLE Prep6A_Recalibrate_$SAMPLE
+SJM_JOB_AFTER Prep6C_Recalibrate_$SAMPLE Prep6B_Recalibrate_$SAMPLE
 }
 
 
 function indelrealign {
-	SJM_MULTILINE_JOB_START Prep7_Realign_$SAMPLE $JAVA_JOB_RAM 
-##create target intervals file
-SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+	##create target intervals file
+	SJM_JOB Prep7A_Realign_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator \
 -R $GENOME \
 -I $1 \
@@ -160,14 +160,16 @@ SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HP
 #-windowSize 	int 	10 	window size for calculating entropy or SNP clusters
 
 ##use target intervals file & realign
-SJM_MULTILINE_JOB_CMD java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+SJM_JOB Prep7B_Realign_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T IndelRealigner \
 -R $GENOME \
 -I $1 \
 -targetIntervals $1.indel.intervals \
 -o $2
 SJM_MULTILINE_JOB_END
-SJM_JOB_AFTER Prep7_Realign_$SAMPLE Prep6_Recalibrate_$SAMPLE
+SJM_JOB_AFTER Prep7A_Realign_$SAMPLE Prep6C_Recalibrate_$SAMPLE
+SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
+
 #Optional
 #-consensusDeterminationModel 	ConsensusDeterminationModel 	USE_READS 	Determines how to compute the possible alternate consenses
 #-knownAlleles 	List[RodBinding[VariantContext]] 	[] 	Input VCF file(s) with known indels
@@ -197,7 +199,7 @@ SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM bedtools intersect \
 -b $TARGET_BED \
 >./filters/$1.bedfiltered.bam
 
-SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7_Realign_$SAMPLE
+SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
 
 SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL ./filters/$1.bedfiltered >./filters/$1.samtools_filtered.bam
 
@@ -228,6 +230,7 @@ SJM_JOB_AFTER Filter4_SORT_$SAMPLE Filter3_RMDuplicates_$SAMPLE
 }
 
 function Prepare_N_Filter_per_file {
+	mkdir -p sjm_logs
 SAMPLE=$1
 	#echo Prepare_N_Filter_per_file
 	#echo $1
@@ -238,6 +241,9 @@ SAMPLE=$1
 	#echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
+SJM_FILE=./Step2-6.$1.sjm
+rm $SJM_FILE
+touch $SJM_FILE
 
 prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
 
@@ -267,18 +273,14 @@ filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
 getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
 SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
 
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
 
 #echo $NC
 #echo $NF
 #echo $TC
 #echo $TF
-rm $SJM_FILE
-touch $SJM_FILE
 Prepare_N_Filter_per_file $NC
 Prepare_N_Filter_per_file $NF
 Prepare_N_Filter_per_file $TC
 Prepare_N_Filter_per_file $TF
-
-mkdir -p sjm_logs
-echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
