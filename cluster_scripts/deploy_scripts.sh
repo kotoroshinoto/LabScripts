@@ -19,4 +19,4 @@ FILES=$(echo $FILES | tr "\n" " ")
 linkfiles $DESTDIR $FILES
 
 #deploy "modulefiles"
-linkfiles /UCHC/HPC/Everson_HPC/modulefiles/EversonLabBiotools/ /UCHC/HPC/Everson_HPC/custom_scripts/src/labscripts-code/modulefiles/EversonLabBiotools/1.0
+linkfiles /UCHC/HPC/Everson_HPC/modulefiles/EversonLabBiotools/ /UCHC/HPC/Everson_HPC/custom_scripts/src/labscripts-code/cluster_scripts/modulefiles/EversonLabBiotools/1.0
