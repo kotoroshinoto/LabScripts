@@ -1,6 +1,6 @@
 #!/bin/bash
 svn update
-chmod +x ./bin/*
-chmod +x ./shbin/*.sh
-chmod +x ./cgi-bin/*.pl
-chmod +x ./pybin/*.py
+chmod -f +x ./bin/*
+chmod -f +x ./shbin/*.sh
+chmod -f +x ./cgi-bin/*.pl
+chmod -f +x ./pybin/*.py
