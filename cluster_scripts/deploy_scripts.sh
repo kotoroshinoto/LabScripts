@@ -5,7 +5,7 @@ function linkfiles {
 	for f in $@ 
 	do
 		echo "ln -f $f $DEST"
-	#ln -f $f $1
+		ln -f $f $DEST
 	done
 }
 #currently deploys "current pipeline"
