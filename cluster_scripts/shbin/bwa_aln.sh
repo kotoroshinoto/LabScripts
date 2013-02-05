@@ -1,5 +1,5 @@
 #!/bin/bash -x
-source /UCHC/HPC/Everson_HPC/custom_scripts/bin/ScriptSettings.lib.sh
+source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 echo "current dir: $CURDIR"
 bwa aln \

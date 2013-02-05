@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/custom_scripts/bin/run_qsub.sh
+HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh
 JOBSCRIPT=$1
 shift
 JOBNAME=$1
