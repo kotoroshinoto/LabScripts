@@ -2,6 +2,7 @@
 #currently deploys "current pipeline"
 chmod +x ./current_pipeline/*.sh 
 FILES=`ls ./current_pipeline/*.sh`
+FILES=$(echo $FILES | tr "\n" " ")
 echo "LINKING FILES: $FILES to $1"
 for f in FILES 
 do
