@@ -103,3 +103,6 @@ prepend-path LIBRARY_PATH /UCHC/HPC/Everson_HPC/ROOT/lib/root
 prepend-path CPLUS_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path C_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path ROOTSYS /UCHC/HPC/Everson_HPC/ROOT
+
+##MANPAGE stuff
+set-alias man "man -C /UCHC/HPC/Everson_HPC/cluster_scripts/configs/man.config"
