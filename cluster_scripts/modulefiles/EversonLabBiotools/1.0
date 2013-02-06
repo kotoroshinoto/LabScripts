@@ -45,7 +45,7 @@ setBiotoolPaths libJPEG 1 1 1 0 0 0 0 1
 setBiotoolPaths libXpm 1 1 1 0 0 0 0 1
 setBiotoolPaths annovar 1 0 0 0 0 0 0 0
 setBiotoolPaths BED_Tools 1 0 0 0 0 0 0 0
-setBiotoolPaths breakdancer 1 1 0 0 0 0 0 
+setBiotoolPaths breakdancer 1 1 0 0 0 0 0 0 
 setBiotoolPaths breakseq 1 0 0 0 0 0 0 0
 setBiotoolPaths bwa 1 0 0 0 0 0 0 1
 setBiotoolPaths CNVnator 1 0 0 0 0 0 0 0
