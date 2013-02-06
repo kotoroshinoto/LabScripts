@@ -62,7 +62,7 @@ function linkfiles {
 function BWA_per_file_pair {
 	linkfiles $1 $2 $3
 	createSJMfile_BWA $1
-	runSJMfile_BWA $1
+	#runSJMfile $1
 }
 
 rm $SJM_FILE
