@@ -4,7 +4,10 @@ LIST=`grep ^setBiotoolPaths ../modulefiles/EversonLabBiotools/1.0 | tr "\n" ";" 
 #echo $LIST
 
 function doMAN {
+if [ ${10} ] 
+then
 	echo "$2 ${10}"
+fi
 }
 
 for f in $LIST
