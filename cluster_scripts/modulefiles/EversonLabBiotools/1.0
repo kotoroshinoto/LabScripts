@@ -96,9 +96,10 @@ setBiotoolPaths hugeseq 1 0 0 0 0 0 0 0
 setBiotoolPaths perl 1 0 1 0 0 0 0 1
 setBiotoolPaths Shimmer 1 0 1 0 0 0 0 1
 setBiotoolPaths VarScan 1 0 0 0 0 0 0 0
+setBiotoolPaths conifer 0 0 0 0 0 0 1 0
 
 ##following tool not yet ready for use
-#setBiotoolPaths conifer
+
 
 
 ##the following are disabled due to changes in cluster environment, TORQE->SGE
