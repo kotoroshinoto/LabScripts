@@ -39,6 +39,7 @@ setBiotoolPaths clustal-omega 1 1 1 0 0 0 0 1
 setBiotoolPaths argtable 0 1 1 0 0 0 0 1
 setBiotoolPaths txt2man 1 0 0 0 0 0 0 1
 setBiotoolPaths cluster_scripts 1 0 0 0 1 1 1 0
+prepend-path PERL5LIB /home/CAM/mgooch/HPC/cluster_scripts/cgi-bin
 setBiotoolPaths serf 0 1 1 0 0 0 0 0
 setBiotoolPaths apr 1 1 1 0 0 0 0 0
 setBiotoolPaths subversion 1 1 1 0 0 0 0 1
