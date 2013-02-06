@@ -35,7 +35,7 @@ proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasP
 proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasPYbin} {
 	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64 $hasSHbin $hasCGIbin $hasPYbin
 }
-
+setBiotoolPaths cluster_scripts 1 0 0 0 1 1 1
 setBiotoolPaths serf 0 1 1 0 0 0 0
 setBiotoolPaths apr 1 1 1 0 0 0 0
 setBiotoolPaths subversion 1 1 1 0 0 0 0
@@ -82,7 +82,6 @@ setBiotoolPaths python-2.7 1 1 1 0 0 0 0
 setBiotoolPaths oracle_jdk/jdk1.7.0_06/jre 1 0 1 0 0 0 0
 setBiotoolPaths oracle_jdk/jdk1.7.0_06 1 1 1 0 0 0 0
 setBiotoolPaths hugeseq 1 0 0 0 0 0 0
-setBiotoolPaths cluster_scripts 1 0 0 0 1 1 1
 setBiotoolPaths perl 1 0 1 0 0 0 0
 setBiotoolPaths Shimmer 1 0 1 0 0 0 0
 setBiotoolPaths VarScan 1 0 0 0 0 0 0
