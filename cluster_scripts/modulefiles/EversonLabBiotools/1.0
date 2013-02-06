@@ -75,17 +75,17 @@ setBiotoolPaths tuxedo_tools/tophat 1 0 0 0 0 0 0 1
 #setBiotoolPaths tuxedo_tools/crossbow 1 0 0 0 0 0 0 1
 #setBiotoolPaths tuxedo_tools/cummeRbund 1 0 0 0 0 0 0 0
 #setBiotoolPaths tuxedo_tools/myrna 1 0 0 0 0 0 0 0
-setBiotoolPaths gtextutils-0.6 0 1 1 0 0 0 0
-setBiotoolPaths bamtools 1 1 1 0 0 0 0
-setBiotoolPaths BICseq 1 0 0 0 0 0 0
-setBiotoolPaths boost 0 1 1 1 0 0 0
-setBiotoolPaths python-2.7 1 1 1 0 0 0 0
-setBiotoolPaths oracle_jdk/jdk1.7.0_06/jre 1 0 1 0 0 0 0
-setBiotoolPaths oracle_jdk/jdk1.7.0_06 1 1 1 0 0 0 0
-setBiotoolPaths hugeseq 1 0 0 0 0 0 0
-setBiotoolPaths perl 1 0 1 0 0 0 0
-setBiotoolPaths Shimmer 1 0 1 0 0 0 0
-setBiotoolPaths VarScan 1 0 0 0 0 0 0
+setBiotoolPaths gtextutils-0.6 0 1 1 0 0 0 0 0
+setBiotoolPaths bamtools 1 1 1 0 0 0 0 0
+setBiotoolPaths BICseq 1 0 0 0 0 0 0 0
+setBiotoolPaths boost 0 1 1 1 0 0 0 0
+setBiotoolPaths python-2.7 1 1 1 0 0 0 0 1
+setBiotoolPaths oracle_jdk/jdk1.7.0_06/jre 1 0 1 0 0 0 0 0
+setBiotoolPaths oracle_jdk/jdk1.7.0_06 1 1 1 0 0 0 0 1
+setBiotoolPaths hugeseq 1 0 0 0 0 0 0 0
+setBiotoolPaths perl 1 0 1 0 0 0 0 1
+setBiotoolPaths Shimmer 1 0 1 0 0 0 0 1
+setBiotoolPaths VarScan 1 0 0 0 0 0 0 0
 
 ##following tool not yet ready for use
 #setBiotoolPaths conifer
