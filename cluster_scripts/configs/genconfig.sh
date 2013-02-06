@@ -2,11 +2,16 @@
 cp /etc/man.config .
 LIST=`grep ^setBiotoolPaths ../modulefiles/EversonLabBiotools/1.0 | tr "\n" ";" | tr " " "," | tr ";" " "`
 #echo $LIST
-
+PREFIX="/UCHC/HPC/Everson_HPC/"
+MANSUFFIX="/share/man"
+BINSUFFIX="/bin"
 function doMAN {
 if [ "${10}" -ne "0" ] 
 then
-	echo "$2 ${10}"
+	#echo "$2 ${10}"
+	echo "MANPATH $PREFIX$2$MANSUFFIX" >> ./man.config
+	echo "MANPATH_MAP $PREFIX$2$BINSUFFIX $PREFIX$2$MANSUFFIX" >> ./man.config
+	#MANPATH_MAP     /bin                    /usr/share/man
 fi
 }
 
