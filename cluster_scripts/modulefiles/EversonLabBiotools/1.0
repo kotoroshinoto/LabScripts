@@ -36,7 +36,7 @@ proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin 
 	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64 $hasSHbin $hasCGIbin $hasPYbin
 }
 
-setBiotoolPaths neon 1 1 1 0 0 0 0
+setBiotoolPaths serf 0 1 1 0 0 0 0
 setBiotoolPaths apr 1 1 1 0 0 0 0
 setBiotoolPaths subversion 1 1 1 0 0 0 0
 setBiotoolPaths sqlite 1 1 1 0 0 0 0
