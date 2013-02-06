@@ -1,5 +1,5 @@
-This directory is a workspace that will be used to edit and 
-eventually replace the old perl pipeline.
+This directory is where the old perl pipeline that was used on the TORQUE cluster 
+will reside until we decide it is safe to delete it.
 
 It will be disappearing from the repository once the old pipeline is reconfigured.
 
