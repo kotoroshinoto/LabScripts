@@ -5,7 +5,12 @@ LIST=`grep ^setBiotoolPaths ../modulefiles/EversonLabBiotools/1.0 | tr "\n" ";" 
 #LIST=$(echo $LIST | tr "\n" " ")
 echo $LIST
 
+function doMAN {
+	echo $2 $10
+}
+
 for f in $LIST
 do
-	echo $f
+	$MAN_INPUT=$(echo $f | tr "," " ")
+	doMAN $MAN_INPUT
 done
