@@ -1,0 +1,2 @@
+#!/bin/bash
+more /UCHC/HPC/Everson_HPC/EMBOSS/share/EMBOSS/doc/programs/text/$1.txt
