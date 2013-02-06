@@ -61,7 +61,7 @@ setBiotoolPaths pindel 1 0 0 0 0 0 0 0
 setBiotoolPaths R 1 0 0 1 0 0 0 1
 setBiotoolPaths Read_Name_Converter 1 0 0 0 0 0 0 0
 setBiotoolPaths samtools 1 1 1 0 0 0 0 1
-setBiotoolPaths SimpleJobManager 1 0 0 0 0 0 0 0
+setBiotoolPaths SimpleJobManager 1 0 0 0 0 0 0 1
 setBiotoolPaths StatGen 0 0 1 0 0 0 0 0
 setBiotoolPaths tclap 0 1 1 0 0 0 0 0
 setBiotoolPaths Trimmomatic 1 1 1 0 0 0 0 0
