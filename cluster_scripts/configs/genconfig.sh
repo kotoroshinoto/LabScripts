@@ -11,6 +11,6 @@ function doMAN {
 
 for f in $LIST
 do
-	$MAN_INPUT=$(echo $f | tr "," " ")
+	MAN_INPUT=$(echo $f | tr "," " ")
 	doMAN $MAN_INPUT
 done
