@@ -4,7 +4,7 @@ LIST=`grep ^setBiotoolPaths ../modulefiles/EversonLabBiotools/1.0 | tr "\n" ";" 
 #echo $LIST
 
 function doMAN {
-	echo "$2 $10"
+	echo "$2 ${10}"
 }
 
 for f in $LIST
