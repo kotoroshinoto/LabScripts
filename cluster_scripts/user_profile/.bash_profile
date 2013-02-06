@@ -7,3 +7,4 @@ module unload EversonLabBiotools/1.0 && module load EversonLabBiotools/1.0
 function listmake {
 	make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'
 }
+alias man="man -C /UCHC/HPC/Everson_HPC/cluster_scripts/configs/man.config"
