@@ -37,6 +37,8 @@ proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin 
 }
 setBiotoolPaths blas 0 0 1 0 0 0 0 0
 setenv BLAS /UCHC/HPC/Everson_HPC/blas/lib/libfblas.a
+setBiotoolPaths lapack 0 0 1 0 0 0 0 0
+setenv LAPACK /UCHC/HPC/Everson_HPC/lapack/lib/libflapack.a
 setBiotoolPaths clustal/clustalw 1 1 1 0 0 0 0 1
 setBiotoolPaths clustal/clustalo 1 1 1 0 0 0 0 1
 setBiotoolPaths argtable 0 1 1 0 0 0 0 1
