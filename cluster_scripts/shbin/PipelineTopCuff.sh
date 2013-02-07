@@ -10,8 +10,9 @@ GROUPLBL=$5
 SJM_FILE=./TopCuff.sjm
 
 function doTophat {
-	SJM_JOB TOPHAT_$1_$2 $BWA_RAM "tophat -p 8 --GTF $GENES --transcriptome-index $TRANSCRIPTOME -o $2 $BOWTIE2INDEX $1_1.fq $1_2.fq"
-	SJM_JOB_AFTER TOPHAT_$1_$2 LINKFILE_$1_$2
+	SJM_JOB TOPHAT_$1 $BWA_RAM "tophat -p 8 --GTF $GENES --transcriptome-index $TRANSCRIPTOME -o $2 $BOWTIE2INDEX $1_1.fq $1_2.fq"
+	SJM_JOB_AFTER TOPHAT_$1 LINKFILE_$1_1
+	SJM_JOB_AFTER TOPHAT_$1 LINKFILE_$1_2
 }
 
 function doCufflinks {
