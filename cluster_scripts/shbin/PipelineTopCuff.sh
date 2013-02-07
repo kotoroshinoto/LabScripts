@@ -33,8 +33,8 @@ function linkfiles {
 
 function doTopCuffPerFilePair {
 	linkfiles $1 $2 $3
-	doTophat $1
-	doCufflinks $1
+	doTophat $1 $1_TOPHAT
+	doCufflinks $1 $1_CUFFLINKS
 	#runSJMfile $1
 }
 
