@@ -16,7 +16,7 @@ function doTophat {
 }
 
 function doCufflinks {
-	SJM_JOB CUFFLINKS_$1 100G "cufflinks -p 8 -o $2 -g $GENES -b $GENOME -u $1"
+	SJM_JOB CUFFLINKS_$1 100G "cufflinks -p 8 -o $2 -g $GENES -b $GENOME -u $1_TOPHAT/accepted_hits.bam"
 	SJM_JOB_AFTER CUFFLINKS_$1 TOPHAT_$1
 }
 
