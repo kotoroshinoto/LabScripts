@@ -1,8 +1,0 @@
-This directory is a workspace that will be used to edit and 
-eventually replace the old perl pipeline.
-
-It will be disappearing from the repository once the old pipeline is reconfigured.
-
-the files currently in cgi-bin will be moved to cgi-bin-old when they are replaced 
-(so we still have them)
-

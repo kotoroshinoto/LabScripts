@@ -11,16 +11,9 @@ sub new {
 
 	$self->{SOURCE2} = undef;
 	$self->{ORIG2} = undef;
-	#read group labels use some combo of these as name prefix
-	#5 labels
-	$self->{ID} = undef;
-	$self->{LB} = undef;
-	$self->{PL} = undef;
-	$self->{PU} = undef;
-	$self->{SM} = undef;
 	bless($self); # but see below
 	return $self;
- } #either 7 or 9 columns
+ }
 
 sub readbatch{
 	#should implement slightly different format for paired end files
@@ -40,7 +33,7 @@ sub readbatch{
 		if(length($_) != 0){
 			#print "\n".'"'.$_.'"'."\n";
 			@splt=split("\t",$_);
-			if( @splt != 7 && @splt != 9 ){ 
+			if( @splt != 5 && @splt != 3 ){ 
 				print "Error on item: $_\n";
 				die  "bad batch format! wrong number columns (".scalar(@splt).")";
 			}
@@ -56,12 +49,6 @@ sub readbatch{
 
 				$files{$splt[4]}->{SOURCE2}=$splt[2];
 				$files{$splt[4]}->{ORIG2}=$splt[3];
-				
-				$files{$splt[4]}->{ID} = $splt[4];
-				$files{$splt[4]}->{LB} = $splt[5];
-				$files{$splt[4]}->{PL} = $splt[6];
-				$files{$splt[4]}->{PU} = $splt[7];
-				$files{$splt[4]}->{SM} = $splt[8];
 				#print("PAIRED! \n");
 			} else {#single-end entry
 				#source (tab) file (tab) label
@@ -71,12 +58,6 @@ sub readbatch{
 
 				$files{$splt[2]}->{SOURCE1}=$splt[0];
 				$files{$splt[2]}->{ORIG1}=$splt[1];
-				
-				$files{$splt[2]}->{ID} = $splt[2];
-				$files{$splt[2]}->{LB} = $splt[3];
-				$files{$splt[2]}->{PL} = $splt[4];
-				$files{$splt[2]}->{PU} = $splt[5];
-				$files{$splt[2]}->{SM} = $splt[6];
 				#print("NOT PAIRED! \n");
 			}
 		}
