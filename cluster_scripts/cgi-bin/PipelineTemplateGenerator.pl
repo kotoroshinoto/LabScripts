@@ -13,7 +13,7 @@ use Getopt::Long qw(:config no_ignore_case bundling);
 use Storable;
 use SampleData;
 use AnalysisPipeline;
-use Switch;
+use feature qw/switch/;
 use File::Basename;
 my $goodopts;
 our ( @inputOpts, @outputOpts, $templatename, @subjobOpts, $help );
