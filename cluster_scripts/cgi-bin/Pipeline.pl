@@ -32,34 +32,7 @@ $goodopts = GetOptions ("pipeline|P=s" => \$pipeline,	# list of steps to run IN 
 						"assumeSteps|A=s" => \$assume, #list of steps to assume were already run, assume order as well (acts like pipeline)
 						#"copyfiles" => \$copyfiles, #specify this to force cp instead of ln -s
 						"help|h" =>\$help);
-#how to define jobs for resolving file dependencies
-#steps separated by ':' imply nothing about linkage, assume no link unless otherwise specified
-#steps separated by '-' imply that JOBL is parent of JOBR
-#STEP1-STEP2-STEP3
 
-#can provide explicit parent-list by putting parent steps into square brackets and separating with ','
-#parent step name must have been defined previously in a left-to-right manner
-#examples:
-#STEP1:STEP2[STEP1]-STEP3 or 
-#STEP1:STEP2:STEP3[STEP1,STEP2] or 
-#STEP1:STEP2[STEP1]:STEP3[STEP2] (equivalent to STEP1-STEP2-STEP3)
-
-#multiple steps that are the children of a previous step can be combined into a parenthesis and separated by ','
-#all subsequent linking should be done either inside the parenthesis or by separating with : and continuing definitions
-#examples: 
-#STEP1-(STEP2,STEP3) <- both steps 2 and 3 are children of step1 but have no relation to each other 
-#STEP1-(STEP2_1-STEP2_2,STEP3_1-STEP3_2) <- STEP2_1 and STEP3_1 are children of STEP1, each has its own child
-#STEP1-(STEP2,STEP3):STEP4[STEP3]
-#STEP1:(STEP2,STEP3)[STEP1]:STEP4[STEP3] <-implies that both STEP2 and STEP3 are dependent on STEP1 and that STEP4 follows STEP3
-#STEP1:(STEP2,STEP3-STEP4)[STEP1]  <- same as immediately previous example
-
-#if assuming steps, pipeline steps can refer to assumed steps as their parents
-#these definitions will be read left-to-right, any unresolvable situation will result in an error
-#with these rules it should not be possible, but just in case: NO CIRCULAR DEPENDENCIES 
-#obvious the above rules imply that step names cannot contain any of these: -()[]:
-
-#TODO implement the above system
-#for now going with '-'
 if($help){
 	ShowUsage();
 }

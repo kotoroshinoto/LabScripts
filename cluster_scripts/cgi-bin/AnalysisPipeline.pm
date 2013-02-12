@@ -120,107 +120,62 @@ sub parseAssume{
 	for my $vertex(@assume_vertices){
 		#TODO mark done
 	}
-	return @assume_vertices; 
+	return uniq @assume_vertices; 
 }
-
 sub parsePipeline{
 	my $string=shift;
-	$string=PipelineUtil::trim($string);
-	my @parents=@_;#=uniq @_;
-	#print STDERR  "parsing: $string\n";
-	#if(scalar(@parents)){print STDERR  "\tparents: @parents\n";}
-	my @added_Vertices;#store them to return them
-	my ($openparenpos,$closeparenpos,$paren_err)=getParenthesisPositions($string);
-	my $parensub="";
-	if($paren_err){die "INVALID FORMAT (parentheses error)\n";}
-	if($openparenpos==0 && $closeparenpos>-1){
-		$parensub=substr($string,$openparenpos+1,$closeparenpos-$openparenpos-1);
-		my $rest=substr($string,$closeparenpos+1);
-		my $parentstr;
-		#my @parents;
-		#print STDERR  "balanced parenthesis found from $openparenpos to $closeparenpos; contained: $parensub\n";
-		if(charAt($rest,0) eq '['){
-			my $end=index($rest,']');
-			if($end != -1){
-				$parentstr=substr($rest,1,$end-1);
-				$rest=substr($rest,$end+1);
-				push (@parents,split(',',$parentstr));
-				#@parents=uniq @parents;
-				#print "\tusing parents: @parents\n";
-			}
-		}
-		if(charAt($rest,0) eq '-'){die "FORMAT ERROR (dash following parentheses)\n"};
-		if(charAt($rest,0) eq ':'){$rest=substr($rest,1)};
-		#print STDERR  "rest: $rest\n";
-		my @commasplit=splitCommaNotInParens($parensub);
-		for my $item (@commasplit){
-			if(scalar(@parents)){
-				push (@added_Vertices,parsePipeline($item,@parents));
-			} else {
-				push (@added_Vertices,parsePipeline($item));
-			}
-		}
-		if(defined($rest) && length ($rest)){push (@added_Vertices,parsePipeline($rest));}
-	} else {
-		my $parentstr="";
-		my $namestr="";
-		#my $commapos=index($string,',');
-		my $colonpos=index($string,':');
-		my $dashpos=index($string,'-');
-		#print STDERR "colonpos: $colonpos\n";
-		#print STDERR "dashpos: $dashpos\n";
-		if($colonpos == 0){die "INVALID FORMAT (colon at start of parse)\n";}
-		if($dashpos == 0){die "INVALID FORMAT (dash at start of parse)\n";}
-		if ($colonpos > 0 && ($colonpos < $dashpos || $dashpos <=0  ) ){
-			$namestr=substr($string,0,$colonpos);#012
-			my $rest=substr($string,$colonpos+1);
-			#ADD
-			parseBrackets($namestr,\$namestr,\@parents);
-			addStep($namestr,@parents);
-			push(@added_Vertices,$namestr);
-			#print STDERR  ("COLON SEPARATOR -> namestr: $namestr\n");
-			push(@added_Vertices,parsePipeline($rest));
-		} elsif ($dashpos > 0 && ( $dashpos < $colonpos || $colonpos <=0 ) ){
-			$namestr=substr($string,0,$dashpos);#012
-			my $rest=substr($string,$dashpos+1);
-			#print "parents before: @parents\n";
-			parseBrackets($namestr,\$namestr,\@parents);
-			#print "parents after: @parents\n";
-			#ADD
-			addStep($namestr,@parents);
-			push(@added_Vertices,$namestr);
-			#print STDERR ("DASH SEPARATOR -> namestr: $namestr\n");
-			push(@added_Vertices,parsePipeline($rest,$namestr));
+	my @splitcomma=split(',',$string);
+	my @splitdash;
+	my %jobdeps;
+	my @jobnames;
+	my ($step,$parent);
+	#print "splitcomma: @splitcomma\n";
+	for my $commaItem(@splitcomma){
+		#print "commaItem: $commaItem\n";
+		@splitdash=split('-',$commaItem);
+		#print "splitdash: @splitdash\n";
+		if(scalar(@splitdash)==2){
+			$step=$splitdash[1];
+			$parent=$splitdash[0];
 		} else {
-			#print STDERR "string: $string\n";
-			parseBrackets($string,\$namestr,\@parents);
-			#$namestr=$string;
-			if($namestr ne ""){
-				#ADD
-				addStep($namestr,@parents);
-				push(@added_Vertices,$namestr);
-			}
-			#print STDERR "namestr: $namestr\n";
+			$step=$splitdash[0];
+			$parent="";
 		}
+		#print STDERR "Declaring Step: $step\n";
+		#print STDERR "\thas_parent: $parent\n";
+		if(!defined($jobdeps{$step})){
+			$jobdeps{$step}=[];
+			push(@jobnames,$step);
+		}
+		if(defined($parent) && length($parent) > 0 && !defined($jobdeps{$parent})){
+			$jobdeps{$parent}=[];
+			push(@jobnames,$parent);
+		}
+		push(@{$jobdeps{$step}},$parent);
 	}
-	return @added_Vertices;
+	for my $job(@jobnames){
+		#print "adding Step: $job with parents @{$jobdeps{$job}}\n";
+		addStep($job,@{$jobdeps{$job}});
+	}
+	return uniq @jobnames;
 }
+
+
 sub parseBrackets{
 	my $string=shift;
 	my $namestr=shift;
-	my $parents=shift;
+	my $brackets=shift;
 	my $start=index($string,'[');
 	my $end=index($string,']');
-	my $parentstr;
 	
 	if($start > 0){
 		if($end > 0){
 			#print STDERR "string: $string\n";
-			$parentstr=substr($string,$start+1,$end-$start-1);
+			${$brackets}=substr($string,$start+1,$end-$start-1);
 			#print STDERR "parentstr: $parentstr\n";
 			${$namestr}=substr($string,0,$start);
 			#print STDERR "namestr: ${$namestr}\n";
-			push (@{$parents},split(',',$parentstr));
+			
 		} else {
 			die "INVALID FORMAT (unpaired '[')\n";
 		}
@@ -231,6 +186,7 @@ sub parseBrackets{
 	}
 }
 
+
 sub addStep{
 	my $StepName=shift;
 	my @parents=uniq @_;
@@ -240,70 +196,22 @@ sub addStep{
 		require_jobdef($StepName);
 	}
 	for my $parent(@parents){
-		if(! $jobNameGraph->has_vertex($parent)){
-			die("SYNTAX ERROR, Step \"$parent\" used as parent before it was defined\n");
+		if(defined($parent) && length($parent)>0){
+			if(! $jobNameGraph->has_vertex($parent)){
+				$jobNameGraph->add_vertex($parent);
+				require_jobdef($parent);
+				#die("SYNTAX ERROR, Step \"$parent\" used as parent before it was defined\n");
+			}
+			if(! $jobNameGraph->has_edge($parent,$StepName)){
+				$jobNameGraph->add_edge($parent,$StepName);
+			}
 		}
-		if(! $jobNameGraph->has_edge($parent,$StepName)){
-			$jobNameGraph->add_edge($parent,$StepName);
-		}
-		
+	}
+	if($jobNameGraph->has_a_cycle){
+		die "JobGraph became cyclic! Cannot issue cyclic jobs!\n";
 	}
 }
-sub splitCommaNotInParens{
-	my @splitresult;
-	my $string=shift;
-	#print STDERR "splitting: $string\n";
-	my $parenlayer=0;
-	my $char;
-	my $badformat=0;
-	my $word="";
-	for(my $i=0;$i<length($string) && !$badformat;++$i){
-		$char=charAt($string,$i);
-		if($char eq '('){
-			++$parenlayer;
-		}elsif($char eq ')'){
-			--$parenlayer;
-			if($parenlayer==-1){$badformat=1;}
-		}
-		if($char eq ',' && $parenlayer == 0){
-			push (@splitresult,$word);
-			$word="";
-		}else {
-			$word.=$char;
-		}
-	}
-	push (@splitresult,$word);
-	if($badformat){
-		die("INVALID FORMAT (parentheses error)\n");
-	}
-	return @splitresult;
-}
-sub getParenthesisPositions{
-	my $string=shift;
-	my (@positions)=(-1,-1,0);
-	my $parenfound=0;
-	my $parenlayer=0;
-	my $char;
-	my $badformat=0;
-	my $done=0;
-	for(my $i=0;$i<length($string) && !$done;++$i){
-		$char=charAt($string,$i);
-		if($char eq '('){
-			if(!$parenfound){$positions[0]=$i;}
-			$parenfound=1;
-			++$parenlayer;
-		}elsif($char eq ')'){
-			if(!$parenfound){$badformat=1;$done=1;}
-			--$parenlayer;
-			if($parenlayer==-1){$badformat=1;$done=1;}
-			if($parenfound && $parenlayer==0){$positions[1]=$i;$done=1;}
-		}
-	}
-	if($badformat){
-		@positions=(-1,-1,1)#no values and indicate error
-	}
-	return @positions;
-}
+
 sub charAt { return substr($_[0],$_[1],1); }
 
 sub require_jobdef{
@@ -409,6 +317,7 @@ sub new {
 	my $class = shift;
 	my $self = {};
 	$self->{name}= undef;
+	$self->{subname}= undef;#used when defining multiple jobs that use same template, will be appended to name
 	$self->{memory}= undef;
 	$self->{queue}= undef;
 	$self->{module}= undef;
