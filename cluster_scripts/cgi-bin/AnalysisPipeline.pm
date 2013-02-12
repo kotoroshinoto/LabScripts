@@ -79,31 +79,35 @@ use warnings;
 use Graph;#http://search.cpan.org/~jhi/Graph-0.94/lib/Graph.pod
 use List::Util qw( min );
 use List::MoreUtils qw(uniq);
-our $GROUPLBL="";
-our $SJM_FILE="";
+our %SettingsLib;
+$SettingsLib{"PREFIX"}="";
+$SettingsLib{"GROUPLBL"}="";
+$SettingsLib{"SJM_FILE"}="";
 #REST ARE OK FOR NOW
-our $HANDLER_SCRIPT="/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh";
-our $GENOME="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa";
-our $BWAINDEX="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa";
-our $BOWTIEINDEX="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg19";
-our $BOWTIE2INDEX="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE2/ucsc.hg19";
-our $DBSNP="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf";
-our $GENES="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf";
-our $TRANSCRIPTOME="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes";
-our $MINQUAL=30;
-our $MAPQUAL=40;
-our $GENOME_TYPE="hg19";
+$SettingsLib{"HANDLER_SCRIPT"}="/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh";
+$SettingsLib{"GENOME"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa";
+$SettingsLib{"BWAINDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa";
+$SettingsLib{"BOWTIEINDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg19";
+$SettingsLib{"BOWTIE2INDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE2/ucsc.hg19";
+$SettingsLib{"DBSNP"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf";
+$SettingsLib{"GENES"}="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf";
+$SettingsLib{"TRANSCRIPTOME"}="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes";
+$SettingsLib{"MODULEFILE"}="EversonLabBiotools/1.0";
+$SettingsLib{"JOBQUEUE"}="all.q";
+$SettingsLib{"MINQUAL"}=30;
+$SettingsLib{"MAPQUAL"}=40;
+$SettingsLib{"GENOME_TYPE"}="hg19";
 #MEMORY SETTINGS
 #CURRENT JOB Memory: 40GiB -> 40960MiB
-our $JAVA_RAM="33G";
+$SettingsLib{"JAVA_RAM"}="33G";
 #roughly 250,000 per GB
-our $MRECORDS=250,000*33;
-our $TARGET_BED="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
-our $CURDIR=PipelineUtil::trim(abs_path(File::Spec->curdir()));
-our $BWA_RAM="10G";
-our $JAVA_JOB_RAM="50G";
-our $SHIMMER_RAM="20G";
-our $GENERIC_JOB_RAM="30G";
+$SettingsLib{"MRECORDS"}=250,000*33;
+$SettingsLib{"TARGET_BED"}="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
+$SettingsLib{"CURDIR"}=PipelineUtil::trim(abs_path(File::Spec->curdir()));
+$SettingsLib{"BWA_RAM"}="10G";
+$SettingsLib{"JAVA_JOB_RAM"}="50G";
+$SettingsLib{"SHIMMER_RAM"}="20G";
+$SettingsLib{"GENERIC_JOB_RAM"}="30G";
 our %jobtemplates;#list of job templates that will be used for generating the jobSteps
 our $jobNameGraph=Graph->new(directed=>1,refvertexed=>1);#graph of jobnames
 our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
@@ -113,7 +117,18 @@ our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
 #options will be: split_by_sample && split_by_step
 #split_by_sample will not have any effect if a job unit pairs files across samples, 
 #as there is no way to do this.
-
+sub replaceVars{
+	my $str=shift;
+	my $search;
+	my $replace;
+	for my $key(keys(%SettingsLib)){
+		$search='\$'.$key;
+		$replace=$SettingsLib{$key};
+		#print "search $search : replace $replace\n";
+		$str=~s/$search/$replace/g;
+	}
+	return $str;
+}
 sub parseAssume{
 	my $string=shift;
 	my @assume_vertices=parsePipeline($string);#store them to mark them "done" and then return them
@@ -252,23 +267,7 @@ sub getOutputPrefix {
 	my $self=shift;
 	my $inputfile=shift;
 }
-sub test {
-	my $t;
-	$GROUPLBL="PT0";
-	$t=PipelineUtil::SJM_JOB('BWA_ALN_FILE_1', $BWA_RAM, q(bwa aln -t 10 $BWAINDEX FILE_1.fq -f FILE_1.fq.aligned));
-	#print STDERR  $t."\n";
-	my $job=q(print STDERR ").$t.q(";);
-	print STDERR  $job,"\n";
-	$job =~ s/\n/\\n/g;
-	print STDERR  $job,"\n";
-	if(!defined(eval $job)){
-		print STDERR  $@,"\n";
-	} else {
-		#print STDERR  $t,"\n";
-	}
-	#my $derp=q(print STDERR $BWA_RAM,"\n";);
-	#eval $derp;
-}
+
 sub parselines {
 	
 }
@@ -285,17 +284,41 @@ sub new {
 	#list of files this step creates
 	#(only need to include files that will be used by other steps)
 	$self->{outputs}={};
-	$self->{substeps}=();#list of subjobs, in order, that compose this step
+	$self->{substeps}=[];#list of subjobs, in order, that compose this step
 	#jobs that this job depends on (uses the output of) 
 	#cannot have conflicting output declarations, 
 	#each declared input variable must only be defined by one or the other parent step
 	#most steps should only have 1 parent
-	$self->{parents}=();
+	$self->{parents}=[];
 	#jobs that are children of this job
-	$self->{children}=();
+	$self->{children}=[];
 	bless($self, $class);
 	return $self;
 }
+sub toTemplateString{
+	my $self=shift;
+	my $str="";
+	for my $i(@{$self->{substeps}}) {
+		$str.=$i->toTemplateString();		
+	}
+	return $str;
+}
+
+sub toString{
+	my $self=shift;
+	my $prefix=shift;
+	my $grouplbl=shift;
+	my $sjm_file=shift;
+	${AnalysisPipeline::SettingsLib}{"PREFIX"}=$prefix;
+	${AnalysisPipeline::SettingsLib}{"GROUPLBL"}=$grouplbl;
+	${AnalysisPipeline::SettingsLib}{"SJM_FILE"}=$sjm_file;
+	my $str="";
+	for my $i(@{$self->{substeps}}){
+		$str.=$i->toString();		
+	}
+	return $str;
+}
+1;
 	
 package PipelineSubStep;#individual_SJM_JOB
 use strict;
@@ -323,17 +346,68 @@ sub new {
 	$self->{module}= undef;
 	$self->{directory}= undef;
 	$self->{status}= undef;#waiting,failed,done
-	$self->{cmd}= ();#list of commands if only 1 member will output in single command mode
+	$self->{cmd}= [];#list of commands if only 1 member will output in single command mode
 	#following not really needed to generate new jobs, but if parsing an SJM file, it will be good to have placeholders
 	$self->{id}= undef;
 	$self->{cpu_usage}= undef;
 	$self->{wallclock}= undef;
 	$self->{memory_usage}= undef;
 	$self->{swap_usage}= undef;
-	$self->{dependencies}=();#list of jobnames that this job must wait for
+	#list of jobnames that this job must wait for
+	$self->{order_after}=[];
 	
 	bless($self, $class);
 	return $self;
+}
+sub getName {
+	my $self = shift;
+	my $str="";
+	if(defined($self->{name})){
+		if(defined($self->{subname})){
+			$str.=$self->{name}."_".$self->{subname};
+		} else {
+			$str.=$self->{name};
+		}
+	}
+	return $str;
+}
+sub toTemplateString {
+	my $self = shift;
+	my $str="";
+	$str.="job_begin\n";
+	if(defined($self->{name})){
+		$str.="\tname ".$self->getName($str)."\n";
+	}
+	if(defined($self->{memory})){
+		$str.="\tmemory ".$self->{memory}."\n";
+	}
+	if(defined($self->{queue})){
+		$str.="\tqueue ".$self->{queue}."\n";
+	}
+	if(defined($self->{module})){
+		$str.="\tmodule ".$self->{module}."\n";
+	}
+	if(defined($self->{directory})){
+		$str.="\tdirectory ".$self->{directory}."\n";
+	}
+	if(defined($self->{status})){
+		$str.="\tstatus ".$self->{status}."\n";
+	}
+	if(defined($self->{cmd})){
+		$str.="\tcmd ".$self->{cmd}."\n";
+	}
+	$str.="job_end\n";
+	if(defined($self->{order_after})){
+		for my $item(@{$self->{order_after}}){
+			$str.="order ".$self->getName($str)." after ".$item."\n";
+		}
+	}
+	return $str;
+}
+
+sub toString {
+	my $self =shift;
+	return AnalysisPipeline::replaceVars($self->toTemplateString());
 }
 
 sub parsejob {
