@@ -20,3 +20,25 @@ C<EXE_FILES: >
 
 =back
 
+=head2 Tue Feb 12 05:44:36 2013: C<Module> L<List::MoreUtils|List::MoreUtils>
+
+=over 4
+
+=item *
+
+C<installed into: /drives/c/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.33>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+

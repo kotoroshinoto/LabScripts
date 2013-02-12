@@ -1,7 +1,9 @@
 #!/usr/bin/env perl
 #these libs are defined so testing in windows with mobaxterm works.
 use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
 use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
 use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
 
 use strict;
@@ -14,9 +16,6 @@ use SampleData;
 use AnalysisPipeline;
 use Switch;
 use File::Basename;
-
-use Graph;
-
 
 #make script args global
 my $goodopts;
@@ -79,30 +78,15 @@ my ($i,$step);
 
 
 $assume=uc($assume);#forcing uppercase is a cheap way to ignore case of input -> requires all checked text to also be uppercase
-@assumeSteps=split("-",$assume);
-for ($i=0;$i < scalar(@assumeSteps);++$i ){
-	$assumeSteps[$i]=PipelineUtil::trim($assumeSteps[$i]);
-}
-print "# of steps to assume: ".scalar(@assumeSteps)."\n";
-
-
+@assumeSteps=AnalysisPipeline::parseAssume($assume);
 $pipeline=uc($pipeline);#forcing uppercase is a cheap way to ignore case of input -> requires all checked text to also be uppercase
-@pipelineSteps=split("-",$pipeline);
-for ($i=0;$i < scalar(@pipelineSteps);++$i ){
-	$step=$pipelineSteps[$i];
-	$step=PipelineUtil::trim($step);
-	$pipelineSteps[$i]=$step;
-}
-print "# of steps to run: ".scalar(@pipelineSteps)."\n";
+@pipelineSteps=AnalysisPipeline::parsePipeline($pipeline);
 if(scalar(@assumeSteps) + scalar(@pipelineSteps) ==0){ShowUsage ("no pipeline specified!\n");}
-DefineBuiltInSteps();
+print "Step Graph: ${AnalysisPipeline::jobNameGraph}\n";
+
 #TODO allow defining custom steps, not a super-high priority
 
 exit( main(scalar(@ARGV),\@ARGV) );
-
-sub DefineBuiltInSteps {
-	#%StepsDefined#Store all defined pipelinesteps in this hash in a name=>object fashion
-}
 
 sub main {
 	my $argc=shift;
