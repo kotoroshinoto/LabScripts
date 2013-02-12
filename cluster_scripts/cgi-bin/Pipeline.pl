@@ -9,6 +9,7 @@ use AnalysisPipeline;
 use Switch;
 use File::Basename;
 
+
 #make script args global
 my $goodopts;
 our ($pipeline,$assume,@assumeSteps,$listtxt,$pairstxt,$jobfile,@pipelineSteps,%StepsDefined,$copyfiles);
@@ -44,7 +45,7 @@ my ($i,$step);
 $assume=uc($assume);#forcing uppercase is a cheap way to ignore case of input -> requires all checked text to also be uppercase
 @assumeSteps=split("-",$assume);
 for ($i=0;$i < scalar(@assumeSteps);++$i ){
-	$assumeSteps[$i]=trim($assumeSteps[$i]);
+	$assumeSteps[$i]=PipelineUtil::trim($assumeSteps[$i]);
 }
 print "# of steps to assume: ".scalar(@assumeSteps)."\n";
 
@@ -53,7 +54,7 @@ $pipeline=uc($pipeline);#forcing uppercase is a cheap way to ignore case of inpu
 @pipelineSteps=split("-",$pipeline);
 for ($i=0;$i < scalar(@pipelineSteps);++$i ){
 	$step=$pipelineSteps[$i];
-	$step=trim($step);
+	$step=PipelineUtil::trim($step);
 	$pipelineSteps[$i]=$step;
 }
 print "# of steps to run: ".scalar(@pipelineSteps)."\n";
@@ -85,6 +86,11 @@ sub main {
 		if($i==0){print STDERR " <---STARTING JOBS HERE\n";}
 		print STDERR ("\n")
 	}
+	#example of how to use variables in a template using eval:
+	#my $derp=q(print "arg count: $argc, arguments: @argv");
+	#eval $derp;
+	#print "${PipelineStep::CURDIR}\n";
+	
 	return 0;
 }
 
@@ -107,32 +113,7 @@ sub BWA_ALIGN_Pipeline {}
 sub TOPHAT_ALIGN_Pipeline {}
 #Preparatory steps (filtering, sorting, reworking BAM file for requirements of tools)
 sub GATK_PREP_Pipeline {}
-sub FILTERBAM_Pipeline {}
+sub FILTER_READS_Pipeline {}
 #Analysis steps
-sub VARIANTCALL_Pipeline {}
+sub CALL_VARIANTS_Pipeline {}
 sub RNACUFF_Pipeline {}
-
-# Trim both sides to remove leading/trailing whitespace
-sub trim {
-	my $string = shift;
-	if(!defined($string)){return "";}
-	$string =~ s/^\s+//;
-	$string =~ s/\s+$//;
-	return $string;
-}
-
-# Left trim function to remove leading whitespace
-sub ltrim {
-	my $string = shift;
-	if(!defined($string)){return "";}
-	$string =~ s/^\s+//;
-	return $string;
-}
-
-# Right trim function to remove trailing whitespace
-sub rtrim {
-	my $string = shift;
-	if(!defined($string)){return "";}
-	$string =~ s/\s+$//;
-	return $string;
-}
