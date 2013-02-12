@@ -1,8 +1,13 @@
 #!/usr/bin/env perl
-# Trim both sides to remove leading/trailing whitespace
+#these libs are defined so testing in windows with mobaxterm works.
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+
 package PipelineUtil;
 use strict;
 use warnings;
+# Trim both sides to remove leading/trailing whitespace
 sub trim {
 	my $string = shift;
 	if(!defined($string)){return "";}
@@ -63,7 +68,12 @@ sub SJM_JOB_AFTER {
 1;
 
 package AnalysisPipeline;
-#TODO fix this and remove the next 2 variables, they're not needed for perl
+use Cwd;
+use Cwd 'abs_path';
+use File::Spec;
+use File::Basename;
+use strict;
+use warnings;
 our $GROUPLBL="";
 our $SJM_FILE="";
 #REST ARE OK FOR NOW
@@ -84,12 +94,47 @@ our $JAVA_RAM="33G";
 #roughly 250,000 per GB
 our $MRECORDS=250,000*33;
 our $TARGET_BED="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
-our $CURDIR=PipelineUtil::trim(`pwd -P`);
+our $CURDIR=PipelineUtil::trim(abs_path(File::Spec->curdir()));
 our $BWA_RAM="10G";
 our $JAVA_JOB_RAM="50G";
 our $SHIMMER_RAM="20G";
 our $GENERIC_JOB_RAM="30G";
+our %jobtemplates;#list of job templates that will be used for generating the jobSteps
+our $jobSteps_head;#head of doubly linked list of job steps that will be used for generating sjm files
+our $jobSteps_tail;#tail of above doubly linked list
+#method of output depends on options, 
+#will run generator once for each set of inputs, 
+#but may end up generating one or several jobfiles for each step or for the whole job.
+#options will be: split_by_sample && split_by_step
+#split_by_sample will not have any effect if a job unit pairs files across samples, 
+#as there is no way to do this.
 
+
+sub require_jobdef{
+	my $step_name=shift;
+	#TODO check if jobname is already defined / loaded
+	#if not found, check if a template exists & load it
+	my $path=TemplateDir();
+	my $file=File::Spec->catfile($path,uc($step_name).'.sjt');
+	unless (load_template($file)) {
+		print STDERR "There is no template for step \"$step_name\" & it is not defined manually\n";
+	}
+}
+sub load_template {
+	my $filename=shift;
+	print STDERR "loading template: $filename\n";
+	unless (-e $filename){
+		return 0;
+	}
+	#TODO load template
+	return 1;
+}
+sub TemplateDir{
+	my($filename, $directories, $suffix) = fileparse($0);
+	my $templatedir=abs_path("$directories");
+	$templatedir=File::Spec->catdir($templatedir,'jobtemplates');
+	#print "$templatedir\n";
+}
 sub new {
 	my $class = shift;
 	my $self = {};
@@ -125,7 +170,30 @@ sub parselines {
 }
 1;
 
-package PipelineStep;
+package PipelineStep;#template file unit
+
+sub new {
+	my $class = shift;
+	my $self = {};
+	#list of files this pipeline uses
+	#(only need to include files produced by previous steps that you need)
+	$self->{inputs}={};
+	#list of files this step creates
+	#(only need to include files that will be used by other steps)
+	$self->{outputs}={};
+	$self->{substeps}=();#list of subjobs, in order, that compose this step
+	#jobs that this job depends on (uses the output of) 
+	#cannot have conflicting output declarations, 
+	#each declared input variable must only be defined by one or the other parent step
+	#most steps should only have 1 parent
+	$self->{parents}=();
+	#jobs that are children of this job
+	$self->{children}=();
+	bless($self, $class);
+	return $self;
+}
+	
+package PipelineSubStep;#individual_SJM_JOB
 use strict;
 use warnings;
 	#example job from a status file:
@@ -158,10 +226,8 @@ sub new {
 	$self->{memory_usage}= undef;
 	$self->{swap_usage}= undef;
 	$self->{dependencies}=();#list of jobnames that this job must wait for
-	$self->{inputs}={};#list of files this step uses (only need to include files produced by previous steps)
-	$self->{outputs}={};#list of files this step creates (only need to include files that will be used by other steps)
 	
-	bless($self, $class); # but see below
+	bless($self, $class);
 	return $self;
 }
 

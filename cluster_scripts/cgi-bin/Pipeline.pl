@@ -1,13 +1,21 @@
 #!/usr/bin/env perl
-use Cwd;
+#these libs are defined so testing in windows with mobaxterm works.
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+
 use strict;
 use warnings;
+use Cwd;
+use Cwd 'abs_path';
 use Getopt::Long qw(:config no_ignore_case bundling);
 use Storable;
 use SampleData;
 use AnalysisPipeline;
 use Switch;
 use File::Basename;
+
+use Graph;
 
 
 #make script args global
@@ -23,13 +31,41 @@ $goodopts = GetOptions ("pipeline|P=s" => \$pipeline,	# list of steps to run IN 
 						"list|L=s"   => \$listtxt,	# list of files
 						"pairs|p=s"  => \$pairstxt,	#file with list of sample pairs (only needed for steps that use more than 1 sample)
 						"assumeSteps|A=s" => \$assume, #list of steps to assume were already run, assume order as well (acts like pipeline)
-						"copyfiles" => \$copyfiles, #specify this to force cp instead of ln -s
+						#"copyfiles" => \$copyfiles, #specify this to force cp instead of ln -s
 						"help|h" =>\$help);
+#how to define jobs for resolving file dependencies
+#steps separated by ':' imply nothing about linkage, assume no link unless otherwise specified
+#steps separated by '-' imply that JOBL is parent of JOBR
+#STEP1-STEP2-STEP3
+
+#can provide explicit parent-list by putting parent steps into square brackets and separating with ','
+#parent step name must have been defined previously in a left-to-right manner
+#examples:
+#STEP1:STEP2[STEP1]-STEP3 or 
+#STEP1:STEP2:STEP3[STEP1,STEP2] or 
+#STEP1:STEP2[STEP1]:STEP3[STEP2] (equivalent to STEP1-STEP2-STEP3)
+
+#multiple steps that are the children of a previous step can be combined into a parenthesis and separated by ','
+#all subsequent linking should be done either inside the parenthesis or by separating with : and continuing definitions
+#examples: 
+#STEP1-(STEP2,STEP3) <- both steps 2 and 3 are children of step1 but have no relation to each other 
+#STEP1-(STEP2_1-STEP2_2,STEP3_1-STEP3_2) <- STEP2_1 and STEP3_1 are children of STEP1, each has its own child
+#STEP1-(STEP2,STEP3):STEP4[STEP3]
+#STEP1:(STEP2,STEP3)[STEP1]:STEP4[STEP3] <-implies that both STEP2 and STEP3 are dependent on STEP1 and that STEP4 follows STEP3
+#STEP1:(STEP2,STEP3-STEP4)[STEP1]  <- same as immediately previous example
+
+#if assuming steps, pipeline steps can refer to assumed steps as their parents
+#these definitions will be read left-to-right, any unresolvable situation will result in an error
+#with these rules it should not be possible, but just in case: NO CIRCULAR DEPENDENCIES 
+#obvious the above rules imply that step names cannot contain any of these: -()[]:
+
+#TODO implement the above system
+#for now going with '-'
 if($help){
 	ShowUsage();
 }
-if(!defined($copyfiles)){$copyfiles=0;}
-print "copyfiles: $copyfiles\n";
+#if(!defined($copyfiles)){$copyfiles=0;}
+#print "copyfiles: $copyfiles\n";
 if(!defined($pairstxt)){$pairstxt="./pairs.txt";}
 print STDERR "pairs: \"$pairstxt\"\n";
 if(!defined($listtxt)){$listtxt="./files.txt";}
@@ -83,7 +119,7 @@ sub main {
 		$step=$pipelineSteps[$i];
 		++$item;
 		print STDERR ("Step $item: $step");
-		if($i==0){print STDERR " <---STARTING JOBS HERE\n";}
+		if($i==0){print STDERR " <---STARTING JOBS HERE";}
 		print STDERR ("\n")
 	}
 	#example of how to use variables in a template using eval:

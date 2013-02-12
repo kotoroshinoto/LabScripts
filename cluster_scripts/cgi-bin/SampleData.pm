@@ -1,4 +1,9 @@
 #!/usr/bin/env perl
+#these libs are defined so testing in windows with mobaxterm works.
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+
 package SampleData;
 use strict;
 sub new {
