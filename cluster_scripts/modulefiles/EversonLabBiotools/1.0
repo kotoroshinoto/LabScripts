@@ -35,6 +35,7 @@ proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasP
 proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasPYbin hasman} {
 	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64 $hasSHbin $hasCGIbin $hasPYbin
 }
+setBiotoolPaths gnuplot 1 0 0 0 0 0 0 1
 setBiotoolPaths EIGEN 0 1 1 0 0 0 0 0
 setBiotoolPaths VIENNA 1 1 1 0 0 0 0 1
 setBiotoolPaths HDF5 1 1 1 0 0 0 0 0
