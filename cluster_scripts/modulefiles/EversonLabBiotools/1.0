@@ -17,11 +17,13 @@ proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasP
 	if {$haslib != 0} {
 		prepend-path LD_LIBRARY_PATH "$path/lib"
 		prepend-path LIBRARY_PATH "$path/lib"
+		prepend-path LD_RUN_PATH "$path/lib"
 		prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib"
 	}
 	if {$haslib64 != 0} {
 		prepend-path LD_LIBRARY_PATH "$path/lib64"
 		prepend-path LIBRARY_PATH "$path/lib64"
+		prepend-path LD_RUN_PATH "$path/lib64"
 		prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib64"
 	}
 	if {$hasSHbin != 0} {
