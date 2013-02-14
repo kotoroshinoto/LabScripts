@@ -61,6 +61,7 @@ setBiotoolPaths serf 0 1 1 0 0 0 0 0
 setBiotoolPaths apr 1 1 1 0 0 0 0 0
 setBiotoolPaths subversion 1 1 1 0 0 0 0 1
 setBiotoolPaths sqlite 1 1 1 0 0 0 0 1
+setBiotoolPaths libGD 1 1 1 0 0 0 0 0
 setBiotoolPaths libPNG 1 1 1 0 0 0 0 1
 setBiotoolPaths libTIFF 1 1 1 0 0 0 0 1
 setBiotoolPaths libJPEG 1 1 1 0 0 0 0 1
