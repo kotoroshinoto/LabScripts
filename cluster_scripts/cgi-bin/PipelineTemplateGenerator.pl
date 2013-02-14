@@ -52,9 +52,8 @@ if(!parseSubjobs($template,@subjobOpts)){
 } else {
 	#print STDERR "subjobOpts: @subjobOpts\n";
 }
-
-print $template->toTemplateString(),"\n\n\n";
-print $template->toString('prefix','grouplbl','sjm_file');
+#print $template->toTemplateString();
+#print $template->toString('prefix','grouplbl','sjm_file');
 sub parseIOPuts{
 	#TODO make it so arguments get read in a way that helps first job gets its input from Pipeline.pl arguments
 	#TODO and the rest can use output values of previous jobs

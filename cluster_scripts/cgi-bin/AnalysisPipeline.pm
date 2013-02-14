@@ -295,6 +295,21 @@ sub new {
 	bless($self, $class);
 	return $self;
 }
+
+sub addInput {
+	my $self = shift;
+	my $type=shift;
+	my $name;
+	my $conversion;#use this to get filenames when its the first
+}
+
+sub addOutput {
+	my $self = shift;
+	my $type=shift;
+	my $name;
+	my $conversion;#use this to get filenames when its the first
+}
+
 sub toTemplateString{
 	my $self=shift;
 	my $str="";
