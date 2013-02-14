@@ -12,19 +12,19 @@ proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasP
 	if {$hasinclude != 0} {
 		prepend-path CPLUS_INCLUDE_PATH "$path/include"
 		prepend-path C_INCLUDE_PATH "$path/include"
-		prepend-path -d " " CMAKE_INCLUDE_PATH "$path/include" 
+		#prepend-path -d " " CMAKE_INCLUDE_PATH "$path/include" 
 	}
 	if {$haslib != 0} {
 		prepend-path LD_LIBRARY_PATH "$path/lib"
 		prepend-path LIBRARY_PATH "$path/lib"
 		prepend-path LD_RUN_PATH "$path/lib"
-		prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib"
+		#prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib"
 	}
 	if {$haslib64 != 0} {
 		prepend-path LD_LIBRARY_PATH "$path/lib64"
 		prepend-path LIBRARY_PATH "$path/lib64"
 		prepend-path LD_RUN_PATH "$path/lib64"
-		prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib64"
+		#prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib64"
 	}
 	if {$hasSHbin != 0} {
 		prepend-path PATH "$path/shbin"	
@@ -35,7 +35,7 @@ proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasP
 	if {$hasPYbin != 0} {
 		prepend-path PATH "$path/pybin"
 	}
-	prepend-path -d " " CMAKE_PREFIX_PATH $path
+	#prepend-path -d " " CMAKE_PREFIX_PATH $path
 }
 
 proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasPYbin hasman} {
