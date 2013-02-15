@@ -16,15 +16,16 @@ use AnalysisPipeline;
 use feature qw/switch/;
 use File::Basename;
 my $goodopts;
-our ( @inputOpts, @outputOpts, $templatename, @subjobOpts, $help );
+our ( $suffix, $templatename, @subjobOpts, $clearsuffixes, @vars,$help );
 our( @jobs ,$template);
 $template=PipelineStep->new();
 $goodopts = GetOptions(
-	"input|I=s"    => \@inputOpts,
-	"output|O=s"   => \@outputOpts,
-	"template|T=s" => \$templatename,
-	"subjob|S=s"   => \@subjobOpts,
-	"help|h"       => \$help
+	"variable|V=s"      => \@vars, #define convenience variables to replace first
+	"clearsuffixes|C" => \$clearsuffixes, #setting this flag indicates that this step should completely rename its output, ignoring accumulated suffixes and restarting the accumulation.
+	"suffix|S=s"      => \$suffix, #this suffix should be carried over into filenames using $ADJPREFIX by appending accumulated suffixes to $PREFIX
+	"template|T=s"    => \$templatename,
+	"subjob|J=s"      => \@subjobOpts,
+	"help|h"          => \$help
 );
 my $showusage=0;
 
@@ -33,47 +34,56 @@ if(!defined($templatename)){
 }else{
 	#print STDERR "template: $templatename\n";
 }
-if(scalar(@inputOpts)+scalar(@outputOpts) == 0){
-	print STDERR "Must have at least 1 input or output\n";$showusage=1;
-} else {
-	if(!parseIOPuts($template->{inputs},@inputOpts)){
-		print STDERR "problem parsing inputs\n";$showusage=1;
-	} else {
-		#print "inputs: @inputOpts\n";
-	}
-	if(!parseIOPuts($template->{outputs},@outputOpts)){
-		print STDERR "problem parsing outputs\n";$showusage=1;
-	} else {
-		#print "outputs: @outputOpts\n";
-	}
+if(!defined($suffix)){
+	$suffix="";
 }
+$template->{suffix}=$suffix;
+#print "suffix $template->{suffix}\n"; 
+if(!defined($clearsuffixes)){
+	$clearsuffixes=0;
+}
+$template->{clearsuffixes}=$clearsuffixes;
 if(!parseSubjobs($template,@subjobOpts)){
 	print STDERR "Problem parsing subjobs\n";$showusage=1;
 } else {
 	#print STDERR "subjobOpts: @subjobOpts\n";
 }
+parseVars($template,@vars);
 #print $template->toTemplateString();
 #print $template->toString('prefix','grouplbl','sjm_file');
-sub parseIOPuts{
-	#TODO make it so arguments get read in a way that helps first job gets its input from Pipeline.pl arguments
-	#TODO and the rest can use output values of previous jobs
-	my $templateio=shift;
-	my @ioputs=@_;
+
+print $template->toTemplateString();
+#print "\n\n";
+#print $template->toString("prefix","groupLBL",".cumsuffix");
+
+sub parseVars {
+	my $template=shift;
+	my @vars=@_;
+	my @eqsplit;
+	for my $var(@vars){
+		@eqsplit=split('=',$var);
+		if(scalar(@eqsplit!=2)){die "Incorrect syntax for var definition: $var\n";}
+		if(defined($template->{vars}->{$eqsplit[0]})){die "defined same var twice: $eqsplit[0]\n";}
+		$template->{vars}->{$eqsplit[0]}=$eqsplit[1];
+	}
 }
+
 sub parseSubjobs{
 	my $template=shift;
 	my @subjobOpts=@_;
 	#print "template ".$template,"\n";
+	my $substep;
 	for my $opt(@subjobOpts){
-		push (@{$template->{substeps}},parseSubJob($opt));
+		$substep=$template->getNewSubStep();
+		parseSubJob($opt,\$substep);
 	}
 	return 1;
 }
 
 sub parseSubJob {
 	my $opt=shift;
+	my $subjob=shift;
 	my %subjobvars;
-	my $subjob=PipelineSubStep->new();
 	my @commasplit=split(',',$opt);
 	for my $commaItem(@commasplit){
 		my @equalsplit=split('=',$commaItem);
@@ -81,13 +91,13 @@ sub parseSubJob {
 		#print STDERR "$equalsplit[0] = $equalsplit[1]\n";
 		if($equalsplit[0] eq "order_after"){
 			my @arr=split(':',$equalsplit[1]);
-			$subjob->{$equalsplit[0]}=\@arr;
+			${$subjob}->{$equalsplit[0]}=\@arr;
 		} else {
-			$subjob->{$equalsplit[0]}=$equalsplit[1];
+			${$subjob}->{$equalsplit[0]}=$equalsplit[1];
 		}
-		if(!defined($subjob->{module})){$subjob->{module}=q($MODULEFILE)};
-		if(!defined($subjob->{directory})){$subjob->{directory}=q($CURDIR)}
-		if(!defined($subjob->{queue})){$subjob->{queue}=q($JOBQUEUE)}
+		if(!defined(${$subjob}->{module})){${$subjob}->{module}=q($MODULEFILE)};
+		if(!defined(${$subjob}->{directory})){${$subjob}->{directory}=q($CURDIR)}
+		if(!defined(${$subjob}->{queue})){${$subjob}->{queue}=q($JOBQUEUE)}
 	}
 	return $subjob;
 }

@@ -119,8 +119,33 @@ our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
 #as there is no way to do this.
 sub replaceVars{
 	my $str=shift;
+	my $subjob=shift;
+	my $cumsuffix=shift;
 	my $search;
 	my $replace;
+	#replace custom variables
+	for my $var(keys(%{${$subjob}->{parent}->{vars}})){
+		$search=$var;
+		$replace=${$subjob}->{parent}->{vars}->{$var};
+		$search=~s/\$/\\\$/g;
+		#$replace=~s/\$/'\$'/g;
+		#print "replacing $search with $replace\n";
+		$str=~s/$search/$replace/g;
+	}
+	
+	#replace ADJPREFIX with $PREFIX$CUMSUFFIX - totally for convenience, can still use $CUMSUFFIX directly, for input files that need it
+	if(!defined($cumsuffix)){$cumsuffix="";}
+	if(!${$subjob}->{parent}->{clearsuffixes}){
+		$str=~s/\$ADJPREFIX/\$PREFIX\$CUMSUFFIX/g;
+	} else {
+		$str=~s/\$ADJPREFIX/\$PREFIX/g;
+	}
+	$str=~s/\$CUMSUFFIX/$cumsuffix/g;
+	my $suffix=${$subjob}->{parent}->{suffix};
+	#print "suffix: $suffix","\n";
+	$str=~s/\$SUFFIX/$suffix/g;
+	
+	#replace standard variables
 	for my $key(keys(%SettingsLib)){
 		$search='\$'.$key;
 		$replace=$SettingsLib{$key};
@@ -280,20 +305,33 @@ sub new {
 	my $self = {};
 	#list of files this pipeline uses
 	#(only need to include files produced by previous steps that you need)
-	$self->{inputs}={};
-	#list of files this step creates
-	#(only need to include files that will be used by other steps)
-	$self->{outputs}={};
+	$self->{suffix}={};#this suffix will be appended to the accumulated suffixes for the next job's use with $ADJPREFIX 
+	$self->{clearsuffixes}=0;#if this flag is set, this step will ignore suffixes gathered from previous steps, and restart accumulation
 	$self->{substeps}=[];#list of subjobs, in order, that compose this step
+	$self->{vars}={};#convenience variables
 	#jobs that this job depends on (uses the output of) 
 	#cannot have conflicting output declarations, 
 	#each declared input variable must only be defined by one or the other parent step
 	#most steps should only have 1 parent
-	$self->{parents}=[];
+	$self->{parents}=[];#TODO probably dont need this now that I'm using the graph implementation
 	#jobs that are children of this job
-	$self->{children}=[];
+	$self->{children}=[];#TODO ditto^
 	bless($self, $class);
 	return $self;
+}
+
+sub setAssume {
+	my $self =shift;
+	for my $substep(@{$self->{substeps}}){
+		$substep->{status}="done";
+	}
+}
+
+sub getNewSubStep{
+	my $self = shift;
+	my $newsubstep= PipelineSubStep->new($self);
+	push (@{$self->{substeps}},$newsubstep);
+	return $newsubstep;
 }
 
 sub addInput {
@@ -313,6 +351,9 @@ sub addOutput {
 sub toTemplateString{
 	my $self=shift;
 	my $str="";
+	for my $v(keys(%{$self->{vars}})){
+		$str.="#&VAR:$v=$self->{vars}->{$v}\n";
+	}
 	for my $i(@{$self->{substeps}}) {
 		$str.=$i->toTemplateString();		
 	}
@@ -323,13 +364,12 @@ sub toString{
 	my $self=shift;
 	my $prefix=shift;
 	my $grouplbl=shift;
-	my $sjm_file=shift;
+	my $cumsuffix = shift;
 	${AnalysisPipeline::SettingsLib}{"PREFIX"}=$prefix;
 	${AnalysisPipeline::SettingsLib}{"GROUPLBL"}=$grouplbl;
-	${AnalysisPipeline::SettingsLib}{"SJM_FILE"}=$sjm_file;
 	my $str="";
 	for my $i(@{$self->{substeps}}){
-		$str.=$i->toString();		
+		$str.=$i->toString($cumsuffix);		
 	}
 	return $str;
 }
@@ -370,6 +410,7 @@ sub new {
 	$self->{swap_usage}= undef;
 	#list of jobnames that this job must wait for
 	$self->{order_after}=[];
+	$self->{parent}=shift;#TODO have this be added via a subroutine in the parent class, so this automatically gets supplied
 	
 	bless($self, $class);
 	return $self;
@@ -422,7 +463,8 @@ sub toTemplateString {
 
 sub toString {
 	my $self =shift;
-	return AnalysisPipeline::replaceVars($self->toTemplateString());
+	my $cumsuffix = shift;
+	return AnalysisPipeline::replaceVars($self->toTemplateString(),\$self,$cumsuffix);
 }
 
 sub parsejob {

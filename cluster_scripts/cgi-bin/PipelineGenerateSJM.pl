@@ -99,7 +99,7 @@ sub ShowUsage {
 	print STDERR "$errmsg$usage\n";
 	exit(1);
 }
-
+#below are defunct since I decided to go with templates, I'll remove them eventually
 #ALIGNMENT OPTIONS
 #sub BOWTIE2_ALIGN_Pipeline {}#TODO add option to use bowtie2
 sub BWA_ALIGN_Pipeline {}

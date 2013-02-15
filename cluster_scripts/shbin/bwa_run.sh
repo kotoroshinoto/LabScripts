@@ -11,4 +11,3 @@ $1_2.fq | \
 samtools view -bS /dev/stdin > $1.bam
 #2>$CURDIR/bwa_logs/$1.bwa.sampe.log | 
 #2>$CURDIR/bwa_logs/$1.samtools.view.log
-
