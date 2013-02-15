@@ -8,7 +8,7 @@ BOWTIEINDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg
 BOWTIE2INDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE2/ucsc.hg19
 DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf
 GENES=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf
-TRANSCRIPTOME=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes
+TRANSCRIPTOME=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes
 MINQUAL=30
 MAPQUAL=40
 GENOME_TYPE=hg19
@@ -23,6 +23,9 @@ BWA_RAM=10G
 JAVA_JOB_RAM=50G
 SHIMMER_RAM=20G
 GENERIC_JOB_RAM=30G
+rRNA=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Sequence/AbundantSequences/humRibosomal.fa
+ENSEMBL_GENES_GC=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/ENSEMBL_ANNOTATIONS/GC/gencode.v7.gc.txt
+ENSEMBL_GENES=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/ENSEMBL_ANNOTATIONS/GTF/gencode.v7.annotation.gtf
 function SJM_MULTILINE_JOB_START {
 	JOBNAME=$1
 	shift
