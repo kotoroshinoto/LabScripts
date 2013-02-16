@@ -80,9 +80,9 @@ use Graph;#http://search.cpan.org/~jhi/Graph-0.94/lib/Graph.pod
 use List::Util qw( min );
 use List::MoreUtils qw(uniq);
 our %SettingsLib;
-$SettingsLib{"PREFIX"}="";
-$SettingsLib{"GROUPLBL"}="";
-$SettingsLib{"SJM_FILE"}="";
+#$SettingsLib{"PREFIX"}="";
+#$SettingsLib{"GROUPLBL"}="";
+#$SettingsLib{"SJM_FILE"}="";
 #REST ARE OK FOR NOW
 $SettingsLib{"HANDLER_SCRIPT"}="/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh";
 $SettingsLib{"GENOME"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa";
@@ -120,7 +120,17 @@ our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
 sub replaceVars{
 	my $str=shift;
 	my $subjob=shift;
-	my $cumsuffix=shift;
+	my $grouplbl=shift;
+	if(!defined($grouplbl)){die "replaceVars called without grouplbl variable\n";}
+	my $cumsuffix = shift;
+	if(!defined($grouplbl)){die "replaceVars called without cumsuffix variable\n";}
+	my ($prefix,$prefix2);
+	$prefix=shift;
+	if(!defined($grouplbl)){die "replaceVars called without prefix variable\n";}
+	if(${$subjob}->{parent}->{isCrossJob}){
+		$prefix2=shift;
+		if(!defined($grouplbl)){die "replaceVars called on crossjob without prefix2 variable\n";}
+	}else {$prefix2="";}
 	my $search;
 	my $replace;
 	#replace custom variables
@@ -151,6 +161,14 @@ sub replaceVars{
 		$replace=$SettingsLib{$key};
 		#print "search $search : replace $replace\n";
 		$str=~s/$search/$replace/g;
+	}
+	#replace remaining filename vars
+	
+	$str=~s/\$GROUPLBL/$grouplbl/g;
+	$str=~s/\$CUMSUFFIX/$cumsuffix/g;
+	$str=~s/\$PREFIX/$prefix/g;
+	if(${$subjob}->{parent}->{isCrossJob}){
+		$str=~s/\$PREFIX2/$prefix2/g;
 	}
 	return $str;
 }
@@ -309,6 +327,7 @@ sub new {
 	$self->{clearsuffixes}=0;#if this flag is set, this step will ignore suffixes gathered from previous steps, and restart accumulation
 	$self->{substeps}=[];#list of subjobs, in order, that compose this step
 	$self->{vars}={};#convenience variables
+	$self->{isCrossJob}=0;#flag for whether job cross-compares samples
 	#jobs that this job depends on (uses the output of) 
 	#cannot have conflicting output declarations, 
 	#each declared input variable must only be defined by one or the other parent step
@@ -354,6 +373,12 @@ sub toTemplateString{
 	for my $v(keys(%{$self->{vars}})){
 		$str.="#&VAR:$v=$self->{vars}->{$v}\n";
 	}
+	$str.="#&SUFFIX:$self->{suffix}\n";
+	if($self->{isCrossJob}){
+		$str.="#&TYPE:CROSS\n";		
+	} else {
+		$str.="#&TYPE:SOLO\n";
+	}
 	for my $i(@{$self->{substeps}}) {
 		$str.=$i->toTemplateString();		
 	}
@@ -362,14 +387,26 @@ sub toTemplateString{
 
 sub toString{
 	my $self=shift;
-	my $prefix=shift;
 	my $grouplbl=shift;
+	if(!defined($grouplbl)){die "toString called without grouplbl variable\n";}
 	my $cumsuffix = shift;
-	${AnalysisPipeline::SettingsLib}{"PREFIX"}=$prefix;
-	${AnalysisPipeline::SettingsLib}{"GROUPLBL"}=$grouplbl;
+	if(!defined($cumsuffix)){die "toString called without cumsuffix variable\n";}
+	my ($prefix,$prefix2);
+	$prefix=shift;
+	if(!defined($prefix)){die "toString called without prefix variable\n";}
+	if($self->{isCrossJob}){
+		$prefix2=shift;
+		if(!defined($prefix2)){die "toString called on crossjob without prefix2 variable\n";}
+	}else {$prefix2="";}
+	#${AnalysisPipeline::SettingsLib}{"PREFIX"}=$prefix;
+	#${AnalysisPipeline::SettingsLib}{"GROUPLBL"}=$grouplbl;
 	my $str="";
 	for my $i(@{$self->{substeps}}){
-		$str.=$i->toString($cumsuffix);		
+		if($self->{isCrossJob}){
+			$str.=$i->toString($grouplbl,$cumsuffix,$prefix,$prefix2);
+		} else {
+			$str.=$i->toString($grouplbl,$cumsuffix,$prefix);	
+		}		
 	}
 	return $str;
 }
@@ -462,9 +499,20 @@ sub toTemplateString {
 }
 
 sub toString {
-	my $self =shift;
+	my $self=shift;
+	my $grouplbl=shift;
+	if(!defined($grouplbl)){die "PipelineSubStep toString called without grouplbl variable\n";}
 	my $cumsuffix = shift;
-	return AnalysisPipeline::replaceVars($self->toTemplateString(),\$self,$cumsuffix);
+	if(!defined($cumsuffix)){die "PipelineSubStep toString called without cumsuffix variable\n";}
+	my ($prefix,$prefix2);
+	$prefix=shift;
+	if(!defined($prefix)){die "PipelineSubStep toString called without prefix variable\n";}
+	if($self->{parent}->{isCrossJob}){
+		$prefix2=shift;
+		if(!defined($prefix2)){die "PipelineSubStep toString called on crossjob without prefix2 variable\n";}
+	}else {$prefix2="";}
+	
+	return AnalysisPipeline::replaceVars($self->toTemplateString(),\$self,$grouplbl,$cumsuffix,$prefix,$prefix2);
 }
 
 sub parsejob {

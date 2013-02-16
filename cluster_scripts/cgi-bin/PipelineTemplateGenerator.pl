@@ -15,8 +15,9 @@ use SampleData;
 use AnalysisPipeline;
 use feature qw/switch/;
 use File::Basename;
+use FileHandle;
 my $goodopts;
-our ( $suffix, $templatename, @subjobOpts, $clearsuffixes, @vars,$help );
+our ( $suffix, $templatename, @subjobOpts, $clearsuffixes, @vars, $cross, $help );
 our( @jobs ,$template);
 $template=PipelineStep->new();
 $goodopts = GetOptions(
@@ -25,10 +26,12 @@ $goodopts = GetOptions(
 	"suffix|S=s"      => \$suffix, #this suffix should be carried over into filenames using $ADJPREFIX by appending accumulated suffixes to $PREFIX
 	"template|T=s"    => \$templatename,
 	"subjob|J=s"      => \@subjobOpts,
+	"cross|c"      => \$cross,
 	"help|h"          => \$help
 );
 my $showusage=0;
-
+if(!defined($cross)){$cross=0;}
+$template->{isCrossJob}=$cross;
 if(!defined($templatename)){
 	print STDERR "must provide a template name\n";$showusage=1;
 }else{
@@ -51,10 +54,14 @@ if(!parseSubjobs($template,@subjobOpts)){
 parseVars($template,@vars);
 #print $template->toTemplateString();
 #print $template->toString('prefix','grouplbl','sjm_file');
+my $path=AnalysisPipeline::TemplateDir();
+my $file=File::Spec->catfile($path,uc($templatename).'.sjt');
+my $fh = FileHandle->new("> $file");
+print $fh $template->toTemplateString();
+$fh->close();
 
-print $template->toTemplateString();
 #print "\n\n";
-#print $template->toString("prefix","groupLBL",".cumsuffix");
+#print $template->toString("groupLBL",".cumsuffix","prefix");
 
 sub parseVars {
 	my $template=shift;
