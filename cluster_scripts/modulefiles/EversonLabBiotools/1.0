@@ -133,3 +133,5 @@ prepend-path ROOTSYS /UCHC/HPC/Everson_HPC/ROOT
 
 ##MANPAGE stuff
 set-alias man "man -C /UCHC/HPC/Everson_HPC/cluster_scripts/configs/man.config"
+setenv GDFONTPATH /home/CAM/mgooch/HPC/fonts/msttcorefonts
+setenv GNUPLOT_DEFAULT_GDFONT arial
