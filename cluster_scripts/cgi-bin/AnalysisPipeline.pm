@@ -110,7 +110,7 @@ $SettingsLib{"SHIMMER_RAM"}="20G";
 $SettingsLib{"GENERIC_JOB_RAM"}="30G";
 our %jobtemplates;#list of job templates that will be used for generating the jobSteps
 our $jobNameGraph=Graph->new(directed=>1,refvertexed=>1);#graph of jobnames
-our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
+#our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
 #method of output depends on options, 
 #will run generator once for each set of inputs, 
 #but may end up generating one or several jobfiles for each step or for the whole job.
@@ -274,17 +274,18 @@ sub charAt { return substr($_[0],$_[1],1); }
 
 sub require_jobdef{
 	my $step_name=shift;
-	#TODO check if jobname is already defined / loaded
-	#if not found, check if a template exists & load it
+	#DONE check if step template is already loaded
+	#if not found, check if template exists & load it
 	my $path=TemplateDir();
 	my $file=File::Spec->catfile($path,uc($step_name).'.sjt');
-	unless (load_template($file)) {
-		print STDERR "There is no template for step \"$step_name\" & it is not defined manually\n";
+	unless (load_template(uc($step_name),$file)) {
+		die "There is no template for step \"$step_name\" & it is not defined manually\n";
 	}
 }
 sub load_template {
+	my $step_name=shift;
 	my $filename=shift;
-	print STDERR "\tloading template: $filename\n";
+	print STDERR "\tloading template[$step_name]: $filename\n";
 	unless (-e $filename){
 		return 0;
 	}
@@ -332,9 +333,9 @@ sub new {
 	#cannot have conflicting output declarations, 
 	#each declared input variable must only be defined by one or the other parent step
 	#most steps should only have 1 parent
-	$self->{parents}=[];#TODO probably dont need this now that I'm using the graph implementation
+	#$self->{parents}=[];#probably dont need this now that I'm using the graph implementation
 	#jobs that are children of this job
-	$self->{children}=[];#TODO ditto^
+	#$self->{children}=[];#ditto^
 	bless($self, $class);
 	return $self;
 }
@@ -447,7 +448,7 @@ sub new {
 	$self->{swap_usage}= undef;
 	#list of jobnames that this job must wait for
 	$self->{order_after}=[];
-	$self->{parent}=shift;#TODO have this be added via a subroutine in the parent class, so this automatically gets supplied
+	$self->{parent}=shift;#DONE have this be added via a subroutine in the parent class, so this automatically gets supplied
 	
 	bless($self, $class);
 	return $self;
