@@ -17,12 +17,14 @@ use feature qw/switch/;
 use File::Basename;
 use FileHandle;
 my $goodopts;
+#TODO enable appending subjobs/vars
+#TODO check for duplicate jobnames && duplicate vars (validate SJM syntax validity)
 our ( $suffix, $templatename, @subjobOpts, $clearsuffixes, @vars, $cross, $help );
 our( @jobs ,$template);
 $template=PipelineStep->new();
 $goodopts = GetOptions(
 	"variable|V=s"      => \@vars, #define convenience variables to replace first
-	"clearsuffixes|C" => \$clearsuffixes, #setting this flag indicates that this step should completely rename its output, ignoring accumulated suffixes and restarting the accumulation.
+	"clearsuffixes|C" => \$clearsuffixes, #setting this flag indicates that this step should/will completely rename its output, ignoring accumulated suffixes and restarting the accumulation.
 	"suffix|S=s"      => \$suffix, #this suffix should be carried over into filenames using $ADJPREFIX by appending accumulated suffixes to $PREFIX
 	"template|T=s"    => \$templatename,
 	"subjob|J=s"      => \@subjobOpts,

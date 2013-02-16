@@ -26,18 +26,23 @@ our ($pipeline,$assume,@assumeSteps,$listtxt,$pairstxt,$jobfile,@pipelineSteps,%
 #analysis
 my $help=0;#indicates usage should be shown and nothing should be done
 my $usage="";
+#TODO option for --splitSOLO , sjm generation will result in separate *.sjm files for each input file,
+#TODO ^has no effect on crossjobs
+#TODO option for --splitSTEPS , sjm generation will result in separate *.sjm files for each step (Template)
+#TODO ^above 2 can be combined to split generated sjm files across samples AND steps
+#TODO option for --splitCROSS, generate a separate sjm file for each pairing
+#TODO ^ should only be used if cross step is set up so that any required SOLO substeps are in a 
+#TODO separate template and run prior to the CROSS step; program will blindly assume all cross steps are truly crossed 
+#TODO (thus it might run the same SOLO sub-commands more than once, resulting in conflicts) 
 $goodopts = GetOptions ("pipeline|P=s" => \$pipeline,	# list of steps to run IN ORDER
 						"list|L=s"   => \$listtxt,	# list of files
 						"pairs|p=s"  => \$pairstxt,	#file with list of sample pairs (only needed for steps that use more than 1 sample)
 						"assumeSteps|A=s" => \$assume, #list of steps to assume were already run, assume order as well (acts like pipeline)
-						#"copyfiles" => \$copyfiles, #specify this to force cp instead of ln -s
 						"help|h" =>\$help);
 
 if($help){
 	ShowUsage();
 }
-#if(!defined($copyfiles)){$copyfiles=0;}
-#print "copyfiles: $copyfiles\n";
 if(!defined($pairstxt)){$pairstxt="./pairs.txt";}
 print STDERR "pairs: \"$pairstxt\"\n";
 if(!defined($listtxt)){$listtxt="./files.txt";}
@@ -56,8 +61,6 @@ $pipeline=uc($pipeline);#forcing uppercase is a cheap way to ignore case of inpu
 @pipelineSteps=AnalysisPipeline::parsePipeline($pipeline);
 if(scalar(@assumeSteps) + scalar(@pipelineSteps) ==0){ShowUsage ("no pipeline specified!\n");}
 print "Step Graph: ${AnalysisPipeline::jobNameGraph}\n";
-
-#TODO allow defining custom steps, not a super-high priority
 
 exit( main(scalar(@ARGV),\@ARGV) );
 
@@ -99,14 +102,3 @@ sub ShowUsage {
 	print STDERR "$errmsg$usage\n";
 	exit(1);
 }
-#below are defunct since I decided to go with templates, I'll remove them eventually
-#ALIGNMENT OPTIONS
-#sub BOWTIE2_ALIGN_Pipeline {}#TODO add option to use bowtie2
-sub BWA_ALIGN_Pipeline {}
-sub TOPHAT_ALIGN_Pipeline {}
-#Preparatory steps (filtering, sorting, reworking BAM file for requirements of tools)
-sub GATK_PREP_Pipeline {}
-sub FILTER_READS_Pipeline {}
-#Analysis steps
-sub CALL_VARIANTS_Pipeline {}
-sub RNACUFF_Pipeline {}
