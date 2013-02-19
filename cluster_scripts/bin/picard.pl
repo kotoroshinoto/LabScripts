@@ -10,7 +10,7 @@ use BiotoolsSettings;
 my $java_heap_ram = ${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath       = "/UCHC/HPC/Everson_HPC/picard/bin";
 my $jarfile       = "";
-opendir( DIR, "$jarpath" ) or die $!."\n";
+opendir( DIR, "$jarpath" ) or die "Couldn't find picard bin directory: $jarpath -->".$!."\n";
 my @FILES = readdir(DIR);
 closedir(DIR);
 my @names = stripjarnames(@FILES);
