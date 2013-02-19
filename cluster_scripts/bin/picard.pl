@@ -2,8 +2,7 @@
 use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
 use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
 use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
-use lib
-  'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
+use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
 use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
 use strict;
 use warnings;
@@ -30,9 +29,7 @@ if ( defined($firstArg) ) {
 	}
 }
 if ( !defined($firstArg) || $hasMatch == 0 ) {
-	die
-"Command given does not match existing jar in picard directory!\nAvailable Commands:\n"
-	  . join( "\n", @names ) . "\n";
+	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names ) . "\n";
 }
 my $jar = File::Spec->catfile( $jarpath, $jarfile );
 my $command = "java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
