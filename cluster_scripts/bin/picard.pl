@@ -14,8 +14,15 @@ opendir(DIR, "$jarpath");
 my @FILES=readdir(DIR);
 closedir(DIR);
 my @names=stripjarnames(@FILES);
-print "\n@FILES\n";
-print "\n@names\n";
+#print "\n@FILES\n";
+#print "\n@names\n";
+my $hasMatch=0;
+my $firstArg=shift @ARGV;
+for my $name(@names){
+	if(!defined($firstArg) || $name ne $firstArg){
+		die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n".join("\n",@names)."\n"; 
+	}
+}
 my $jar=File::Spec->catfile($jarpath,$jarfile);
 my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
 print "$command\n";
@@ -26,7 +33,9 @@ sub stripjarnames{
 	my @outnames;
 	for my $jar (@injars){
 		my $ext=rindex($jar,".jar");
-		print "$jar : $ext : ".(length($jar)-$ext)."\n";
+		#print "$jar : $ext : ".(length($jar)-$ext)."\n";
+		#skip the two library jars, because they aren't executable
+		#picard-##.##.jar && sam-##.##.jar  
 		if(!($jar =~ m/^(picard-|sam-)([0-9]+).([0-9]+)(.jar)$/)){
 			push @outnames,substr($jar,0,$ext);
 		}
