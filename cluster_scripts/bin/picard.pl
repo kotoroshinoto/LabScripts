@@ -1,16 +1,18 @@
 #!/usr/bin/env perl
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+if($^O eq 'cygwin'){
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+}
 use strict;
 use warnings;
 use BiotoolsSettings;
 my $java_heap_ram = ${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath       = "/UCHC/HPC/Everson_HPC/picard/bin";
 my $jarfile       = "";
-opendir( DIR, "$jarpath" ) or die "Couldn't find picard bin directory: $jarpath -->".$!."\n";
+opendir( DIR, "$jarpath" ) or die "Couldn't find picard bin directory: $jarpath \-\-\> ".$!."\n";
 my @FILES = readdir(DIR);
 closedir(DIR);
 my @names = stripjarnames(@FILES);
