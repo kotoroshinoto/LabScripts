@@ -6,6 +6,7 @@ if($^O eq 'cygwin'){
 	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
 	use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
 }
+print "lerp\n";
 use strict;
 use warnings;
 use BiotoolsSettings;
