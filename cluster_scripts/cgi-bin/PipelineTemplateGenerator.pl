@@ -1,9 +1,11 @@
 #!/usr/bin/env perl
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+if($^O eq 'cygwin'){
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+}
 
 use strict;
 use warnings;

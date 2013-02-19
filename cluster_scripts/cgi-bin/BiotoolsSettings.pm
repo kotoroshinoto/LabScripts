@@ -1,11 +1,13 @@
 #!/usr/bin/env perl
+if($^O eq 'cygwin'){
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
+	use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+}
 package SettingsLib;
 #these libs are defined so testing in windows with mobaxterm works.
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
-use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
-use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
 use Cwd;
 use Cwd 'abs_path';
 use File::Spec;
