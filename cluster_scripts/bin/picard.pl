@@ -13,8 +13,19 @@ my $jarfile="";
 opendir(DIR, "$jarpath");
 my @FILES=readdir(DIR);
 closedir(DIR);
-print "@FILES\n";
+my @names=stripjarnames(@FILES);
+print "\n@FILES\n";
+print "\n@names\n";
 my $jar=File::Spec->catfile($jarpath,$jarfile);
 my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
 print "$command\n";
 system ($command);
+
+sub stripjarnames{
+	my @injars=@_;
+	my @outnames;
+	for my $jar (@injars){
+		my $ext=rindex($jar,".jar");
+		push @outnames,substr($jar,0,length($jar)-$ext);
+	}
+}
