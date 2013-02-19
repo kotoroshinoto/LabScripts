@@ -47,7 +47,7 @@ sub stripjarnames {
 		#print "$jar : $ext : ".(length($jar)-$ext)."\n";
 		#skip the two library jars, because they aren't executable
 		#picard-##.##.jar && sam-##.##.jar
-		if ( !( $jar =~ m/^(picard-|sam-)([0-9]+).([0-9]+)(.jar)$/ ) ) {
+		if ( !( $jar =~ m/^((picard-|sam-)([0-9]+).([0-9]+)(.jar))|.$/ ) ) {
 			push @outnames, substr( $jar, 0, $ext );
 		}
 	}
