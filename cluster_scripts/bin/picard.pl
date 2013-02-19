@@ -27,7 +27,9 @@ sub stripjarnames{
 	for my $jar (@injars){
 		my $ext=rindex($jar,".jar");
 		print "$jar : $ext : ".(length($jar)-$ext)."\n";
-		push @outnames,substr($jar,0,$ext);
+		if(!($jar =~ m/^(picard-|sam-)[0-9]+.[0-9]+/)){
+			push @outnames,substr($jar,0,$ext);
+		}
 	}
 	return @outnames;
 }
