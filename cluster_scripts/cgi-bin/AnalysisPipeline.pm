@@ -70,8 +70,6 @@ sub SJM_JOB_AFTER {
 1;
 
 package AnalysisPipeline;
-use Cwd;
-use Cwd 'abs_path';
 use File::Spec;
 use File::Basename;
 use strict;
@@ -79,35 +77,8 @@ use warnings;
 use Graph;#http://search.cpan.org/~jhi/Graph-0.94/lib/Graph.pod
 use List::Util qw( min );
 use List::MoreUtils qw(uniq);
-our %SettingsLib;
-#$SettingsLib{"PREFIX"}="";
-#$SettingsLib{"GROUPLBL"}="";
-#$SettingsLib{"SJM_FILE"}="";
-#REST ARE OK FOR NOW
-$SettingsLib{"HANDLER_SCRIPT"}="/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh";
-$SettingsLib{"GENOME"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa";
-$SettingsLib{"BWAINDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa";
-$SettingsLib{"BOWTIEINDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg19";
-$SettingsLib{"BOWTIE2INDEX"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE2/ucsc.hg19";
-$SettingsLib{"DBSNP"}="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf";
-$SettingsLib{"GENES"}="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf";
-$SettingsLib{"TRANSCRIPTOME"}="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes";
-$SettingsLib{"MODULEFILE"}="EversonLabBiotools/1.0";
-$SettingsLib{"JOBQUEUE"}="all.q";
-$SettingsLib{"MINQUAL"}=30;
-$SettingsLib{"MAPQUAL"}=40;
-$SettingsLib{"GENOME_TYPE"}="hg19";
-#MEMORY SETTINGS
-#CURRENT JOB Memory: 40GiB -> 40960MiB
-$SettingsLib{"JAVA_RAM"}="33G";
-#roughly 250,000 per GB
-$SettingsLib{"MRECORDS"}=250,000*33;
-$SettingsLib{"TARGET_BED"}="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
-$SettingsLib{"CURDIR"}=PipelineUtil::trim(abs_path(File::Spec->curdir()));
-$SettingsLib{"BWA_RAM"}="10G";
-$SettingsLib{"JAVA_JOB_RAM"}="50G";
-$SettingsLib{"SHIMMER_RAM"}="20G";
-$SettingsLib{"GENERIC_JOB_RAM"}="30G";
+use BiotoolsSettings;
+
 our %jobtemplates;#list of job templates that will be used for generating the jobSteps
 our $jobNameGraph=Graph->new(directed=>1,refvertexed=>1);#graph of jobnames
 #our $jobGraph=Graph->new(directed=>1,refvertexed_stringified=>1);#graph of jobs
@@ -156,9 +127,9 @@ sub replaceVars{
 	$str=~s/\$SUFFIX/$suffix/g;
 	
 	#replace standard variables
-	for my $key(keys(%SettingsLib)){
+	for my $key(keys(%{SettingsLib::SettingsList})){
 		$search='\$'.$key;
-		$replace=$SettingsLib{$key};
+		$replace=${SettingsLib::SettingsList}{$key};
 		#print "search $search : replace $replace\n";
 		$str=~s/$search/$replace/g;
 	}
