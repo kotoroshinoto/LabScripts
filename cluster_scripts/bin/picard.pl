@@ -27,7 +27,7 @@ sub stripjarnames{
 	for my $jar (@injars){
 		my $ext=rindex($jar,".jar");
 		print "$jar : $ext : ".(length($jar)-$ext)."\n";
-		push @outnames,substr($jar,0,length($jar)-$ext);
+		push @outnames,substr($jar,0,$ext);
 	}
 	return @outnames;
 }
