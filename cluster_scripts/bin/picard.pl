@@ -29,8 +29,10 @@ if ( defined($firstArg) ) {
 			last;
 		}
 	}
+} else {
+	die "No Commands or Args Given!\nAvailable Commands:\n" . join( "\n", @names ) . "\n";
 }
-if ( !defined($firstArg) || $hasMatch == 0 ) {
+if ( $hasMatch == 0 ) {
 	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names ) . "\n";
 }
 my $jar = File::Spec->catfile( $jarpath, $jarfile );
