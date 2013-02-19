@@ -1,2 +1,7 @@
 #!/bin/bash
+if [ $# -ne 1 ]
+then
+  echo "Usage: `basename $0` emboss_tool_name"
+  exit  65
+fi
 more /UCHC/HPC/Everson_HPC/EMBOSS/share/EMBOSS/doc/programs/text/$1.txt
