@@ -41,6 +41,8 @@ my $command = "java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
 print "$command\n";
 system($command);
 
+exit 0;
+
 sub stripjarnames {
 	my @injars = @_;
 	my @outnames;
@@ -50,7 +52,7 @@ sub stripjarnames {
 		#print "$jar : $ext : ".(length($jar)-$ext)."\n";
 		#skip the two library jars, because they aren't executable
 		#picard-##.##.jar && sam-##.##.jar
-		if ( !( ( $jar =~ m/^(picard-|sam-)([0-9]+)\.([0-9]+)(.jar)$/ ) || ($jar =~ m/^\s*\.+\s*$/) ) ) { # || $jar =~ m/^\s+$/ || $jar eq "" ) ) {
+		if ( !( ( $jar =~ m/^(picard-|sam-)([0-9]+)\.([0-9]+)(.jar)$/ ) || ($jar =~ m/^\s*\.+\s*$/) ) ) { 
 			push @outnames, substr( $jar, 0, $ext );
 		}
 	}
