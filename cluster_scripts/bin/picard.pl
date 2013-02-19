@@ -19,9 +19,14 @@ my @names=stripjarnames(@FILES);
 my $hasMatch=0;
 my $firstArg=shift @ARGV;
 for my $name(@names){
-	if(!defined($firstArg) || $name ne $firstArg){
-		die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n".join("\n",@names)."\n"; 
+	if( $name eq $firstArg){
+		$hasMatch=1;
+		$jarfile=$name.".jar";
+		last;
 	}
+}
+if(!defined($firstArg) ||$hasMatch==0){
+		die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n".join("\n",@names)."\n"; 
 }
 my $jar=File::Spec->catfile($jarpath,$jarfile);
 my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
