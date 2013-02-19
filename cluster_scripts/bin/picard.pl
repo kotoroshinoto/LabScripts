@@ -28,4 +28,5 @@ sub stripjarnames{
 		my $ext=rindex($jar,".jar");
 		push @outnames,substr($jar,0,length($jar)-$ext);
 	}
+	return @outnames;
 }
