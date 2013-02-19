@@ -33,7 +33,7 @@ if ( defined($firstArg) ) {
 	die "No Commands or Args Given!\nAvailable Commands:\n" . join( "\n", @names ) . "\n";
 }
 if ( $hasMatch == 0 ) {
-	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names ) . "\n";
+	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names );
 }
 my $jar = File::Spec->catfile( $jarpath, $jarfile );
 my $command = "java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
