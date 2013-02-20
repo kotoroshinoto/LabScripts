@@ -24,7 +24,8 @@ my $hasMatch = 0;
 my $firstArg = shift @ARGV;
 if ( defined($firstArg) ) {
 	for my $name (@names) {
-		if ( $name eq $firstArg ) {
+		#make it not case-sensitive for the jarnames
+		if ( uc($name) eq uc($firstArg) ) {
 			$hasMatch = 1;
 			$jarfile  = $name . ".jar";
 			last;
