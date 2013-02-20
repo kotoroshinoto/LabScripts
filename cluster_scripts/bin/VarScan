@@ -9,6 +9,7 @@ if($^O eq 'cygwin'){
 use strict;
 use warnings;
 use BiotoolsSettings;
+my $java_binary="/home/CAM/mgooch/HPC/oracle_jdk/jdk1.6.0_41/bin/java";
 my $java_heap_ram=${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath="/UCHC/HPC/Everson_HPC/VarScan/bin";
 my $jarfile="VarScan.v2.3.2.jar";

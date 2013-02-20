@@ -11,6 +11,7 @@ if($^O eq 'cygwin'){
 
 use BiotoolsSettings;
 
+my $java_binary="/home/CAM/mgooch/HPC/oracle_jdk/jdk1.6.0_41/bin/java";
 my $java_heap_ram = ${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath       = "/UCHC/HPC/Everson_HPC/picard/bin";
 my $jarfile       = "";
@@ -39,7 +40,7 @@ if ( $hasMatch == 0 ) {
 	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names ). "\n";
 }
 my $jar = File::Spec->catfile( $jarpath, $jarfile );
-my $command = "java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
+my $command = "$java_binary -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
 print "$command\n";
 system($command);
 

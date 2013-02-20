@@ -9,10 +9,11 @@ if($^O eq 'cygwin'){
 use strict;
 use warnings;
 use BiotoolsSettings;
+my $java_binary="/home/CAM/mgooch/HPC/oracle_jdk/jdk1.6.0_41/bin/java";
 my $java_heap_ram=${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath="/UCHC/HPC/Everson_HPC/mutect/bin";
 my $jarfile="muTect-1.1.4.jar";
 my $jar=File::Spec->catfile($jarpath,$jarfile);
-my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar --analysis_type MuTect @ARGV";
+my $command="$java_binary -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar --analysis_type MuTect @ARGV";
 print "$command\n";
 system ($command);
