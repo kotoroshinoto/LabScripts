@@ -1,3 +1,5 @@
+THIS FILE CONTAINS BITS AND PIECES OF VARIOUS CODES OR COMMANDS THAT MIGHT BE USEFUL
+
 mutect \
 --reference_sequence /UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa \
 --cosmic /UCHC/HPC/Everson_HPC/reference_data/COSMIC/MUTECT/hg19_cosmic_v54_120711.chrprefix.vcf \
