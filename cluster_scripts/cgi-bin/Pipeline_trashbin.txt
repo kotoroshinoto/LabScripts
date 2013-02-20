@@ -1,3 +1,13 @@
+mutect \
+--reference_sequence /UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa \
+--cosmic /UCHC/HPC/Everson_HPC/reference_data/COSMIC/MUTECT/hg19_cosmic_v54_120711.chrprefix.vcf \
+--dbsnp /UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf \
+--intervals /UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed \
+--input_file:normal /UCHC/Everson/Projects/Bladder/Pt5/A/SKU091715NCBL5A.4GATK.recal.realn.filtered.bam \
+--input_file:tumor /UCHC/Everson/Projects/Bladder/Pt5/A/SKU091711TCBL5A.4GATK.recal.realn.filtered.bam \
+--out Pt5_NC_TC_callStats.out \
+--coverage_file Pt5_NC_TC_coverage.wig.txt
+
 #how to define jobs for resolving file dependencies
 #steps separated by ':' imply nothing about linkage, assume no link unless otherwise specified
 #steps separated by '-' imply that JOBL is parent of JOBR
