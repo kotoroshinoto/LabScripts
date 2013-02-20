@@ -13,6 +13,6 @@ my $java_heap_ram=${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath="/UCHC/HPC/Everson_HPC/mutect/bin";
 my $jarfile="muTect-1.1.4.jar";
 my $jar=File::Spec->catfile($jarpath,$jarfile);
-my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
+my $command="java -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar --analysis_type MuTect @ARGV";
 print "$command\n";
 system ($command);
