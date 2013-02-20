@@ -35,7 +35,6 @@ $SettingsList{"JAVA_RAM"}="33G";
 #roughly 250,000 per GB
 $SettingsList{"MRECORDS"}=250,000*33;
 $SettingsList{"TARGET_BED"}="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
-print "TEST\n";
 $SettingsList{"CURDIR"}=abs_path(File::Spec->curdir());
 $SettingsList{"BWA_RAM"}="10G";
 $SettingsList{"JAVA_JOB_RAM"}="50G";
