@@ -10,7 +10,8 @@ if($^O eq 'cygwin'){
 }
 
 use BiotoolsSettings;
-my $java_heap_ram = ${SettingsLib::SettingsList}->{"JAVA_RAM"};
+
+my $java_heap_ram = ${SettingsLib::SettingsList}{"JAVA_RAM"};
 my $jarpath       = "/UCHC/HPC/Everson_HPC/picard/bin";
 my $jarfile       = "";
 opendir( DIR, "$jarpath" ) or die "Couldn't find picard bin directory: $jarpath \-\-\> ".$!."\n";
