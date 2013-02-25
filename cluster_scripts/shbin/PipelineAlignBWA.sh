@@ -67,6 +67,7 @@ touch $SJM_FILE
 for var in "$@"
 do
 	ARGS=$(echo $var | tr "," "\n")
+	echo "ARGS: $ARGS"
     BWA_per_file_pair $ARGS
 done
 
