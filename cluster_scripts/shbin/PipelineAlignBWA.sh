@@ -71,5 +71,5 @@ do
 	echo "ARGS: $ARGS"
     BWA_per_file_pair $ARGS
 done
-
+mkdir -P $CURDIR/sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
