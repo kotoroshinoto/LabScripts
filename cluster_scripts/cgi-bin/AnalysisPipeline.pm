@@ -72,6 +72,8 @@ sub SJM_JOB_AFTER {
 1;
 
 package AnalysisPipeline;
+use Cwd;
+use Cwd 'abs_path';
 use File::Spec;
 use File::Basename;
 use strict;
@@ -80,6 +82,7 @@ use Graph;#http://search.cpan.org/~jhi/Graph-0.94/lib/Graph.pod
 use List::Util qw( min );
 use List::MoreUtils qw(uniq);
 use BiotoolsSettings;
+use feature 'switch';
 
 our %jobtemplates;#list of job templates that will be used for generating the jobSteps
 our $jobNameGraph=Graph->new(directed=>1,refvertexed=>1);#graph of jobnames
@@ -255,6 +258,7 @@ sub require_jobdef{
 		die "There is no template for step \"$step_name\" & it is not defined manually\n";
 	}
 }
+
 sub load_template {
 	my $step_name=shift;
 	my $filename=shift;
@@ -262,15 +266,20 @@ sub load_template {
 	unless (-e $filename){
 		return 0;
 	}
-	#TODO load template
+	my $file=FileHandle->new("< $filename") or die "error with template file($filename): $!\n";
+	my @lines=<$file>;
+	my $stepTemplate;
+	$stepTemplate=PipelineStep->readTemplate(@lines);
 	return 1;
 }
+
 sub TemplateDir{
 	my($filename, $directories, $suffix) = fileparse($0);
 	my $templatedir=abs_path("$directories");
 	$templatedir=File::Spec->catdir($templatedir,'jobtemplates');
 	#print STDERR  "$templatedir\n";
 }
+
 sub new {
 	my $class = shift;
 	my $self = {};
@@ -280,6 +289,7 @@ sub new {
 	bless $self,$class;
 	return $self;
 }
+
 sub getOutputPrefix {
 	my $self=shift;
 	my $inputfile=shift;
@@ -301,6 +311,7 @@ sub new {
 	$self->{clearsuffixes}=0;#if this flag is set, this step will ignore suffixes gathered from previous steps, and restart accumulation
 	$self->{substeps}=[];#list of subjobs, in order, that compose this step
 	$self->{vars}={};#convenience variables
+	$self->{var_keys}=[];
 	$self->{isCrossJob}=0;#flag for whether job cross-compares samples
 	#jobs that this job depends on (uses the output of) 
 	#cannot have conflicting output declarations, 
@@ -312,6 +323,192 @@ sub new {
 	bless($self, $class);
 	return $self;
 }
+
+sub readTemplate {
+	my $class =shift;
+	my @lines=@_;
+	my $newStep=$class->new();
+	my @joblines;
+	my ($type,$suffix);
+	# read templates from lines in a file
+	chomp(@lines);
+	for my $line(@lines){
+		given($line){
+			when(/^#\S+$/){
+				given($line){
+					when(/^#&VAR:.+$/){
+						if(!($line =~ m/^#&VAR:(\$.+)=(.+)$/)){die "improperly formed VAR line in template: $line\n"}
+							#print "\t\tStep Variable Line: $line\n";
+						if(defined($newStep->{vars}->{$1})){die "Defined variable $1 twice in one template\n";}
+						$newStep->{vars}->{$1}=$2;
+						push(@{$newStep->{var_keys}},$1);
+						print STDERR "\t\tvariable \"$1\" set to \"$2\"\n";
+					} 
+					when(/^#&SUFFIX:(.+)$/) {
+						#print "\t\tStep Suffix Line: $line\n";
+						if(defined($suffix)){
+							die "Job Suffix defined twice in template!\n";
+						}
+						$suffix=$1;
+						print STDERR "\t\tsuffix: $suffix\n";
+						$newStep->{suffix}=$suffix;
+				
+					} 
+					when(/^#&TYPE:(.+)$/) {
+						#print "\t\tStep Type Line: $line\n";
+						if(defined($type)){
+							die "Job Type defined twice in template!\n";
+						}
+						$type = $1;
+						given(uc($1)){
+							when (/SOLO/){
+								$newStep->{isCrossJob}=0;
+							}
+							when (/CROSS/){
+								$newStep->{isCrossJob}=1;
+							}
+							default {
+								die "improperly formed TYPE line in template: $line\n"
+							}
+						}
+						print STDERR "\t\ttype: $type, crossjob: $newStep->{isCrossJob}\n";
+					}
+					default {
+						print STDERR "Comment Line: $line\n";
+					}
+				}
+			}
+			default {
+				#not a comment, push into joblines for SJM template reading
+				push (@joblines,$line);
+				#print "job line: $line\n";
+			}
+		}
+	}
+	#print scalar(@joblines)," joblines\n";
+	#print join("\n", @joblines);
+	#parse the SJM lines now
+	$newStep->parseSubJobs(@joblines);
+	#print STDOUT $newStep->toTemplateString();
+	return $newStep;
+}
+
+sub parseSubJobs{
+	my $self =shift;
+	my @lines=@_;
+	my $newSubstep;
+	my($injob,$incmd,$cmd_done)=(0,0,0);
+	for my $line(@lines){
+		if($injob){
+			if($incmd){
+				given($line){
+					when(/^\s*cmd_end\s*$/){
+						$incmd=0;
+					}
+					default{
+						#store line as a command if it isn't cmd_end
+						push(@{$newSubstep->{cmd}}, $line);
+					}
+				}
+			} else {#if($incmd)
+				given($line){
+					when(/^\s*job_begin\s*$/){
+						die ("job_begin found after previous job_begin but not after job_end\n");
+					}
+					when(/^\s*job_end\s*$/){
+						$injob=0;
+						#TODO VERIFY VALIDITY!!!
+					}
+					when(/^\s*cmd_begin\s*$/){
+						die ("job_begin found after previous job_begin but not after job_end\n");
+					}
+					when(/^\s*name\s+(\S+)\s*$/){
+						defined($newSubstep->{name}) ? ( die("name defined twice in job template\n") ): ($newSubstep->{name}=$1);							
+					}
+					when(/^\s*memory\s+(\S+)\s*$/){
+						defined($newSubstep->{memory}) ? ( die("memory defined twice in job template\n") ): ($newSubstep->{memory}=$1);
+					}
+					when(/^\s*queue\s+(\S+)\s*$/){
+						defined($newSubstep->{queue}) ? ( die("queue defined twice in job template\n") ): ($newSubstep->{queue}=$1);
+					}
+					when(/^\s*module\s+(\S+)\s*$/){
+						defined($newSubstep->{module}) ? ( die("module defined twice in job template\n") ): ($newSubstep->{module}=$1);
+					}
+					when(/^\s*directory\s+(\S+)\s*$/){
+						defined($newSubstep->{directory}) ? ( die("module defined twice in job template\n") ): ($newSubstep->{directory}=$1);
+					}						
+					when(/^\s*status\s+(\S+)\s*$/){
+						die("status should not be defined in templates!\n");
+					}
+					when(/^\s*id\s+(\S+)\s*$/){
+						defined($newSubstep->{id}) ? ( die("id defined twice in job template\n") ): ($newSubstep->{id}=$1);
+					}
+					when(/^\s*cpu_usage\s+(\S+)\s*$/){
+						defined($newSubstep->{cpu_usage}) ? ( die("cpu_usage defined twice in job template\n") ): ($newSubstep->{cpu_usage}=$1);
+					}
+					when(/^\s*wallclock\s+(\S+)\s*$/){
+						defined($newSubstep->{wallclock}) ? ( die("wallclock defined twice in job template\n") ): ($newSubstep->{wallclock}=$1);
+					}
+					when(/^\s*memory_usage\s+(\S+)\s*$/){
+						defined($newSubstep->{memory_usage}) ? ( die("memory_usage defined twice in job template\n") ): ($newSubstep->{memory_usage}=$1);
+					}
+					when(/^\s*swap_usage\s+(\S+)\s*$/){
+						defined($newSubstep->{swap_usage}) ? ( die("swap_usage defined twice in job template\n") ): ($newSubstep->{swap_usage}=$1);
+					}
+					when(/^\s*cmd\s+(.+)\s*$/){
+						if($cmd_done){die("cmd defined twice for job in template\n");}
+						$cmd_done=1;
+						push(@{$newSubstep->{cmd}}, $1);
+					}
+					when(/^\s*cmd_begin\s+(\S+)\s*$/){
+						if($cmd_done){die("cmd defined twice for job in template\n");}
+						$incmd=1;
+					}
+					default{
+						die ("invalid line in template: $line\n");
+					}
+				}
+			}
+		} else {#if($injob)
+			given($line){
+				when(/^\s*job_begin\s*$/){
+					$injob=1;
+					$cmd_done=0;
+					$newSubstep=$self->getNewSubStep();
+				}
+				when(/^\s*job_end\s*$/){
+					die ("job_end did not follow job_begin\n");
+				}
+				when(/^\s*log_dir\s+(\S+)\s*$/){
+					die ("log_dir should not be defined in templates!\n");
+				}
+				when(/^\s*order\s+(.+)\s*$/){
+					my($parentjob,$childjob);
+					given($line){
+						when(/^\s*order\s*(\S+)\s*before\s*(\S+)\s*$/){
+							$parentjob=$1;
+							$childjob=$2;
+						}
+						when(/^\s*order\s*(\S+)\s*after\s*(\S+)\s*$/){
+							$parentjob=$2;
+							$childjob=$1;
+						}
+						default{
+							die ("invalid order line in template: $line\n");
+						}
+					}
+					print STDERR "setting depedency: $childjob after $parentjob\n";
+					$self->addDependency($childjob,$parentjob);
+				}
+				default{
+					die ("invalid line in template: $line\n");
+				}
+			}	
+		}
+	}
+}
+
+
 
 sub setAssume {
 	my $self =shift;
@@ -327,24 +524,27 @@ sub getNewSubStep{
 	return $newsubstep;
 }
 
-sub addInput {
-	my $self = shift;
-	my $type=shift;
-	my $name;
-	my $conversion;#use this to get filenames when its the first
-}
-
-sub addOutput {
-	my $self = shift;
-	my $type=shift;
-	my $name;
-	my $conversion;#use this to get filenames when its the first
+sub addDependency {
+	my $self =shift;
+	my $child=shift;
+	my $parent = shift;
+	my ($parentfound,$childsubstep);
+	for my $substep(@{$self->{substeps}}){
+		if($substep->{name} eq $parent){
+			$parentfound=1;
+		} elsif($substep->{name} eq $child){
+			$childsubstep=$substep;
+		}
+	}
+	if(!$parentfound){die "No job exists with name: $parent\n";}
+	if(!defined($childsubstep)){die "No job exists with name: $child\n";}
+	push(@{$childsubstep->{order_after}},$parent);
 }
 
 sub toTemplateString{
 	my $self=shift;
 	my $str="";
-	for my $v(keys(%{$self->{vars}})){
+	for my $v(@{$self->{var_keys}}){
 		$str.="#&VAR:$v=$self->{vars}->{$v}\n";
 	}
 	$str.="#&SUFFIX:$self->{suffix}\n";
@@ -461,7 +661,23 @@ sub toTemplateString {
 		$str.="\tstatus ".$self->{status}."\n";
 	}
 	if(defined($self->{cmd})){
-		$str.="\tcmd ".$self->{cmd}."\n";
+		my $numcmds;
+		$numcmds=scalar(@{$self->{cmd}});
+		given($numcmds){
+			when(/0/){
+				die "tried to create job template string when no commands defined for job!!\n";
+			}
+			when(/1/){
+				$str.="\tcmd ".${$self->{cmd}}[0]."\n";
+			}
+			default{
+				$str.="\tcmd_begin\n";
+				for my $item(@{$self->{cmd}}){
+					$str.="\t\t".$item."\n";
+				}
+				$str.="\tcmd_end\n";
+			}
+		}
 	}
 	$str.="job_end\n";
 	if(defined($self->{order_after})){
@@ -487,22 +703,5 @@ sub toString {
 	}else {$prefix2="";}
 	
 	return AnalysisPipeline::replaceVars($self->toTemplateString(),\$self,$grouplbl,$cumsuffix,$prefix,$prefix2);
-}
-
-sub parsejob {
-	my $self = shift;
-	my $stringarr= shift;
-	my $string;
-	$string=$$stringarr[0];
-	$string=trim($string);
-	if($string ne "job_begin"){
-		return undef;#cannot parse from here
-	}
-	while (@{$stringarr}){
-		$string=trim(shift (@{$stringarr} ) );
-		$string=q($string=").$string.q(");
-		eval $string;
-		print STDERR  $string;
-	}
 }
 1;

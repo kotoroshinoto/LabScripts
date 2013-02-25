@@ -76,6 +76,7 @@ sub parseVars {
 		if(scalar(@eqsplit!=2)){die "Incorrect syntax for var definition: $var\n";}
 		if(defined($template->{vars}->{$eqsplit[0]})){die "defined same var twice: $eqsplit[0]\n";}
 		$template->{vars}->{$eqsplit[0]}=$eqsplit[1];
+		push(@{$template->{var_keys}},$eqsplit[0]);
 	}
 }
 
@@ -96,19 +97,32 @@ sub parseSubJob {
 	my $subjob=shift;
 	my %subjobvars;
 	my @commasplit=split(',',$opt);
+	my @cmds;
 	for my $commaItem(@commasplit){
+		#print STDERR "comma Item: $commaItem\n";
 		my @equalsplit=split('=',$commaItem);
 		if(scalar(@equalsplit) != 2){die "invalid argument syntax! should have 2 elements separated by '=', have: ".scalar(@equalsplit)."\n";}
 		#print STDERR "$equalsplit[0] = $equalsplit[1]\n";
-		if($equalsplit[0] eq "order_after"){
-			my @arr=split(':',$equalsplit[1]);
-			${$subjob}->{$equalsplit[0]}=\@arr;
-		} else {
-			${$subjob}->{$equalsplit[0]}=$equalsplit[1];
+		given($equalsplit[0]){
+			when(/order_after/){
+				my @arr=split(':',$equalsplit[1]);
+				${$subjob}->{$equalsplit[0]}=\@arr;
+			}
+			when(/cmd/){
+				push(@cmds,$equalsplit[1]);	
+			}
+			default{
+				${$subjob}->{$equalsplit[0]}=$equalsplit[1];
+			}
 		}
 		if(!defined(${$subjob}->{module})){${$subjob}->{module}=q($MODULEFILE)};
 		if(!defined(${$subjob}->{directory})){${$subjob}->{directory}=q($CURDIR)}
 		if(!defined(${$subjob}->{queue})){${$subjob}->{queue}=q($JOBQUEUE)}
+		
+	}
+	for my $cmd(@cmds){
+		#print STDERR ("pushing into cmd list: $cmd\n");
+		push(@{${$subjob}->{cmd}},$cmd);
 	}
 	return $subjob;
 }

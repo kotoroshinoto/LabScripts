@@ -62,7 +62,7 @@ $assume=uc($assume);#forcing uppercase is a cheap way to ignore case of input ->
 $pipeline=uc($pipeline);#forcing uppercase is a cheap way to ignore case of input -> requires all checked text to also be uppercase
 @pipelineSteps=AnalysisPipeline::parsePipeline($pipeline);
 if(scalar(@assumeSteps) + scalar(@pipelineSteps) ==0){ShowUsage ("no pipeline specified!\n");}
-print "Step Graph: ${AnalysisPipeline::jobNameGraph}\n";
+print STDERR "Step Graph: ${AnalysisPipeline::jobNameGraph}\n";
 
 exit( main(scalar(@ARGV),\@ARGV) );
 
