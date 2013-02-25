@@ -29,9 +29,9 @@ our ($pipeline,$assume,@assumeSteps,$listtxt,$pairstxt,$jobfile,@pipelineSteps,%
 my $help=0;#indicates usage should be shown and nothing should be done
 my $usage="";
 #TODO option for --splitSOLO , sjm generation will result in separate *.sjm files for each input file,
-#TODO ^has no effect on crossjobs
+#TODO ^has no effect on crossjobs (change to join, split is default)
 #TODO option for --splitSTEPS , sjm generation will result in separate *.sjm files for each step (Template)
-#TODO ^above 2 can be combined to split generated sjm files across samples AND steps
+#TODO ^above 2 can be combined to split generated sjm files across samples AND steps (change to join, split is default)
 #TODO option for --splitCROSS, generate a separate sjm file for each pairing
 #TODO ^ should only be used if cross step is set up so that any required SOLO substeps are in a 
 #TODO separate template and run prior to the CROSS step; program will blindly assume all cross steps are truly crossed 

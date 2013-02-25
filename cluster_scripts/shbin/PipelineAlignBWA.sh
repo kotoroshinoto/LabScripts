@@ -1,12 +1,9 @@
 #!/bin/bash -x
 source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
+GROUPLBL=$1
+shift
 
-NC=$(echo $1 | tr "," "\n")
-NF=$(echo $2 | tr "," "\n")
-TC=$(echo $3 | tr "," "\n")
-TF=$(echo $4 | tr "," "\n")
-GROUPLBL=$5
 SJM_FILE=./Step1.sjm
 
 #function runBWA {
@@ -67,9 +64,10 @@ function BWA_per_file_pair {
 
 rm $SJM_FILE
 touch $SJM_FILE
-BWA_per_file_pair $NC
-BWA_per_file_pair $NF
-BWA_per_file_pair $TC
-BWA_per_file_pair $TF
+for var in "$@"
+do
+	ARGS=$(echo $var | tr "," "\n")
+    BWA_per_file_pair $ARGS
+done
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE

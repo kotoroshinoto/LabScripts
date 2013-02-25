@@ -389,7 +389,7 @@ sub readTemplate {
 	#print join("\n", @joblines);
 	#parse the SJM lines now
 	$newStep->parseSubJobs(@joblines);
-	#print STDOUT $newStep->toTemplateString();
+	print STDOUT $newStep->toTemplateString();
 	return $newStep;
 }
 
