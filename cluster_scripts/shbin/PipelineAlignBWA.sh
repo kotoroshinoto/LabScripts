@@ -2,7 +2,7 @@
 source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 GROUPLBL=$1
-echo "group label: $GROUPLBL" 
+#echo "group label: $GROUPLBL" 
 shift
 
 SJM_FILE=./Step1.sjm
@@ -68,7 +68,7 @@ touch $SJM_FILE
 for var in "$@"
 do
 	ARGS=$(echo $var | tr "," " ")
-	echo "ARGS: $ARGS"
+	#echo "ARGS: $ARGS"
     BWA_per_file_pair $ARGS
 done
 mkdir -p $CURDIR/sjm_logs
