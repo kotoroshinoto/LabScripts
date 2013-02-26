@@ -91,6 +91,7 @@ use List::Util qw( min );
 use List::MoreUtils qw(uniq);
 use BiotoolsSettings;
 use feature 'switch';
+use FileHandle;
 
 our %jobtemplates;#list of job templates that will be used for generating the jobSteps
 our $jobNameGraph=Graph->new(directed=>1,refvertexed=>1);#graph of jobnames
@@ -270,7 +271,7 @@ sub require_jobdef{
 sub load_template {
 	my $step_name=shift;
 	my $filename=shift;
-	print STDERR "\tloading template[$step_name]: $filename\n";
+	#print STDERR "\tloading template[$step_name]: $filename\n";
 	unless (-e $filename){
 		return 0;
 	}
@@ -350,7 +351,7 @@ sub readTemplate {
 						if(defined($newStep->{vars}->{$1})){die "Defined variable $1 twice in one template\n";}
 						$newStep->{vars}->{$1}=$2;
 						push(@{$newStep->{var_keys}},$1);
-						print STDERR "\t\tvariable \"$1\" set to \"$2\"\n";
+						#print STDERR "\t\tvariable \"$1\" set to \"$2\"\n";
 					} 
 					when(/^#&SUFFIX:(.+)$/) {
 						#print "\t\tStep Suffix Line: $line\n";
@@ -358,7 +359,7 @@ sub readTemplate {
 							die "Job Suffix defined twice in template!\n";
 						}
 						$suffix=$1;
-						print STDERR "\t\tsuffix: $suffix\n";
+						#print STDERR "\t\tsuffix: $suffix\n";
 						$newStep->{suffix}=$suffix;
 				
 					} 
@@ -379,10 +380,10 @@ sub readTemplate {
 								die "improperly formed TYPE line in template: $line\n"
 							}
 						}
-						print STDERR "\t\ttype: $type, crossjob: $newStep->{isCrossJob}\n";
+						#print STDERR "\t\ttype: $type, crossjob: $newStep->{isCrossJob}\n";
 					}
 					default {
-						print STDERR "Comment Line: $line\n";
+						#print STDERR "Comment Line: $line\n";
 					}
 				}
 			}
@@ -397,7 +398,7 @@ sub readTemplate {
 	#print join("\n", @joblines);
 	#parse the SJM lines now
 	$newStep->parseSubJobs(@joblines);
-	print STDOUT $newStep->toTemplateString();
+	#print STDOUT $newStep->toTemplateString();
 	return $newStep;
 }
 
@@ -505,7 +506,7 @@ sub parseSubJobs{
 							die ("invalid order line in template: $line\n");
 						}
 					}
-					print STDERR "setting depedency: $childjob after $parentjob\n";
+					#print STDERR "setting depedency: $childjob after $parentjob\n";
 					$self->addDependency($childjob,$parentjob);
 				}
 				default{
