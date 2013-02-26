@@ -1,23 +1,28 @@
 #!/usr/bin/env perl
-if($^O eq 'cygwin'){
-	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
-	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
-	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
-	use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
-	use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
-}
-
 use strict;
 use warnings;
+use feature 'switch';
+given($^O){
+	when(/cygwin/){
+		use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10';
+		use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/5.10/i686-cygwin';
+		use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10';
+		use lib 'C:/Apps/workspace/cluster_scripts/lib/perl5/site_perl/5.10/i686-cygwin';
+		use lib 'C:/Apps/workspace/cluster_scripts/cgi-bin';
+	}
+	when(/linux/){
+		use lib '/UCHC/HPC/Everson_HPC/cluster_scripts/cgi-bin';
+	}
+}
 use Cwd;
 use Cwd 'abs_path';
 use Getopt::Long qw(:config no_ignore_case bundling);
 use Storable;
 use SampleData;
 use AnalysisPipeline;
-use feature qw/switch/;
 use File::Basename;
 use FileHandle;
+
 my $goodopts;
 #TODO enable appending subjobs/vars
 #TODO check for duplicate jobnames && duplicate vars (validate SJM syntax validity)
