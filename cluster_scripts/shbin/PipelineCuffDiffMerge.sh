@@ -18,7 +18,7 @@ function runSJMfile {
 }
 
 function doCuffMerge {
-	SJM_JOB CuffMerge_$1_$2 25G ./CuffDiffMerge.sh $1 $2
+	SJM_JOB CuffMerge_$1_$2 25G CuffMerge.sh $1 $2
 }
 
 function doCuffDiff {
