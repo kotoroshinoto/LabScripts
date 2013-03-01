@@ -66,8 +66,7 @@ print STDERR "assume: \"$assume\"\n";
 if(!defined($pipeline)){$pipeline="";}#pipeline is allowed to be blank if assume has values
 print STDERR "pipeline: \"$pipeline\"\n";
 
-my ($i,$step);
-
+my ($i,$step,$item);
 
 $assume=uc($assume);#forcing uppercase is a cheap way to ignore case of input -> requires all checked text to also be uppercase
 @assumeSteps=parseAssume($assume);
@@ -76,41 +75,20 @@ $pipeline=uc($pipeline);#forcing uppercase is a cheap way to ignore case of inpu
 if(scalar(@assumeSteps) + scalar(@pipelineSteps) ==0){ShowUsage ("no pipeline specified!\n");}
 print STDERR "Step Graph: $jobNameGraph\n";
 
-exit( main(scalar(@ARGV),\@ARGV) );
-
-sub main {
-	my $argc=shift;
-	my @argv=@{$_[0]};
-	shift;
-	my ($step,$item);
-	$item=0;
-	for (my $i = 0 ; $i < scalar(@assumeSteps); ++$i ) {
-		$step=$assumeSteps[$i];
-		++$item;
-		print STDERR ("Step $item: $step\n");
-	}
-	for (my $i = 0 ; $i < scalar(@pipelineSteps); ++$i ){
-		$step=$pipelineSteps[$i];
-		++$item;
-		print STDERR ("Step $item: $step");
-		if($i==0){print STDERR " <---STARTING JOBS HERE";}
-		print STDERR ("\n")
-	}
-	#example of how to use variables in a template using eval:
-	#my $derp=q(print "arg count: $argc, arguments: @argv");
-	#eval $derp;
-	#print "${PipelineStep::CURDIR}\n";
-	#TODO can traverse graph like this: 
-	#@sinks = $g->sink_vertices()
-	#@sources = $g->source_vertices()
-	#@parents = $g->predecessors($v)
-	#@children = $g->successors($v)
-	#TODO figure out best way to traverse graph
-	#any 1 step(per-sample or pair of samples) should probably only be allowed to have at most 2 parents (for CROSSJOBS) and 1 parent (for SOLOJOBS)
-	#start at sources, fill in all required info @ one level THEN handle children by stripping sources off of a copied graph so as not to wreck the original
-	#will ensure that all required info is available before successors are handled.   
-	return 0;
+for (my $i = 0 ; $i < scalar(@assumeSteps); ++$i ) {
+	$step=$assumeSteps[$i];
+	++$item;
+	print STDERR ("Step $item: $step\n");
 }
+for (my $i = 0 ; $i < scalar(@pipelineSteps); ++$i ){
+	$step=$pipelineSteps[$i];
+	++$item;
+	print STDERR ("Step $item: $step");
+	if($i==0){print STDERR " <---STARTING JOBS HERE";}
+	print STDERR ("\n")
+}
+
+
 
 sub ShowUsage {
 	my $errmsg=shift;
