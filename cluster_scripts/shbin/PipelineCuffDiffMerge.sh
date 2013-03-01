@@ -18,10 +18,7 @@ function runSJMfile {
 }
 
 function doCuffMerge {
-	echo "#!/bin/bash
-echo \"./$1_CUFFLINKS/transcripts.gtf
-./$2_CUFFLINKS/transcripts.gtf\" | cuffmerge -g $GENES -s $BWAINDEX -p 8 -o $1_$2_Merge /dev/stdin" > ./CuffDiffMerge.$1.$2.sh
-	SJM_JOB CuffMerge_$1_$2 25G ./CuffDiffMerge.$1.$2.sh
+	SJM_JOB CuffMerge_$1_$2 25G ./CuffDiffMerge.sh $1 $2
 }
 
 function doCuffDiff {
