@@ -24,11 +24,11 @@ $2"
 }
 
 function doCuffDiff {
-	
+	echo "DERPDIFF"
 }
 
 function doCummerBund {
-	
+	echo "DERPBUND"
 }
 
 function doCuffDiffMergePerFilePair {
