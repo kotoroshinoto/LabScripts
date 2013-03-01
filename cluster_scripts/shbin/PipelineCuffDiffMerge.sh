@@ -43,4 +43,5 @@ doCuffDiffMergePerFilePair $NC $TC
 doCuffDiffMergePerFilePair $NF $TF
 doCuffDiffMergePerFilePair $NC $TF
 
+mkdir -p $CURDIR/sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
