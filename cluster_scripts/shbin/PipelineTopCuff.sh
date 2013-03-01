@@ -2,11 +2,8 @@
 source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 
-NC=$(echo $1 | tr "," "\n")
-NF=$(echo $2 | tr "," "\n")
-TC=$(echo $3 | tr "," "\n")
-TF=$(echo $4 | tr "," "\n")
-GROUPLBL=$5
+GROUPLBL=$1
+shift
 SJM_FILE=./TopCuff.sjm
 
 function doTophat {
@@ -40,9 +37,13 @@ function doTopCuffPerFilePair {
 
 rm $SJM_FILE
 touch $SJM_FILE
-doTopCuffPerFilePair $NC
-doTopCuffPerFilePair $NF
-doTopCuffPerFilePair $TC
-doTopCuffPerFilePair $TF
 
+for var in "$@"
+do
+	ARGS=$(echo $var | tr "," " ")
+	#echo "ARGS: $ARGS"
+    doTopCuffPerFilePair $ARGS
+done
+
+mkdir -p $CURDIR/sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
