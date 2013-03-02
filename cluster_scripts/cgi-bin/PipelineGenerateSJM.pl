@@ -85,7 +85,7 @@ for (my $i = 0 ; $i < scalar(@pipelineSteps); ++$i ){
 	++$item;
 	print STDERR ("Step $item: $step");
 	if($i==0){print STDERR " <---STARTING JOBS HERE";}
-	print STDERR ("\n")
+	print STDERR ("\n");
 }
 
 

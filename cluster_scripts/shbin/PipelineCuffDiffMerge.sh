@@ -22,7 +22,7 @@ function doCuffMerge {
 }
 
 function doCuffDiff {
-	echo "DERPDIFF"
+	SJM_JOB CuffDiff_$1_$2 25G "cuffdiff -o ./$1_$2_CuffDiff -b $BWAINDEX -p 8 -L $1,$2 -u ./$1_$2_Merge/merged.gtf ./$1_TOPHAT/accepted_hits.bam ./$2_TOPHAT/accepted_hits.bam"
 }
 
 function doCummerBund {
