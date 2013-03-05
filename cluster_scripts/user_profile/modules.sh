@@ -4,5 +4,5 @@ if [ -f $MODULE_INIT/$shell ]
 then
   . $MODULE_INIT/$shell
 else
-  . $MODULE_INIT/init/sh
+  . $MODULE_INIT/sh
 fi
