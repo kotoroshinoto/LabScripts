@@ -22,8 +22,8 @@ function doCuffMerge {
 }
 
 function doCuffDiff {
-	SJM_JOB CuffDiff_$1_$2 25G "cuffdiff -o ./$1_$2_CuffDiff -b $BWAINDEX -p 8 -L $1,$2 -u ./$1_$2_Merge/merged.gtf ./$1_TOPHAT/accepted_hits.bam ./$2_TOPHAT/accepted_hits.bam"
-	SJM_JOB_AFTER CuffDiff_$1_$2 CuffMerge_$1_$2
+	SJM_JOB CuffDiff_$1_$2 25G cuffdiff -o $1_$2_Diff -b $GENOME -p 8 -L $1,$2 -u ./$1_$2_Merge/merged.gtf ./$1_tophat/accepted_hits.bam ./$2_tophat/accepted_hits.bam
+	SJM_JOB_AFTER CuffDiff_$1_$2 CuffMerge_$1_$2 
 }
 
 function doCummerBund {
