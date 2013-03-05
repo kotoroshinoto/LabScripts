@@ -1,4 +1,4 @@
-source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/modules.sh
+source /UCHC/HPC/Everson_HPC/cluster_scripts/user_profile/modules.sh
 module load /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0
 
 HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh
