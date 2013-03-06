@@ -48,7 +48,7 @@ if ( $hasMatch == 0 ) {
 	die "Command given does not match existing jar in picard directory!\nAvailable Commands:\n" . join( "\n", @names ). "\n";
 }
 my $jar = File::Spec->catfile( $jarpath, $jarfile );
-my $command = "$java_binary -Xmx$java_heap_ram -Xms$java_heap_ram -jar $jar @ARGV";
+my $command = "$java_binary -Xmx$java_heap_ram -Xms$java_heap_ram -Djava.io.tmpdir=$tmpdir -jar $jar TMP_DIR=$tmpdir @ARGV";
 
 print "$command\n";
 #system($command);
