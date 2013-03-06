@@ -12,7 +12,7 @@ if($^O eq 'cygwin'){
 use BiotoolsSettings;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Path qw(make_path remove_tree);
-use Cwd ‘abs_path’;
+use Cwd'abs_path';
 my $goodopts;
 my $tmpdir;
 $goodopts = GetOptions ("tmp|t=s"=>\$tmpdir);
