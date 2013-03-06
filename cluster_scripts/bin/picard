@@ -15,7 +15,7 @@ use File::Path qw(make_path remove_tree);
 use Cwd 'abs_path';
 my $goodopts;
 my $tmpdir;
-$goodopts = GetOptions ("tmp|t=s"=>\$tmpdir);
+$goodopts = GetOptions ("tmpdir=s"=>\$tmpdir);
 if(!defined($tmpdir)){$tmpdir=${SettingsLib::SettingsList}{"CURDIR"}}
 $tmpdir=abs_path($tmpdir);
 if(! (-d $tmpdir)){
@@ -53,7 +53,7 @@ my $jar = File::Spec->catfile( $jarpath, $jarfile );
 my $command = "$java_binary -Xmx$java_heap_ram -Xms$java_heap_ram -Djava.io.tmpdir=$tmpdir -jar $jar TMP_DIR=$tmpdir @ARGV";
 
 print "$command\n";
-#system($command);
+system($command);
 
 exit 0;
 
