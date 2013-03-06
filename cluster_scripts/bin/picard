@@ -17,7 +17,7 @@ my $tmpdir;
 $goodopts = GetOptions ("tmp|t=s"=>\$tmpdir);
 if(!defined($tmpdir)){$tmpdir=${SettingsLib::SettingsList}{"CURDIR"}}
 elsif(! (-d $tmpdir)){
-	mkpath $tmpdir or die $!."\n";
+	make_path($tmpdir) or die $!."\n";
 }
 my $java_binary="/home/CAM/mgooch/HPC/oracle_jdk/jdk1.6.0_41/bin/java";
 my $java_heap_ram = ${SettingsLib::SettingsList}{"JAVA_RAM"};
