@@ -199,4 +199,8 @@ sub parseBrackets{
 	}
 }
 
+sub outputPipelineSJM {
+	
+} 
+
 sub charAt { return substr($_[0],$_[1],1); }
