@@ -39,11 +39,14 @@ import sys
 #sub SJM_JOB_AFTER {return  q(order ${GROUPLBL}_).$_[0].q( after ${GROUPLBL}_).$_[1];}
 class AnalysisPipeline:
     def __init__(self):
+        #TODO: fill in stub
         self.jobtemplates={}
     def replaceVars(self):
-        #TODO: derp
+        #TODO: fill in stub
         return None
     def requireJobDef(self):
+        #TODO: fill in stub
         return None
     def templateDir(self):
+        #TODO: fill in stub
         return None
