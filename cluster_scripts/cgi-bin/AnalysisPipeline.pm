@@ -185,8 +185,8 @@ sub TemplateDir{
 	my $templatedir=abs_path("$directories");
 	$templatedir=File::Spec->catdir($templatedir,'..');
 	$templatedir=File::Spec->catdir($templatedir,'jobtemplates');
-	$templatedir=File::Spec->rel2abs($templatedir);
-	#print STDERR  "$templatedir\n";
+	$templatedir=abs_path($templatedir);
+	print STDERR  "template dir: $templatedir\n";
 	return $templatedir;
 }
 
