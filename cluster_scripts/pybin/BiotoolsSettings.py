@@ -9,7 +9,13 @@ if sys.platform == "cygwin":
         sys.path.append(winpybin)
     if winpymods not in sys.path:
         sys.path.append(winpymods)
-import pyswitch
+if sys.platform == "win32":
+    winpybin='c:\Apps\workspace\cluster_scripts\pybin'
+    winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
+    if winpybin not in sys.path:
+        sys.path.append(winpybin)
+    if winpymods not in sys.path:
+        sys.path.append(winpymods)
 def printDict(Dict):
     if type(Dict) != type(dict()):
         return

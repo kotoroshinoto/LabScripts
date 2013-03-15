@@ -203,54 +203,54 @@ if __name__ == '__main__': # pragma: no cover
     # A default handler
     @mySwitch.default
     def gotDefault(value, *args, **kwargs):
-        print "Default handler: I got unregistered value %r, "\
+        print ("Default handler: I got unregistered value %r, "\
               "with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+              (value, args, kwargs))
         return value
         
     # A single numeric case value.
     @mySwitch.case(0)
     def gotZero(value, *args, **kwargs):
-        print "gotZero: I got a %d, with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+        print ("gotZero: I got a %d, with args: %r and kwargs: %r" % \
+              (value, args, kwargs))
         return value
 
     # A range of numeric case values.
     @mySwitch.case(range(5, 10))
     def gotFiveThruNine(value, *args, **kwargs):    
-        print "gotFiveThruNine: I got a %d, with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+        print ("gotFiveThruNine: I got a %d, with args: %r and kwargs: %r" % \
+              (value, args, kwargs))
         return value
         
     # A string case value, for an exact match.
     @mySwitch.case('Guido')
     def gotGuido(value, *args, **kwargs):
-        print "gotGuido: I got '%s', with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+        print ("gotGuido: I got '%s', with args: %r and kwargs: %r" % \
+              (value, args, kwargs))
         return value
         
     # A string value for use with the 'in' operator.
     @mySwitch.caseIn('lo')
     def gotLo(value, *args, **kwargs):
-        print "gotLo: I got '%s', with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+        print ("gotLo: I got '%s', with args: %r and kwargs: %r" % \
+              (value, args, kwargs))
         return value
         
     # A regular expression pattern match in a string.
     # You can also pass in a pre-compiled regular expression.
     @mySwitch.caseRegEx(r'\b([Pp]y\w*)\b')
     def gotPyword(matchObj, *args, **kwargs):
-        print "gotPyword: I got a matchObject where group(1) is '%s', "\
+        print ("gotPyword: I got a matchObject where group(1) is '%s', "\
               "with args: %r and kwargs: %r" % \
-              (matchObj.group(1), args, kwargs)
+              (matchObj.group(1), args, kwargs))
         return matchObj
         
     # And lastly, you can pass a iterable to case, caseIn, and
     # caseRegEx.
     @mySwitch.case([ 99, 'yo', 200 ])
     def gotStuffInSeq(value, *args, **kwargs):
-        print "gotStuffInSeq: I got %r, with args: %r and kwargs: %r" % \
-              (value, args, kwargs)
+        print ("gotStuffInSeq: I got %r, with args: %r and kwargs: %r" % \
+              (value, args, kwargs))
         return value
     
     
