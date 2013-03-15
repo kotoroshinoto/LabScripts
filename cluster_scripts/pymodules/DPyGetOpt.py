@@ -226,7 +226,7 @@ class DPyGetOpt:
         (name, (type, mode, default, multi), realName) = oTuple
 
         # verify name and add to option names dictionary
-        if self.optionNames.has_key(name):
+        if name in self.optionNames:
             if realName:
                 raise SpecificationError('Alias \'' + name + '\' for \'' +
                                          realName +
@@ -250,7 +250,7 @@ class DPyGetOpt:
             oTuple = (alias, specTuple, name)
 
             # verify name and add to option names dictionary
-            if self.optionNames.has_key(alias):
+            if alias in self.optionNames:
                 if realName:
                     raise SpecificationError('Negated alias \'' + name +
                                              '\' for \'' + realName +
@@ -316,7 +316,7 @@ class DPyGetOpt:
             specification = match.group('spec')
 
             # break name into name, aliases
-            nlist = string.split(names, '|')
+            nlist = names.split('|')
 
             # get name
             name      = nlist[0]
@@ -600,7 +600,7 @@ class DPyGetOpt:
                     self.optionValues[realName] = [optionValue]
             else:
                 # only one value per
-                if self.isPosixCompliant and self.optionValues.has_key(realName):
+                if self.isPosixCompliant and realName in self.optionValues:
                     raise ArgumentError('Argument \'' + arg +
                                         '\' occurs multiple times.')
 
