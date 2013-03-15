@@ -183,8 +183,11 @@ sub load_template {
 sub TemplateDir{
 	my($filename, $directories, $suffix) = fileparse($0);
 	my $templatedir=abs_path("$directories");
+	$templatedir=File::Spec->catdir($templatedir,'..');
 	$templatedir=File::Spec->catdir($templatedir,'jobtemplates');
+	$templatedir=File::Spec->rel2abs($templatedir);
 	#print STDERR  "$templatedir\n";
+	return $templatedir;
 }
 
 sub new {
