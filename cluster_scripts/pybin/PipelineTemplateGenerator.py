@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-import BiotoolsSettings
-import DPyGetOpt
-import pyswitch
 import sys
 import os
-
+import BiotoolsSettings
+BiotoolsSettings.AssertPaths()
+import DPyGetOpt
+import pyswitch
 def usage(exit_code=0):
     usage="Usage: %s (options)\n" % sys.argv[0]
     usage +="Options:\n"

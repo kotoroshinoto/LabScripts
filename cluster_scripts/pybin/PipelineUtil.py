@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import BiotoolsSettings
-import pyswitch
-import os
 import sys
+import os
+import BiotoolsSettings
+BiotoolsSettings.AssertPaths()
+import pyswitch
 #to write test modules:
 #http://docs.python.org/3.3/library/unittest.html
 #SJM creating functions:
@@ -37,6 +38,57 @@ import sys
 #    return $str;
 #}
 #sub SJM_JOB_AFTER {return  q(order ${GROUPLBL}_).$_[0].q( after ${GROUPLBL}_).$_[1];}
+class PipelineUtil:
+    @staticmethod
+    def printDict(Dict):
+        if type(Dict) != type(dict()):
+            return
+        for key in Dict:
+            print ("key: %s\n\tValue: %s" % (key,Dict[key]))
+    @staticmethod
+    def printList(List):
+        if type(List) != type(list()):
+            return
+        for item in List:
+            print (item)
+class PipelineSubStep:
+    def __init__(self):
+        #TODO: fill in stub
+        pass
+    def getName(self):
+        #TODO: fill in stub
+        pass
+    def toString(self):
+        #TODO: fill in stub
+        pass
+    def toTemplateSTring(self):
+        #TODO: fill in stub
+        pass
+class PipelineStep:
+    def __init__(self):
+        #TODO: fill in stub
+        pass
+    def addDependency(self):
+        #TODO: fill in stub
+        pass
+    def getCopy(self):
+        #TODO: fill in stub
+        pass
+    def getNewSubStep(self):
+        #TODO: fill in stub
+        pass
+    def readTemplate(self):
+        #TODO: fill in stub
+        pass
+    def setAssume(self):
+        #TODO: fill in stub
+        pass
+    def toString(self):
+        #TODO: fill in stub
+        pass
+    def toTemplateString(self):
+        #TODO: fill in stub
+        pass
 class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
@@ -48,5 +100,8 @@ class AnalysisPipeline:
         #TODO: fill in stub
         return None
     def templateDir(self):
+        #TODO: fill in stub
+        return None
+    def loadTemplate(self):
         #TODO: fill in stub
         return None

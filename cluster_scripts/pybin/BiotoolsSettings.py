@@ -1,31 +1,5 @@
 #!/usr/bin/env python
-import sys
 import os
-import inspect
-if sys.platform == "cygwin":
-    winpybin='/drives/c/Apps/workspace/cluster_scripts/pybin'
-    winpymods='/drives/c/Apps/workspace/cluster_scripts/pymodules'
-    if winpybin not in sys.path:
-        sys.path.append(winpybin)
-    if winpymods not in sys.path:
-        sys.path.append(winpymods)
-if sys.platform == "win32":
-    winpybin='c:\Apps\workspace\cluster_scripts\pybin'
-    winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
-    if winpybin not in sys.path:
-        sys.path.append(winpybin)
-    if winpymods not in sys.path:
-        sys.path.append(winpymods)
-def printDict(Dict):
-    if type(Dict) != type(dict()):
-        return
-    for key in Dict:
-        print ("key: %s\n\tValue: %s" % (key,Dict[key]))
-def printList(List):
-    if type(List) != type(list()):
-        return
-    for item in List:
-        print (item)
 SettingsList={}
 #SettingsList["PREFIX"]="";
 #SettingsList["GROUPLBL"]="";
@@ -56,3 +30,26 @@ SettingsList["JAVA_JOB_RAM"]="50G";
 SettingsList["SHIMMER_RAM"]="20G";
 SettingsList["GENERIC_JOB_RAM"]="30G";
 #printDict(SettingsList)
+import sys
+def AssertPaths():
+    if sys.platform == "cygwin":
+        winpybin='/drives/c/Apps/workspace/cluster_scripts/pybin'
+        winpymods='/drives/c/Apps/workspace/cluster_scripts/pymodules'
+        if winpybin not in sys.path:
+            sys.path.append(winpybin)
+        if winpymods not in sys.path:
+            sys.path.append(winpymods)
+    if sys.platform == "win32":
+        winpybin='c:\Apps\workspace\cluster_scripts\pybin'
+        winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
+        if winpybin not in sys.path:
+            sys.path.append(winpybin)
+        if winpymods not in sys.path:
+            sys.path.append(winpymods)
+    if sys.platform == "linux":
+        linpybin='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
+        linpymods='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
+        if winpybin not in sys.path:
+            sys.path.append(linpybin)
+        if winpymods not in sys.path:
+            sys.path.append(linpymods)
