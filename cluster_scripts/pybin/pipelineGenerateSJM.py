@@ -5,6 +5,8 @@ import BiotoolsSettings
 BiotoolsSettings.AssertPaths()
 import DPyGetOpt
 import pyswitch
+#http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
+#http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 class Usage(Exception):
     def __init__(self, msg, err=True):
         #msg is an error message to post before the usage info
