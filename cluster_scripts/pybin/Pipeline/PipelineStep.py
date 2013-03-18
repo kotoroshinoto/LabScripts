@@ -1,129 +1,11 @@
 #!/usr/bin/env python
-import sys
-import os
+'''
+Created on Mar 18, 2013
+
+@author: Gooch
+'''
 import re
-import inspect
-import BiotoolsSettings
-BiotoolsSettings.AssertPaths()
-
-#to write test modules:
-#http://docs.python.org/3.3/library/unittest.html
-#SJM creating functions:
-#sub GET_SJM_START {
-#    my $str="";
-#    my $JOBNAME=shift;
-#    my $JOBRAM=shift;
-#    $str.=q(job_begin)."\n";
-#    $str.=q(name ${GROUPLBL}_).$JOBNAME."\n";
-#    $str.=q(memory ).$JOBRAM."\n";
-#    $str.=q(module EversonLabBiotools/1.0)."\n";
-#    $str.=q(queue all.q)."\n";
-#    $str.=q(directory ${CURDIR})."\n";
-#}
-#sub SJM_MULTILINE_JOB_START {
-#    my $str=GET_SJM_START @_;
-#    $str.=q(cmd_begin)."\n";
-#    return $str;
-#}
-#sub SJM_MULTILINE_JOB_CMD {
-#    my $str=join(" ",@_);
-#    return $str."\n";
-#}
-#sub SJM_MULTILINE_JOB_END {
-#    return "cmd_end\n";
-#}
-#sub SJM_JOB {
-#    my $str=GET_SJM_START @_;
-#    $str.=q(cmd $HANDLER_SCRIPT ).join(" ",@_)."\n";
-#    $str.=q(job_end)."\n";
-#    print "str:\n".$str."\n";
-#    return $str;
-#}
-#sub SJM_JOB_AFTER {return  q(order ${GROUPLBL}_).$_[0].q( after ${GROUPLBL}_).$_[1];}
-def printDict(Dict):
-    if type(Dict) != type(dict()):
-        return
-    for key in Dict:
-        print ("key: %s\n\tValue: %s" % (key,Dict[key]))
-def printList(List):
-    if type(List) != type(list()):
-        return
-    for item in List:
-        print (item)
-
-def templateDir():
-    #TODO: if/when the script is placed into a zip executable, put template path in biotools settings
-    #get path to this script, get directory name, and go up one level, then append template dir name
-    return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))),"jobtemplates")
-
-def replaceVars():
-    #TODO: fill in stub
-    return None
-class PipelineError(Exception):
-    def __init__(self, msg=None, err=True):
-        if msg is not None:
-            self.msg=msg
-        else:
-            self.msg="[Pipeline Error]: unspecified error"
-class PipelineSubStep:
-    def __init__(self,parent):
-        self.name= None;
-        self.subname= None;#used when defining multiple jobs that use same template, will be appended to name
-        self.memory= None;
-        self.queue= None;
-        self.module= None;
-        self.directory= None;
-        self.status= None;#waiting,failed,done
-        self.cmd=[];#list of commands if only 1 member will output in single command mode
-        #following not really needed to generate new jobs, but if parsing an SJM file, it will be good to have placeholders
-        self.id= None;
-        self.cpu_usage= None;
-        self.wallclock= None;
-        self.memory_usage= None;
-        self.swap_usage= None;
-        #list of jobnames that this job must wait for
-        self.order_after=[];
-        self.parent=parent;#DONE have this be added via a subroutine in the parent class, so this automatically gets supplied
-    def getFullName(self):
-        if self.name is None:
-            return None
-        if self.subname is None:
-            return self.name
-        return self.name + "_" + self.subname
-    def toTemplateString(self):
-        tempstr="job_begin\n";
-        if self.name is not None:
-            tempstr+="\tname "+self.name+"\n"
-        else:
-            raise PipelineError("[PipelineSubStep] Attempted to produce template string with no defined name!")
-        if self.memory is not None:
-            tempstr+="\tmemory "+self.memory+"\n"
-        if self.queue is not None:
-            tempstr+="\tqueue "+self.queue+"\n"
-        if self.module is not None:
-            tempstr+="\tmodule "+self.module+"\n"
-        if self.directory is not None:
-            tempstr+="\tdirectory "+self.directory+"\n"
-        if self.status is not None:
-            tempstr+="\tstatus "+self.status+"\n"
-        if len(self.cmd) <= 0:
-            raise PipelineError("[PipelineSubStep] Attempted to produce template string with no defined commands!")
-        elif len(self.cmd) == 1:
-            tempstr+="\tcmd "+self.cmd[0]+"\n"
-        else:
-            tempstr+="\tcmd_begin "+self.cmd[0]+"\n"
-            for cmd in self.cmd:
-                tempstr+="\t\t"+cmd+"\n"
-            tempstr+="\tcmd_end "+self.cmd[0]+"\n"
-        tempstr+="job_end\n"
-        if len(self.order_after) > 0:
-            for prior in self.order_after:
-                tempstr+="order "+self.getFullName()+" after "+prior
-        return tempstr
-    def toString(self,grouplbl,cumsuffix,prefix,prefix2=None):
-        if self.parent.isCrossJob and prefix2 is None:
-            raise PipelineError("[PipelineSubStep.toString] toString called on crossjob without prefix2 variable\n")
-        return AnalysisPipeline.replaceVars(self.toTemplateString(),self,grouplbl,cumsuffix,prefix,prefix2)
+import PipelineError,PipelineSubStep
 class PipelineStep:
     def __init__(self):
         #list of files this pipeline uses
@@ -353,13 +235,3 @@ class PipelineStep:
                       
             else:
                 pass
-class AnalysisPipeline:
-    def __init__(self):
-        #TODO: fill in stub
-        self.jobtemplates={}
-    def requireJobDef(self):
-        #TODO: fill in stub
-        return None
-    def loadTemplate(self):
-        #TODO: fill in stub
-        return None

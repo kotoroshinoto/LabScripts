@@ -29,8 +29,15 @@ SettingsList["BWA_RAM"]="10G";
 SettingsList["JAVA_JOB_RAM"]="50G";
 SettingsList["SHIMMER_RAM"]="20G";
 SettingsList["GENERIC_JOB_RAM"]="30G";
-#printDict(SettingsList)
+
 import sys
+if sys.platform == "linux":
+    SettingsList["SJM_TEMPLATE_DIR"]='/UCHC/HPC/Everson_HPC/cluster_scripts/jobtemplates';
+if sys.platform == "win32":
+    SettingsList["SJM_TEMPLATE_DIR"]='c:\Apps\workspace\cluster_scripts\jobtemplates';
+if sys.platform == "cygwin":
+    SettingsList["SJM_TEMPLATE_DIR"]='/drives/c/Apps/workspace/cluster_scripts/jobtemplates';
+#printDict(SettingsList)
 def AssertPaths():
     if sys.platform == "cygwin":
         winpybin='/drives/c/Apps/workspace/cluster_scripts/pybin'
