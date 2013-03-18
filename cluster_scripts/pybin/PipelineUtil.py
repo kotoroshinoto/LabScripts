@@ -60,6 +60,13 @@ class PipelineUtil:
             return
         for item in List:
             print (item)
+    @staticmethod
+    def templateDir():
+        return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))),"jobtemplates")
+    @staticmethod
+    def replaceVars():
+        #TODO: fill in stub
+        return None
 class PipelineSubStep:
     def __init__(self,parent):
         self.name= None;
@@ -352,16 +359,9 @@ class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
         self.jobtemplates={}
-    @staticmethod
-    def replaceVars():
-        #TODO: fill in stub
-        return None
     def requireJobDef(self):
         #TODO: fill in stub
         return None
-    @staticmethod
-    def templateDir():
-        return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))),"jobtemplates")
     def loadTemplate(self):
         #TODO: fill in stub
         return None
