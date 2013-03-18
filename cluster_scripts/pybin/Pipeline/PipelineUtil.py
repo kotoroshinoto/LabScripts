@@ -4,7 +4,7 @@ import os
 import re
 import inspect
 import BiotoolsSettings
-import PipelineError
+import Pipeline.PipelineError as PipelineError
 BiotoolsSettings.AssertPaths()
 #SJM creating functions:
 #sub GET_SJM_START {

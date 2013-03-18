@@ -6,9 +6,7 @@ Created on Mar 18, 2013
 import unittest
 
 from Pipeline.PipelineError import PipelineError 
-class Test(unittest.TestCase):
-
-
+class PipelineErrorTest(unittest.TestCase):
     def testErrorBlank(self):
         try:
             raise PipelineError()
@@ -19,11 +17,6 @@ class Test(unittest.TestCase):
             raise PipelineError("TEST MESSAGE")
         except PipelineError as error:
             self.assertEqual(error.msg,"TEST MESSAGE")
-
-
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testErrorBlank']
-    #unittest.main()
-    derp=Test()
-    derp.testErrorBlank()
-    derp.testErrorMsg()
+    unittest.main()

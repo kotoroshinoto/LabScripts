@@ -5,7 +5,9 @@ Created on Mar 18, 2013
 @author: Gooch
 '''
 import re
-import PipelineError,PipelineSubStep
+import Pipeline.PipelineError as PipelineError
+import Pipeline.PipelineSubStep as PipelineSubStep
+import Pipeline.PipelineUtil as PipelineUtil
 class PipelineStep:
     def __init__(self):
         #list of files this pipeline uses

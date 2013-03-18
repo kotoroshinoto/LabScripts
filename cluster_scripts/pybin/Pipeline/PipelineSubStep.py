@@ -4,7 +4,8 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import PipelineError,PipelineUtil
+import Pipeline.PipelineError as PipelineError
+import Pipeline.PipelineUtil as PipelineUtil
 class PipelineSubStep:
     def __init__(self,parent):
         self.name= None;

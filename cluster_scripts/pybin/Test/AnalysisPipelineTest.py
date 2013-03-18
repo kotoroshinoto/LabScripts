@@ -5,8 +5,8 @@ Created on Mar 18, 2013
 '''
 import unittest
 
-
-class Test(unittest.TestCase):
+from Pipeline.AnalysisPipeline import AnalysisPipeline
+class AnalysisPipelineTest(unittest.TestCase):
 
 
     def setUp(self):
