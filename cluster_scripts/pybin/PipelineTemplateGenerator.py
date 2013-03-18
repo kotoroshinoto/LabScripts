@@ -5,39 +5,75 @@ import BiotoolsSettings
 BiotoolsSettings.AssertPaths()
 import DPyGetOpt
 import pyswitch
-def usage(exit_code=0):
-    usage="Usage: %s (options)\n" % sys.argv[0]
-    usage +="Options:\n"
-    usage +="\t--template|-T=string : set template name\n"
-    usage +="\t--clearsuffixes|-C   : set flag to force suffix reset post-module\n"
-    usage +="\t--cross|-c           : set flag to inform SJM generator that this is a crossjob\n" 
-    usage +="\t                       (depends on pairs of input files from different samples)\n"
-    usage +="\t--variable|-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
-    usage +="\t--suffix|-S=string   : set suffix to be used post-module\n"
-    usage +="\t--subjob|-s=string   : add a subjob to template\n"
-    sys.stderr.write(usage)
-    sys.exit(exit_code)
-
-opts=[]
-opts.append("variable|V=s@")
-opts.append("clearsuffixes|C")
-opts.append("suffix|S=s")
-opts.append("template|T=s")
-opts.append("subjob|J=s@")
-opts.append("cross|c")
-opts.append("help|h")
-opt_parser=DPyGetOpt.DPyGetOpt()
-opt_parser.setIgnoreCase(False)
-opt_parser.setAllowAbbreviations(False)
-opt_parser.setPosixCompliance(True)
-opt_parser.parseConfiguration(opts)
-opt_parser.processArguments(sys.argv)
-pipeline_vars=opt_parser.valueForOption("variable")
-pipeline_clearsuffixes=bool(opt_parser.valueForOption("clearsuffixes"))
-pipeline_crossjob=bool(opt_parser.valueForOption("cross"))
-pipeline_suffix=opt_parser.valueForOption("suffix")
-pipeline_templateName=opt_parser.valueForOption("template")
-help_flag=bool(opt_parser.valueForOption("help"))
-if help_flag:
-    usage(exit_code=0)
-argv=opt_parser.freeValues
+#http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
+#http://www.artima.com/weblogs/viewpost.jsp?thread=4829
+class Usage(Exception):
+    def __init__(self, msg=None, err=True):
+        #msg is an error message to post before the usage info
+        usage="Usage: %s (options)\n" % sys.argv[0]
+        usage +="Options:\n"
+        usage +="\t--template|-T=string : set template name\n"
+        usage +="\t--clearsuffixes|-C   : set flag to force suffix reset post-module\n"
+        usage +="\t--cross|-c           : set flag to inform SJM generator that this is a crossjob\n" 
+        usage +="\t                       (depends on pairs of input files from different samples)\n"
+        usage +="\t--variable|-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
+        usage +="\t--suffix|-S=string   : set suffix to be used post-module\n"
+        usage +="\t--subjob|-s=string   : add a subjob to template\n"
+        if msg is not None:
+            self.msg = msg.strip() +"\n" + usage
+        else:
+            self.msg = usage
+        self.exit_code=None
+        if err == True:
+            self.exit_code = 2
+        else:
+            self.exit_code = 0
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    try:
+        #try to parse option arguments
+        try:
+            opts=[]
+            opts.append("variable|V=s@")
+            opts.append("clearsuffixes|C")
+            opts.append("suffix|S=s")
+            opts.append("template|T=s")
+            opts.append("subjob|J=s@")
+            opts.append("cross|c")
+            opts.append("help|h")
+            opt_parser=DPyGetOpt.DPyGetOpt()
+            opt_parser.setIgnoreCase(False)
+            opt_parser.setAllowAbbreviations(False)
+            opt_parser.setPosixCompliance(True)
+            opt_parser.parseConfiguration(opts)
+            opt_parser.processArguments(sys.argv)
+            pipeline_vars=opt_parser.valueForOption("variable")
+            pipeline_clearsuffixes=bool(opt_parser.valueForOption("clearsuffixes"))
+            pipeline_crossjob=bool(opt_parser.valueForOption("cross"))
+            pipeline_suffix=opt_parser.valueForOption("suffix")
+            pipeline_templateName=opt_parser.valueForOption("template")
+            help_flag=bool(opt_parser.valueForOption("help"))
+            if help_flag:
+                raise Usage(err=False)
+            argv=opt_parser.freeValues
+        except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
+            raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
+            pass
+        except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
+            raise Usage("DPyGetOptSpecErr: " + DPyGetOptSpecErr.__str__())
+            pass
+        except DPyGetOpt.TerminationError as DPyGetOptTermErr:
+            raise Usage("DPyGetOptTermErr: " + DPyGetOptTermErr.__str__())
+            pass
+        except DPyGetOpt.Error as DPyGetOptErr:
+            raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
+            pass
+        raise Usage("")
+    except Usage as err:
+        sys.stderr.write(err.msg)
+        sys.stderr.write("for help use --help")
+        return err.exit_code
+        
+if __name__ == "__main__":
+    sys.exit(main())
