@@ -23,9 +23,10 @@ class SampleData:
         try:
             f=open(filename,"r")
             for line in f:
-                sd=SampleData()
+                sd=None
                 line=line.strip()
                 if line != '':
+                    sd=SampleData()
                     cols=line.split("\t")
                     if len(cols) == 7:
                         #print ("entry is single")
