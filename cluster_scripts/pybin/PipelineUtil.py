@@ -40,33 +40,31 @@ BiotoolsSettings.AssertPaths()
 #    return $str;
 #}
 #sub SJM_JOB_AFTER {return  q(order ${GROUPLBL}_).$_[0].q( after ${GROUPLBL}_).$_[1];}
+def printDict(Dict):
+    if type(Dict) != type(dict()):
+        return
+    for key in Dict:
+        print ("key: %s\n\tValue: %s" % (key,Dict[key]))
+def printList(List):
+    if type(List) != type(list()):
+        return
+    for item in List:
+        print (item)
+
+def templateDir():
+    #TODO: if/when the script is placed into a zip executable, put template path in biotools settings
+    #get path to this script, get directory name, and go up one level, then append template dir name
+    return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))),"jobtemplates")
+
+def replaceVars():
+    #TODO: fill in stub
+    return None
 class PipelineError(Exception):
     def __init__(self, msg=None, err=True):
         if msg is not None:
             self.msg=msg
         else:
             self.msg="[Pipeline Error]: unspecified error"
-
-class PipelineUtil:
-    @staticmethod
-    def printDict(Dict):
-        if type(Dict) != type(dict()):
-            return
-        for key in Dict:
-            print ("key: %s\n\tValue: %s" % (key,Dict[key]))
-    @staticmethod
-    def printList(List):
-        if type(List) != type(list()):
-            return
-        for item in List:
-            print (item)
-    @staticmethod
-    def templateDir():
-        return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))),"jobtemplates")
-    @staticmethod
-    def replaceVars():
-        #TODO: fill in stub
-        return None
 class PipelineSubStep:
     def __init__(self,parent):
         self.name= None;
