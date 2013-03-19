@@ -107,6 +107,7 @@ setBiotoolPaths bamtools 1 1 1 0 0 0 0 0
 setBiotoolPaths BICseq 1 0 0 0 0 0 0 0
 setBiotoolPaths boost 0 1 1 1 0 0 0 0
 setBiotoolPaths python-2.7 1 1 1 0 0 0 0 1
+setBiotoolPaths python-3.3 1 1 1 0 0 0 0 1
 setBiotoolPaths oracle_jdk/jdk1.7.0_06/jre 1 0 1 0 0 0 0 0
 setBiotoolPaths oracle_jdk/jdk1.7.0_06 1 1 1 0 0 0 0 1
 setBiotoolPaths hugeseq 1 0 0 0 0 0 0 0
