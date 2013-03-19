@@ -46,6 +46,12 @@ def AssertPaths():
             sys.path.append(winpybin)
         if winpymods not in sys.path:
             sys.path.append(winpymods)
+        winpipeline='/drives/c/Apps/workspace/cluster_scripts/pybin/Pipeline'
+        wintest='/drives/c/Apps/workspace/cluster_scripts/pybin/Test'
+        if winpipeline not in sys.path:
+            sys.path.append(winpipeline)
+        if wintest not in sys.path:
+            sys.path.append(wintest)
     if sys.platform == "win32":
         winpybin='c:\Apps\workspace\cluster_scripts\pybin'
         winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
@@ -53,6 +59,12 @@ def AssertPaths():
             sys.path.append(winpybin)
         if winpymods not in sys.path:
             sys.path.append(winpymods)
+        winpipeline='c:\Apps\workspace\cluster_scripts\pybin'
+        wintest='c:\Apps\workspace\cluster_scripts\pymodules'
+        if winpipeline not in sys.path:
+            sys.path.append(winpipeline)
+        if wintest not in sys.path:
+            sys.path.append(wintest)
     if sys.platform == "linux":
         linpybin='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
         linpymods='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
@@ -60,3 +72,9 @@ def AssertPaths():
             sys.path.append(linpybin)
         if winpymods not in sys.path:
             sys.path.append(linpymods)
+        linpipeline='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
+        lintest='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
+        if winpipeline not in sys.path:
+            sys.path.append(linpipeline)
+        if wintest not in sys.path:
+            sys.path.append(lintest)

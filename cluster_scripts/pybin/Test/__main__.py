@@ -3,7 +3,10 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import unittest
+import unittest,sys,os
+sys.path.append(os.path.realpath(os.getcwd()))
+import BiotoolsSettings
+BiotoolsSettings.AssertPaths()
 from PipelineErrorTest import PipelineErrorTest
 from PipelineSampleDataTest import SampleDataTest  
 from PipelineSubStepTest import PipelineSubStepTest  
