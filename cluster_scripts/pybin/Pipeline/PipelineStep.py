@@ -90,6 +90,7 @@ class PipelineStep:
             else:
                 joblines.append(line)
         newStep.parseSubJobs(joblines)
+        return newStep;
             
     def setAssume(self):
         for substep in self.substeps:

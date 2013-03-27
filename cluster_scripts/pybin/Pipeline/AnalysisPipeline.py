@@ -3,14 +3,16 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
+import BiotoolsSettings
 import re
-import PipelineUtil
 import os
-from PipelineStep import *
+import Pipeline.PipelineStep as PipelineStep
+import Pipeline.PipelineUtil as PipelineUtil
 class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
         self.jobtemplates={}
+
     @staticmethod
     def splitJobname(jobspec):
         #TODO: name format is TemplateName[SubName]
@@ -52,27 +54,16 @@ class AnalysisPipeline:
         #check if step template is already loaded
         if self.jobtemplates.has_key(splitName[0]):
             #if loaded, no more work to do
-            return;
+            return True;
         #if not found, check if template exists
         path2Template=os.path.join(PipelineUtil.templateDir(),splitName[0].upper()+".sjt")
+        print(path2Template) 
         if os.path.isfile(path2Template):
             #if template exists, load it
-            PipelineStep.readTemplate(path2Template)
+            #template=PipelineStep.readTemplate(path2Template)
+            return True
         else:
             #if template doesn't exist, signal error
             return False
-splitresult=AnalysisPipeline.splitJobname("TemplateName")
-for item in splitresult:
-    print (item);
-splitresult=AnalysisPipeline.splitJobname("TemplateName[SubJobName]")
-for item in splitresult:
-    print (item);
-splitresult=AnalysisPipeline.splitJobname("[SubJobName]")
-for item in splitresult:
-    print (item);
-splitresult=AnalysisPipeline.splitJobname("[]")
-for item in splitresult:
-    print (item);
-splitresult=AnalysisPipeline.splitJobname("TemplateName[]")
-for item in splitresult:
-    print (item);
+apl=AnalysisPipeline()
+apl.loadTemplate("BWA_ALIGN_PAIRED")

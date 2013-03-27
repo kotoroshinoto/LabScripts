@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import os,re
 SettingsList={}
 #SettingsList["PREFIX"]="";
 #SettingsList["GROUPLBL"]="";
@@ -31,50 +31,56 @@ SettingsList["SHIMMER_RAM"]="20G";
 SettingsList["GENERIC_JOB_RAM"]="30G";
 
 import sys
-if sys.platform == "linux":
+if re.match("^linux",sys.platform):
     SettingsList["SJM_TEMPLATE_DIR"]='/UCHC/HPC/Everson_HPC/cluster_scripts/jobtemplates';
-if sys.platform == "win32":
+    linpybin='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
+    linpymods='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
+    if linpybin not in sys.path:
+        sys.path.append(linpybin)
+    if linpymods not in sys.path:
+        sys.path.append(linpymods)
+    linpipeline='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
+    lintest='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
+    if linpipeline not in sys.path:
+        sys.path.append(linpipeline)
+    if lintest not in sys.path:
+        sys.path.append(lintest)
+elif re.match("^win32",sys.platform):
     SettingsList["SJM_TEMPLATE_DIR"]='c:\Apps\workspace\cluster_scripts\jobtemplates';
-if sys.platform == "cygwin":
+    winpybin='c:\Apps\workspace\cluster_scripts\pybin'
+    winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
+    if winpybin not in sys.path:
+        sys.path.append(winpybin)
+    if winpymods not in sys.path:
+        sys.path.append(winpymods)
+    winpipeline='c:\Apps\workspace\cluster_scripts\pybin'
+    wintest='c:\Apps\workspace\cluster_scripts\pymodules'
+    if winpipeline not in sys.path:
+        sys.path.append(winpipeline)
+    if wintest not in sys.path:
+        sys.path.append(wintest)
+elif re.match("^cygwin",sys.platform):
     SettingsList["SJM_TEMPLATE_DIR"]='/drives/c/Apps/workspace/cluster_scripts/jobtemplates';
-#printDict(SettingsList)
-def AssertPaths():
-    if sys.platform == "cygwin":
-        winpybin='/drives/c/Apps/workspace/cluster_scripts/pybin'
-        winpymods='/drives/c/Apps/workspace/cluster_scripts/pymodules'
-        if winpybin not in sys.path:
-            sys.path.append(winpybin)
-        if winpymods not in sys.path:
-            sys.path.append(winpymods)
-        winpipeline='/drives/c/Apps/workspace/cluster_scripts/pybin/Pipeline'
-        wintest='/drives/c/Apps/workspace/cluster_scripts/pybin/Test'
-        if winpipeline not in sys.path:
-            sys.path.append(winpipeline)
-        if wintest not in sys.path:
-            sys.path.append(wintest)
-    if sys.platform == "win32":
-        winpybin='c:\Apps\workspace\cluster_scripts\pybin'
-        winpymods='c:\Apps\workspace\cluster_scripts\pymodules'
-        if winpybin not in sys.path:
-            sys.path.append(winpybin)
-        if winpymods not in sys.path:
-            sys.path.append(winpymods)
-        winpipeline='c:\Apps\workspace\cluster_scripts\pybin'
-        wintest='c:\Apps\workspace\cluster_scripts\pymodules'
-        if winpipeline not in sys.path:
-            sys.path.append(winpipeline)
-        if wintest not in sys.path:
-            sys.path.append(wintest)
-    if sys.platform == "linux":
-        linpybin='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
-        linpymods='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
-        if winpybin not in sys.path:
-            sys.path.append(linpybin)
-        if winpymods not in sys.path:
-            sys.path.append(linpymods)
-        linpipeline='/UCHC/HPC/Everson_HPC/cluster_scripts/pybin'
-        lintest='/UCHC/HPC/Everson_HPC/cluster_scripts/pymodules'
-        if winpipeline not in sys.path:
-            sys.path.append(linpipeline)
-        if wintest not in sys.path:
-            sys.path.append(lintest)
+    winpybin='/drives/c/Apps/workspace/cluster_scripts/pybin'
+    winpymods='/drives/c/Apps/workspace/cluster_scripts/pymodules'
+    if winpybin not in sys.path:
+        sys.path.append(winpybin)
+    if winpymods not in sys.path:
+        sys.path.append(winpymods)
+    winpipeline='/drives/c/Apps/workspace/cluster_scripts/pybin/Pipeline'
+    wintest='/drives/c/Apps/workspace/cluster_scripts/pybin/Test'
+    if winpipeline not in sys.path:
+        sys.path.append(winpipeline)
+    if wintest not in sys.path:
+        sys.path.append(wintest)
+else:
+    sys.stderr.write("unexpected platform detected, program may not work properly")
+def hasValue(key):
+    return SettingsList.has_key(key)
+def getValue(key):
+    if(hasValue(key)):
+        return SettingsList.get(key)
+    else:
+        return None
+def setValue(key,value):
+    SettingsList[key]=value
