@@ -2,7 +2,6 @@
 import sys
 import os
 import BiotoolsSettings
-BiotoolsSettings.AssertPaths()
 import DPyGetOpt
 import pyswitch
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html

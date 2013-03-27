@@ -5,8 +5,8 @@ Created on Mar 18, 2013
 @author: Gooch
 '''
 import re
-import Pipeline.PipelineError as PipelineError
-import Pipeline.PipelineSubStep as PipelineSubStep
+from Pipeline.PipelineError import PipelineError
+from Pipeline.PipelineSubStep import PipelineSubStep
 import Pipeline.PipelineUtil as PipelineUtil
 class PipelineStep:
     def __init__(self):
@@ -54,6 +54,7 @@ class PipelineStep:
         typeMatcher=re.compile(r"^#&TYPE:(.+)$")
         jobtype=None
         for line in lines:
+            line=line.strip()
             if hashMatcher.match(line):
                 if varLineMatcher.match(line):
                     varMatch=varMatcher.match(line)
@@ -136,9 +137,15 @@ class PipelineStep:
         clockMatcher=re.compile(r"^\s*wallclock\s+(\S+)\s*$")
         memUseMatcher=re.compile(r"^\s*memory_usage\s+(\S+)\s*$")
         swapUseMatcher=re.compile(r"^\s*swap_usage\s+(\S+)\s*$")
-        cmdMatcher=re.compile(r"^\s*cmd\s+(\S+)\s*$")
+        cmdMatcher=re.compile(r"^\s*cmd\s+([\S ]+)\s*$")
+        logDirMatcher=re.compile(r"^\s*log_dir\s+(\S+)\s*$")
+        orderMatcher=re.compile(r"^\s*order\s+(.+)\s*$")
+        orderBeforeMatcher=re.compile(r"^\s*order\s*(\S+)\s*before\s*(\S+)\s*$")
+        orderAfterMatcher=re.compile(r"^\s*order\s*(\S+)\s*after\s*(\S+)\s*$")
         for line in lines:
+            #print (line)
             if injob:
+                #print("\tin_job")
                 if incmd:
                     if cmdStopMatcher.match(line):
                         incmd=False
@@ -146,7 +153,7 @@ class PipelineStep:
                     else:
                         newSubStep.cmd.append(line.strip())
                     continue
-                else:
+                else:# if in command
                     jobStartMatch=jobStartMatcher.match(line)
                     if jobStartMatch:
                         raise PipelineError("[PipelineStep.parseSubJobs] job_begin found after previous job_begin but not after job_end")
@@ -236,5 +243,30 @@ class PipelineStep:
                         continue
                     raise PipelineError("[PipelineStep.parseSubJobs] invalid line in template: "+line)
                       
-            else:
-                pass
+            else:#if in job
+                #print("\tout_of_job")
+                #TODO: fill out
+                jobStopMatch=jobStopMatcher.match(line)
+                if jobStopMatch:
+                    raise PipelineError("[PipelineStep.parseSubJobs] job_end discovered before finding job_begin: " )
+                logDirMatch=logDirMatcher.match(line)
+                if logDirMatch:
+                    raise PipelineError("[PipelineStep.parseSubJobs] log_dir should not be defined in a job template: " )
+                jobStartMatch=jobStartMatcher.match(line)
+                if jobStartMatch:
+                    injob=True
+                    cmd_done=False
+                    newSubStep=self.getNewSubStep()
+                    continue 
+                orderMatch=orderMatcher.match(line)
+                if orderMatch:
+                    orderBeforeMatch=orderBeforeMatcher.match(line)
+                    if orderBeforeMatch:
+                        self.addDependency(orderBeforeMatch.group(1), orderBeforeMatch.group(2))
+                        continue
+                    orderAfterMatch=orderAfterMatcher.match(line)
+                    if orderAfterMatch:
+                        self.addDependency(orderAfterMatch.group(2), orderAfterMatch.group(1))
+                        continue
+                    raise PipelineError("[PipelineStep.parseSubJobs] improperly formed order line")
+                raise PipelineError("[PipelineStep.parseSubJobs] unrecognized line in job")

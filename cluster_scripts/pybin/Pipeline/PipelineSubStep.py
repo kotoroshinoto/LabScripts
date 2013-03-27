@@ -4,7 +4,7 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import Pipeline.PipelineError as PipelineError
+from Pipeline.PipelineError import PipelineError
 import Pipeline.PipelineUtil as PipelineUtil
 class PipelineSubStep:
     def __init__(self,parent):

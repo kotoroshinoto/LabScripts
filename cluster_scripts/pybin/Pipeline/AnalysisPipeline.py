@@ -6,7 +6,7 @@ Created on Mar 18, 2013
 import BiotoolsSettings
 import re
 import os
-import Pipeline.PipelineStep as PipelineStep
+from Pipeline.PipelineStep import PipelineStep
 import Pipeline.PipelineUtil as PipelineUtil
 class AnalysisPipeline:
     def __init__(self):
@@ -57,13 +57,31 @@ class AnalysisPipeline:
             return True;
         #if not found, check if template exists
         path2Template=os.path.join(PipelineUtil.templateDir(),splitName[0].upper()+".sjt")
-        print(path2Template) 
+        #print(path2Template)
         if os.path.isfile(path2Template):
-            #if template exists, load it
-            #template=PipelineStep.readTemplate(path2Template)
+            #if template exists
+            templateFile=open(path2Template,'rU')
+            templateLines=templateFile.readlines()
+            templateFile.close()
+            template=PipelineStep.readTemplate(templateLines)
+            self.jobtemplates[splitName[0].upper()]=template
             return True
         else:
             #if template doesn't exist, signal error
             return False
+    def TemplateIsLoaded(self,jobspec):
+        splitName=AnalysisPipeline.splitJobname(jobspec)
+        return self.jobtemplates.has_key(splitName[0])
+    def getTemplate(self,jobspec):
+        if not self.TemplateIsLoaded(jobspec):
+            self.loadTemplate(jobspec)
+            if not self.TemplateIsLoaded(jobspec):
+                return None
+        else:
+            splitName=AnalysisPipeline.splitJobname(jobspec)
+            return self.jobtemplates.get(splitName[0])
 apl=AnalysisPipeline()
-apl.loadTemplate("BWA_ALIGN_PAIRED")
+worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
+print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
+print (apl.getTemplate("BWA_ALIGN_PAIRED").toTemplateString())
+print (apl.getTemplate("BWA_ALIGN_PAIRED").toString('grouplbl','cumsuffix','prefix'))
