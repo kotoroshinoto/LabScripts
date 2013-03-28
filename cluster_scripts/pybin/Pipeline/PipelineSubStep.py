@@ -59,7 +59,7 @@ class PipelineSubStep:
         tempstr+="job_end\n"
         if len(self.order_after) > 0:
             for prior in self.order_after:
-                tempstr+="order "+self.getFullName()+" after "+prior
+                tempstr+="order "+self.getFullName()+" after "+prior+"\n"
         return tempstr
     def toString(self,grouplbl,cumsuffix,prefix,prefix2=None):
         if self.parent.isCrossJob and prefix2 is None:

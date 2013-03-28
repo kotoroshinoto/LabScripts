@@ -52,7 +52,7 @@ class AnalysisPipeline:
         if len(splitName) == 0:
             return False
         #check if step template is already loaded
-        if self.jobtemplates.has_key(splitName[0]):
+        if splitName[0] in self.jobtemplates:
             #if loaded, no more work to do
             return True;
         #if not found, check if template exists
@@ -71,7 +71,7 @@ class AnalysisPipeline:
             return False
     def TemplateIsLoaded(self,jobspec):
         splitName=AnalysisPipeline.splitJobname(jobspec)
-        return self.jobtemplates.has_key(splitName[0])
+        return (splitName[0] in self.jobtemplates)
     def getTemplate(self,jobspec):
         if not self.TemplateIsLoaded(jobspec):
             self.loadTemplate(jobspec)
@@ -84,4 +84,4 @@ apl=AnalysisPipeline()
 worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
 print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
 print (apl.getTemplate("BWA_ALIGN_PAIRED").toTemplateString())
-print (apl.getTemplate("BWA_ALIGN_PAIRED").toString('grouplbl','cumsuffix','prefix'))
+print (apl.getTemplate("BWA_ALIGN_PAIRED").toString('grouplbl','.cumsuffix','prefix'))

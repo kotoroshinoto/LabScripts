@@ -15,14 +15,14 @@ SettingsList["GENES"]="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapien
 SettingsList["TRANSCRIPTOME"]="/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes";
 SettingsList["MODULEFILE"]="EversonLabBiotools/1.0";
 SettingsList["JOBQUEUE"]="all.q";
-SettingsList["MINQUAL"]=30;
-SettingsList["MAPQUAL"]=40;
+SettingsList["MINQUAL"]='30';
+SettingsList["MAPQUAL"]='40';
 SettingsList["GENOME_TYPE"]="hg19";
 #MEMORY SETTINGS
 #CURRENT JOB Memory: 40GiB -> 40960MiB
 SettingsList["JAVA_RAM"]="33G";
 #roughly 250,000 per GB
-SettingsList["MRECORDS"]=250000*33;
+SettingsList["MRECORDS"]="%d" %(250000*33);
 SettingsList["TARGET_BED"]="/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed";
 SettingsList["CURDIR"]=os.path.realpath(os.getcwd())
 SettingsList["BWA_RAM"]="10G";
@@ -76,11 +76,13 @@ elif re.match("^cygwin",sys.platform):
 else:
     sys.stderr.write("unexpected platform detected, program may not work properly")
 def hasValue(key):
-    return SettingsList.has_key(key)
+    return key in SettingsList
 def getValue(key):
     if(hasValue(key)):
         return SettingsList.get(key)
     else:
         return None
+def getKeyList():
+    return SettingsList.keys()
 def setValue(key,value):
     SettingsList[key]=value

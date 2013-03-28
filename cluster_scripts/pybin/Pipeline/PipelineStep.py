@@ -101,7 +101,11 @@ class PipelineStep:
             raise PipelineError("[PipelineStep.toString] toString called on crossjob without prefix2 variable\n")
         resstr=""
         for substep in self.substeps:
-            resstr+=substep.toString(grouplbl,cumsuffix,prefix,prefix2)
+            if substep is not None:
+                result=substep.toString(grouplbl,cumsuffix,prefix,prefix2)
+                if result is None:
+                    raise PipelineError("[Pipeline.PipelineStep.toString()] call to substep.tostring() returned None")
+                resstr+=result
         return resstr
     def toTemplateString(self):
         tmpstr=""
