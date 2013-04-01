@@ -77,17 +77,19 @@ def main(argv=None):
         output=open(outputOpt,'w')
     print ("input: %s" % inputOpt)
     print ("output: %s" % outputOpt)
+    chroms={}
     for line in input:
         result=line.strip()
         if not (re.match("^#.+$",result)):
             splitresult=result.split("\t")
             if len(splitresult) != 8:
                 raise Exception("File does not adhere to VCF format (8 TAB columns)")
-            output.write("%s\n" % splitresult[0])
+            #output.write("%s\n" % splitresult[0])
+            chroms[splitresult[0]]=True
 #            if not(re.match("^chr.+$",splitresult[0])):
 #                splitresult[0]="chr%s" % splitresult[0]
-        output.write(("%s\n" % result))
-            
-        
+        #output.write(("%s\n" % result))
+    for item in chroms:
+        output.write("%s\n" % item)
 if __name__ == "__main__":
     sys.exit(main())
