@@ -7,8 +7,10 @@ NF=$2.4GATK.recal.realn.filtered.bam
 TC=$3.4GATK.recal.realn.filtered.bam
 TF=$4.4GATK.recal.realn.filtered.bam
 GROUPLBL=$5
-SJM_FILE=./Step7.sjm
-
+SJM_FILE=./CallVariants.sjm
+function runMutect {
+	
+}
 function runPileupSingle {
 	FNAME=$2
 	FNAME=${FNAME//./_}
