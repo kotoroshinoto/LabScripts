@@ -70,11 +70,11 @@ def main(argv=None):
     if inputOpt is None:
         input=sys.stdin
     else:
-        input=open(input,'r')
+        input=open(inputOpt,'r')
     if outputOpt is None:
         output=sys.stdout
     else:
-        output=open(output,'w')
+        output=open(outputOpt,'w')
     print ("input: %s" % inputOpt)
     print ("output: %s" % outputOpt)
     for line in input:
