@@ -7,13 +7,7 @@ Created on Apr 1, 2013
 import sys,re
 import BiotoolsSettings
 import DPyGetOpt
-import logging,traceback
-def log_uncaught_exceptions(exception_type, exception, tb):
-
-    logging.critical(''.join(traceback.format_tb(tb)))
-    logging.critical('{0}: {1}'.format(exception_type, exception))
-
-sys.excepthook = log_uncaught_exceptions
+import exceptions
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 class Usage(Exception):
@@ -99,4 +93,7 @@ def main(argv=None):
     for item in chroms:
         output.write("%s\n" % item)
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except exceptions.KeyboardInterrupt:
+        sys.exit(1)
