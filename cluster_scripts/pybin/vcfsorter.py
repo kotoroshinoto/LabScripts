@@ -5,9 +5,9 @@ Created on Apr 1, 2013
 @author: mgooch
 '''
 ######################################################
-# port of vcfsorter.pl to python
+# logic port of vcfsorter.pl to python
 #
-# Copyright (C) 2011 German Gaston Leparc
+# from https://code.google.com/p/vcfsorter
 #
 # sorts VCF by reference genome
 #
@@ -16,7 +16,6 @@ Created on Apr 1, 2013
 # vcfsorter.pl genome.dict myvcf.file > mynewvcf.file
 #
 ######################################################
-#from https://code.google.com/p/vcfsorter
 import sys,re
 import BiotoolsSettings
 import DPyGetOpt
