@@ -106,12 +106,12 @@ def main(argv=None):
     print ("inputFile: %s" % inputOpt)
     print ("outputFile: %s" % outputOpt)
     vcf_hash={}
-    vcf_header=""
+    vcf_header=[]
     #read VCF file
     for line in inputFile:
         result=line.strip()
         if re.match("^#.+$",result):
-            vcf_header+=line
+            vcf_header.append(result)
         else:
             if result != "":
                 splitresult=result.split("\t")
@@ -133,15 +133,18 @@ def main(argv=None):
         inputFile.close()
     else:
         inputFile=None
+    for item in vcf_header:
+        outputFile.write("%s\n" % item)
     for contig in contig_order:
         if contig in vcf_hash:
-            outputFile.write("%s\n" % contig)
+#            outputFile.write("%s\n" % contig)
             for start in sorted(vcf_hash[contig].keys()):
-                outputFile.write("\t%s\n" % start)
+#                outputFile.write("\t%s\n" % start)
                 for variant in sorted(vcf_hash[contig][start].keys()):
-                    outputFile.write("\t\t%s\n" % variant)
+#                    outputFile.write("\t\t%s\n" % variant)
                     for entry in vcf_hash[contig][start][variant]: 
-                        outputFile.write("\t\t\t%s\n" % entry)
+#                        outputFile.write("\t\t\t%s\n" % entry)
+                        outputFile.write("%s\n" % entry)
                 
                 
     outputFile.flush()
