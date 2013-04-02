@@ -66,7 +66,11 @@ def main(argv=None):
             dictOpt=opt_parser.valueForOption("dict")
             help_flag=bool(opt_parser.valueForOption("help"))
             argv=opt_parser.freeValues
-            if help_flag or len(argv) > 0 or (dictOpt is None):
+            if len(argv) > 0:
+                raise Usage("unexpected arguments:" + " ".join(argv))
+            if dictOpt is None:
+                raise Usage("No dictionary option!")
+            if help_flag:
                 raise Usage(err=False)
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
