@@ -53,6 +53,7 @@ def main(argv=None):
             opts=[]
             opts.append("input|I=s")
             opts.append("output|O=s")
+            opts.append("dict|D=s")
             opts.append("help|h")
             opt_parser=DPyGetOpt.DPyGetOpt()
             opt_parser.setIgnoreCase(False)
