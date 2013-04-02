@@ -134,8 +134,8 @@ def main(argv=None):
     else:
         inputFile=None
     for contig in contig_order:
-        outputFile.write("%s\n" % contig)
         if contig in vcf_hash:
+            outputFile.write("%s\n" % contig)
             for start in sorted(vcf_hash[contig].keys()):
                 outputFile.write("\t%s\n" % start)
                 for variant in sorted(vcf_hash[contig][start].keys()):
