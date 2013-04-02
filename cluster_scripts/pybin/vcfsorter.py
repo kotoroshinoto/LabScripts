@@ -108,39 +108,39 @@ def main(argv=None):
     vcf_hash={}
     vcf_header=""
     #read VCF file
-    for line in inputFile:
-        result=line.strip()
-        if re.match("^#.+$",result):
-            vcf_header+=line
-        else:
-            if result != "":
-                splitresult=result.split("\t")
-                if len(splitresult) != 8:
-                    raise Exception("File does not adhere to VCF format (8 TAB columns)")
-                contig=splitresult[0]
-                start=int(splitresult[1])
-                variant=("%sto%s" %(splitresult[3],splitresult[4]))
-                if not vcf_hash.has_key(contig):
-                    vcf_hash[contig]={}
-                if not vcf_hash[contig].has_key(start):
-                    vcf_hash[contig][start]={}
-                if not vcf_hash[contig][start].has_key(variant):
-                    vcf_hash[contig][start][variant]=[]
-                vcf_hash[contig][start][variant].append(result)
-                
-    #close input
-    if inputFile is not sys.stdin:
-        inputFile.close()
-    else:
-        inputFile=None
+#    for line in inputFile:
+#        result=line.strip()
+#        if re.match("^#.+$",result):
+#            vcf_header+=line
+#        else:
+#            if result != "":
+#                splitresult=result.split("\t")
+#                if len(splitresult) != 8:
+#                    raise Exception("File does not adhere to VCF format (8 TAB columns)")
+#                contig=splitresult[0]
+#                start=int(splitresult[1])
+#                variant=("%sto%s" %(splitresult[3],splitresult[4]))
+#                if not vcf_hash.has_key(contig):
+#                    vcf_hash[contig]={}
+#                if not vcf_hash[contig].has_key(start):
+#                    vcf_hash[contig][start]={}
+#                if not vcf_hash[contig][start].has_key(variant):
+#                    vcf_hash[contig][start][variant]=[]
+#                vcf_hash[contig][start][variant].append(result)
+#                
+#    #close input
+#    if inputFile is not sys.stdin:
+#        inputFile.close()
+#    else:
+#        inputFile=None
     for contig in contig_order:
         outputFile.write("%s\n" % contig)
-        for start in sorted(vcf_hash[contig].keys()):
-            outputFile.write("\t%s\n" % start)
-            for variant in sorted(vcf_hash[contig][start].keys()):
-                outputFile.write("\t\t%s\n" % variant)
-                for entry in vcf_hash[contig][start][variant]: 
-                    outputFile.write("\t\t\t%s\n" % entry)
+#        for start in sorted(vcf_hash[contig].keys()):
+#            outputFile.write("\t%s\n" % start)
+#            for variant in sorted(vcf_hash[contig][start].keys()):
+#                outputFile.write("\t\t%s\n" % variant)
+#                for entry in vcf_hash[contig][start][variant]: 
+#                    outputFile.write("\t\t\t%s\n" % entry)
                 
                 
     outputFile.flush()
