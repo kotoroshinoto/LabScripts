@@ -93,8 +93,8 @@ def main(argv=None):
         if matchObj:
             contig_order.append(matchObj.group(1))
     dictFile.close()
-    for item in contig_order:
-        sys.stderr.write("%s\n" % item)
+#    for item in contig_order:
+#        sys.stderr.write("%s\n" % item)
     if inputOpt is None:
         inputFile=sys.stdin
     else:
