@@ -135,12 +135,13 @@ def main(argv=None):
         inputFile=None
     for contig in contig_order:
         outputFile.write("%s\n" % contig)
-        for start in sorted(vcf_hash[contig].keys()):
-            outputFile.write("\t%s\n" % start)
-            for variant in sorted(vcf_hash[contig][start].keys()):
-                outputFile.write("\t\t%s\n" % variant)
-                for entry in vcf_hash[contig][start][variant]: 
-                    outputFile.write("\t\t\t%s\n" % entry)
+        if contig in vcf_hash[contig]:
+            for start in sorted(vcf_hash[contig].keys()):
+                outputFile.write("\t%s\n" % start)
+                for variant in sorted(vcf_hash[contig][start].keys()):
+                    outputFile.write("\t\t%s\n" % variant)
+                    for entry in vcf_hash[contig][start][variant]: 
+                        outputFile.write("\t\t\t%s\n" % entry)
                 
                 
     outputFile.flush()
