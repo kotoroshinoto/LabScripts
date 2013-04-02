@@ -127,7 +127,7 @@ def main(argv=None):
                 if not vcf_hash[contig][start].has_key(variant):
                     vcf_hash[contig][start][variant]=result
                 else:
-                    raise Exception("Found 2 entries with same contig/start/variant")
+                    raise Exception("Found 2 entries with same contig/start/variant: %s/%d/%s" % (contig,start,variant))
                 
     #close input
     if inputFile is not sys.stdin:
