@@ -28,7 +28,7 @@ class Usage(Exception):
         #msg is an error message to post before the usage info
         usage="Usage: %s (Options)\n" % sys.argv[0]
         usage +="Options:\n"
-        usage +="\t--dict  |-D=string : reference dictionary file, must be provided"
+        usage +="\t--dict  |-D=string : reference dictionary file, must be provided\n"
         usage +="\t--input |-I=string : input file, if unset, defaults to stdin\n"
         usage +="\t--output|-O=string : output file, if unset defaults to stdout\n"
         usage +="\t--help  |-h        : get this usage info\n"
