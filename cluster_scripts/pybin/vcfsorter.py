@@ -125,9 +125,8 @@ def main(argv=None):
                 if not vcf_hash[contig].has_key(start):
                     vcf_hash[contig][start]={}
                 if not vcf_hash[contig][start].has_key(variant):
-                    vcf_hash[contig][start][variant]=result
-                else:
-                    raise Exception("Found 2 entries with same contig/start/variant: %s/%d/%s" % (contig,start,variant))
+                    vcf_hash[contig][start][variant]=[]
+                vcf_hash[contig][start][variant].append(result)
                 
     #close input
     if inputFile is not sys.stdin:
@@ -140,6 +139,8 @@ def main(argv=None):
             outputFile.write("\t%s\n" % start)
             for variant in sorted(vcf_hash[contig][start].keys()):
                 outputFile.write("\t\t%s\n" % variant)
+                for entry in vcf_hash[contig][start][variant]: 
+                    outputFile.write("\t\t\t%s\n" % entry)
                 
                 
     outputFile.flush()
