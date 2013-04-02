@@ -119,7 +119,7 @@ def main(argv=None):
                     raise Exception("File does not adhere to VCF format (8 TAB columns)")
                 contig=splitresult[0]
                 start=int(splitresult[1])
-                variant=("%sto%s" %(splitresult[4],splitresult[5]))
+                variant=("%sto%s" %(splitresult[3],splitresult[4]))
                 if not vcf_hash.has_key(contig):
                     vcf_hash[contig]={}
                 if not vcf_hash[contig].has_key(start):
