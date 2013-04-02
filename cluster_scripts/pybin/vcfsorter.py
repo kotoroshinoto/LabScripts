@@ -95,7 +95,6 @@ def main(argv=None):
     dictFile.close()
     for item in contig_order:
         sys.stderr.write("%s\n" % item)
-    sys.exit(0)
     if inputOpt is None:
         inputFile=sys.stdin
     else:
@@ -106,36 +105,41 @@ def main(argv=None):
         outputFile=open(outputOpt,'w')
     print ("inputFile: %s" % inputOpt)
     print ("outputFile: %s" % outputOpt)
-    chromsIn={}
-    chromsOut={}
+    vcf_hash={}
+    vcf_header=""
     #read VCF file
     for line in inputFile:
         result=line.strip()
-        if not (re.match("^#.+$",result)) and not(result == ""):
-            splitresult=result.split("\t")
-            if len(splitresult) != 8:
-                raise Exception("File does not adhere to VCF format (8 TAB columns)")
-            chromsIn[splitresult[0]]=True
-            if not(re.match("^chr.+$",splitresult[0])):
-                if re.match("^MT$",splitresult[0]):
-                    splitresult[0]="chrM"
-                else:
-                    splitresult[0]="chr%s" % splitresult[0]
-            chromsOut[splitresult[0]]=True
-            result="\t".join(splitresult)
-        outputFile.write(("%s\n" % result))
+        if re.match("^#.+$",result):
+            vcf_header+=line
+        else:
+            if result != "":
+                splitresult=result.split("\t")
+                if len(splitresult) != 8:
+                    raise Exception("File does not adhere to VCF format (8 TAB columns)")
+                contig=splitresult[0]
+                start=int(splitresult[1])
+                variant=("%sto%s" %(splitresult[4],splitresult[5]))
+                vcf_hash[contig][start][variant]=result
     #close input
     if inputFile is not sys.stdin:
         inputFile.close()
+    else:
+        inputFile=None
+    for contig in contig_order:
+        outputFile.write("%s\n" % contig)
+        for start in sorted(vcf_hash[contig].keys()):
+            outputFile.write("\t%s\n" % start)
+            for variant in sorted(vcf_hash[contig][start].keys()):
+                outputFile.write("\t\t%s\n" % variant)
+                
+                
+    outputFile.flush()
     #close output
     if outputFile is not sys.stdout:
         outputFile.close()
-    sys.stderr.write("Chrom Labels in:\n")
-    for item in sorted(chromsIn.keys()):
-        sys.stderr.write("\t%s\n" % item)
-    sys.stderr.write("Chrom Labels out:\n")
-    for item in sorted(chromsOut.keys()):
-        sys.stderr.write("\t%s\n" % item)
+    else:
+        outputFile=None
     return 0
 if __name__ == "__main__":
     try:
