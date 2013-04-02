@@ -7,8 +7,10 @@ BWAINDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa
 BOWTIEINDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg19
 BOWTIE2INDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE2/ucsc.hg19
 DBSNP=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/VCF/dbsnp_137.hg19.vcf
+#/UCHC/HPC/Everson_HPC/reference_data/dbsnp/137/snp137.chradded.sorted.vcf
 GENES=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf
 TRANSCRIPTOME=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes
+COSMIC=/UCHC/HPC/Everson_HPC/reference_data/COSMIC/MUTECT/hg19_cosmic_v54_120711.chrprefix.vcf
 MINQUAL=30
 MAPQUAL=40
 GENOME_TYPE=hg19

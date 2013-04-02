@@ -9,7 +9,8 @@ TF=$4.4GATK.recal.realn.filtered.bam
 GROUPLBL=$5
 SJM_FILE=./CallVariants.sjm
 function runMutect {
-	
+	FNAME=$3
+	SJM_JOB MUTECT_$FNAME $JAVA_JOB_RAM "mutect -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.$FNAME.txt --coverage_file mutect_coverage.$FNAME.wig.txt"
 }
 function runPileupSingle {
 	FNAME=$2
@@ -42,6 +43,12 @@ function runSJMfile {
 
 rm $SJM_FILE
 touch $SJM_FILE
+
+runMutect $NC $TC NC_TC
+runMutect $NC $TF NC_TF
+runMutect $NF $TF NF_TF
+runMutect $NC $NF NC_NF
+runMutect $TC $TF TC_TF
 
 #Step7: (separate file)
 #	Shimmer (BQ 30)
