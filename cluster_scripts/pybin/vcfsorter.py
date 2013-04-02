@@ -120,7 +120,15 @@ def main(argv=None):
                 contig=splitresult[0]
                 start=int(splitresult[1])
                 variant=("%sto%s" %(splitresult[4],splitresult[5]))
-                vcf_hash[contig][start][variant]=result
+                if not vcf_hash.has_key(contig):
+                    vcf_hash[contig]={}
+                if not vcf_hash[contig].has_key(start):
+                    vcf_hash[contig][start]={}
+                if not vcf_hash[contig][start].has_key(variant):
+                    vcf_hash[contig][start][variant]=result
+                else:
+                    raise Exception("Found 2 entries with same contig/start/variant")
+                
     #close input
     if inputFile is not sys.stdin:
         inputFile.close()
