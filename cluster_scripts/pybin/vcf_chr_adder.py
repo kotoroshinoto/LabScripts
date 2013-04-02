@@ -78,20 +78,28 @@ def main(argv=None):
         output=open(outputOpt,'w')
     print ("input: %s" % inputOpt)
     print ("output: %s" % outputOpt)
-    chroms={}
+    chromsIn={}
+    chromsOut={}
     for line in input:
         result=line.strip()
-        if not (re.match("^#.+$",result)):
+        if not (re.match("^#.+$",result)) and not(result == ""):
             splitresult=result.split("\t")
             if len(splitresult) != 8:
                 raise Exception("File does not adhere to VCF format (8 TAB columns)")
-            #output.write("%s\n" % splitresult[0])
-            chroms[splitresult[0]]=True
-#            if not(re.match("^chr.+$",splitresult[0])):
-#                splitresult[0]="chr%s" % splitresult[0]
-        #output.write(("%s\n" % result))
-    for item in chroms:
-        output.write("%s\n" % item)
+            output.write("%s\n" % splitresult[0])
+            chromsIn[splitresult[0]]=True
+            if not(re.match("^chr.+$",splitresult[0])):
+                if re.match("^MT$"):
+                    splitresult[0]="chrM"
+                else:
+                    splitresult[0]="chr%s" % splitresult[0]
+            chromsOut[splitresult[0]]=True
+            result="\t".join(splitresult)
+        output.write(("%s\n" % result))
+    for item in chromsIn:
+        sys.stderr.write("%s\n" % item)
+    for item in chromsOut:
+        sys.stderr.write("%s\n" % item)
 if __name__ == "__main__":
     try:
         sys.exit(main())
