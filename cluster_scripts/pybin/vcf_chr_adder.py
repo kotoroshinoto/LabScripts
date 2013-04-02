@@ -89,7 +89,7 @@ def main(argv=None):
             output.write("%s\n" % splitresult[0])
             chromsIn[splitresult[0]]=True
             if not(re.match("^chr.+$",splitresult[0])):
-                if re.match("^MT$"):
+                if re.match("^MT$",splitresult[0]):
                     splitresult[0]="chrM"
                 else:
                     splitresult[0]="chr%s" % splitresult[0]
