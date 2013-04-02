@@ -86,7 +86,6 @@ def main(argv=None):
             splitresult=result.split("\t")
             if len(splitresult) != 8:
                 raise Exception("File does not adhere to VCF format (8 TAB columns)")
-            output.write("%s\n" % splitresult[0])
             chromsIn[splitresult[0]]=True
             if not(re.match("^chr.+$",splitresult[0])):
                 if re.match("^MT$",splitresult[0]):
@@ -96,10 +95,17 @@ def main(argv=None):
             chromsOut[splitresult[0]]=True
             result="\t".join(splitresult)
         output.write(("%s\n" % result))
-    for item in chromsIn:
-        sys.stderr.write("%s\n" % item)
-    for item in chromsOut:
-        sys.stderr.write("%s\n" % item)
+    sys.stderr.write("Chrom Labels in:\n")
+    for item in sorted(chromsIn.keys()):
+        sys.stderr.write("\t%s\n" % item)
+    sys.stderr.write("Chrom Labels out:\n")
+    for item in sorted(chromsOut.keys()):
+        sys.stderr.write("\t%s\n" % item)
+    if input is not sys.stdin:
+        input.close()
+    if output is not sys.stdout:
+        output.close()
+    return 0
 if __name__ == "__main__":
     try:
         sys.exit(main())
