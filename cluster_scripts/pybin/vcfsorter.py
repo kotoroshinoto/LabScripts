@@ -85,7 +85,7 @@ def main(argv=None):
         return err.exit_code
     inputFile=None
     outputFile=None
-    dictFile=open(inputOpt,'r')
+    dictFile=open(dictOpt,'r')
     #read dict file
     contig_order=[]
     for line in dictFile:
