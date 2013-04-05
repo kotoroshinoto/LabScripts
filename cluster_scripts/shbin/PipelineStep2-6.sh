@@ -271,7 +271,7 @@ echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 #echo $TF
 for var in "$@"
 do
-	ARGS=$(echo $1 | tr "," "\n")
+	ARGS=$(echo $var | tr "," "\n")
 	echo "ARGS: $ARGS"
     Prepare_N_Filter_per_file $ARGS
 done
