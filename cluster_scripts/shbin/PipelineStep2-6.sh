@@ -2,11 +2,8 @@
 source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 #source ScriptSettings.lib.sh
 
-NC=$(echo $1 | tr "," "\n")
-NF=$(echo $2 | tr "," "\n")
-TC=$(echo $3 | tr "," "\n")
-TF=$(echo $4 | tr "," "\n")
-GROUPLBL=$5
+GROUPLBL=$1
+shift
 
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
@@ -272,7 +269,9 @@ echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 #echo $NF
 #echo $TC
 #echo $TF
-Prepare_N_Filter_per_file $NC
-Prepare_N_Filter_per_file $NF
-Prepare_N_Filter_per_file $TC
-Prepare_N_Filter_per_file $TF
+for var in "$@"
+do
+	ARGS=$(echo $1 | tr "," "\n")
+	#echo "ARGS: $ARGS"
+    Prepare_N_Filter_per_file $ARGS
+done
