@@ -80,8 +80,8 @@ class AnalysisPipeline:
         else:
             splitName=AnalysisPipeline.splitJobname(jobspec)
             return self.jobtemplates.get(splitName[0])
-apl=AnalysisPipeline()
-worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
-print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
-print (apl.getTemplate("BWA_ALIGN_PAIRED").toTemplateString())
-print (apl.getTemplate("BWA_ALIGN_PAIRED").toString('grouplbl','.cumsuffix','prefix'))
+#apl=AnalysisPipeline()
+#worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
+#print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
+#print (apl.getTemplate("BWA_ALIGN_PAIRED").toTemplateString())
+#print (apl.getTemplate("BWA_ALIGN_PAIRED").toString('grouplbl','.cumsuffix','prefix'))

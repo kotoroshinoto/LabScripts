@@ -58,16 +58,12 @@ def main(argv=None):
             argv=opt_parser.freeValues
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
-            pass
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
             raise Usage("DPyGetOptSpecErr: " + DPyGetOptSpecErr.__str__())
-            pass
         except DPyGetOpt.TerminationError as DPyGetOptTermErr:
             raise Usage("DPyGetOptTermErr: " + DPyGetOptTermErr.__str__())
-            pass
         except DPyGetOpt.Error as DPyGetOptErr:
             raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
-            pass
         raise Usage("")
     except Usage as err:
         sys.stderr.write(err.msg)
