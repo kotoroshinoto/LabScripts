@@ -16,13 +16,13 @@ MAPQUAL=40
 GENOME_TYPE=hg19
 #MEMORY SETTINGS
 #CURRENT JOB Memory: 40GiB -> 40960MiB
-JAVA_RAM=33G
 #250,000*33=8250000
 MRECORDS=8250000
 TARGET_BED=/UCHC/HPC/Everson_HPC/reference_data/agilent_kits/SSKinome/S0292632_Covered.bed
 CURDIR=`pwd -P`
 BWA_RAM=10G
-JAVA_JOB_RAM=50G
+JAVA_JOB_RAM=70G
+JAVA_RAM=33G
 SHIMMER_RAM=20G
 GENERIC_JOB_RAM=30G
 rRNA=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Sequence/AbundantSequences/humRibosomal.fa
