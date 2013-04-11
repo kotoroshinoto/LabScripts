@@ -134,6 +134,10 @@ prepend-path CPLUS_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path C_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
 prepend-path ROOTSYS /UCHC/HPC/Everson_HPC/ROOT
 
+#SGE libraries
+prepend-path LIBRARY_PATH /opt/gridengine/lib/lx26-amd64
+prepend-path LD_LIBRARY_PATH /opt/gridengine/lib/lx26-amd64
+
 ##MANPAGE stuff
 set-alias man "man -C /UCHC/HPC/Everson_HPC/cluster_scripts/configs/man.config"
 setenv GDFONTPATH /home/CAM/mgooch/HPC/fonts/msttcorefonts
