@@ -1,0 +1,144 @@
+#%Module1.0
+
+proc ModulesHelp { } {
+        puts stderr "\tInitializes your environment to use the bioinformatics tools installed under /UCHC/HPC/Everson_HPC/\n"
+}
+
+
+proc setAllPaths {path hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasPYbin} {
+	if {$hasbin != 0 } {
+		prepend-path PATH "$path/bin"
+	}
+	if {$hasinclude != 0} {
+		prepend-path CPLUS_INCLUDE_PATH "$path/include"
+		prepend-path C_INCLUDE_PATH "$path/include"
+		#prepend-path -d " " CMAKE_INCLUDE_PATH "$path/include" 
+	}
+	if {$haslib != 0} {
+		prepend-path LD_LIBRARY_PATH "$path/lib"
+		prepend-path LIBRARY_PATH "$path/lib"
+		prepend-path LD_RUN_PATH "$path/lib"
+		#prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib"
+	}
+	if {$haslib64 != 0} {
+		prepend-path LD_LIBRARY_PATH "$path/lib64"
+		prepend-path LIBRARY_PATH "$path/lib64"
+		prepend-path LD_RUN_PATH "$path/lib64"
+		#prepend-path -d " " CMAKE_LIBRARY_PATH "$path/lib64"
+	}
+	if {$hasSHbin != 0} {
+		prepend-path PATH "$path/shbin"	
+	}
+	if {$hasCGIbin != 0} {
+		prepend-path PATH "$path/cgi-bin"
+	}
+	if {$hasPYbin != 0} {
+		prepend-path PATH "$path/pybin"
+	}
+	#prepend-path -d " " CMAKE_PREFIX_PATH $path
+}
+
+proc setBiotoolPaths {name hasbin hasinclude haslib haslib64 hasSHbin hasCGIbin hasPYbin hasman} {
+	setAllPaths "/UCHC/HPC/Everson_HPC/$name" $hasbin $hasinclude $haslib $haslib64 $hasSHbin $hasCGIbin $hasPYbin
+}
+setBiotoolPaths preseq 1 0 0 0 0 0 0 1
+setBiotoolPaths GNU/GSL 1 1 1 0 0 0 0 1
+setBiotoolPaths lynx 1 0 0 0 0 0 0 1
+setBiotoolPaths cabextract 1 0 0 0 0 0 0 1
+setBiotoolPaths cmake 1 0 0 0 0 0 0 1
+setBiotoolPaths mercurial 1 0 0 0 0 0 0 1
+setBiotoolPaths gnuplot 1 0 0 0 0 0 0 1
+setBiotoolPaths EIGEN 0 1 1 0 0 0 0 0
+setBiotoolPaths VIENNA 1 1 1 0 0 0 0 1
+setBiotoolPaths HDF5 1 1 1 0 0 0 0 0
+setBiotoolPaths blas 0 0 1 0 0 0 0 0
+setenv BLAS /UCHC/HPC/Everson_HPC/blas/lib/libfblas.a
+setBiotoolPaths lapack 0 0 1 0 0 0 0 0
+setenv LAPACK /UCHC/HPC/Everson_HPC/lapack/lib/libflapack.a
+setBiotoolPaths clustal/clustalw 1 1 1 0 0 0 0 1
+setBiotoolPaths clustal/clustalo 1 1 1 0 0 0 0 1
+setBiotoolPaths argtable 0 1 1 0 0 0 0 1
+setBiotoolPaths txt2man 1 0 0 0 0 0 0 1
+setBiotoolPaths cluster_scripts 1 0 0 0 1 1 1 0
+prepend-path PERL5LIB /home/CAM/mgooch/HPC/cluster_scripts/cgi-bin
+setBiotoolPaths serf 0 1 1 0 0 0 0 0
+setBiotoolPaths apr 1 1 1 0 0 0 0 0
+setBiotoolPaths subversion 1 1 1 0 0 0 0 1
+setBiotoolPaths sqlite 1 1 1 0 0 0 0 1
+setBiotoolPaths libGD 1 1 1 0 0 0 0 0
+setBiotoolPaths libPNG 1 1 1 0 0 0 0 1
+setBiotoolPaths libTIFF 1 1 1 0 0 0 0 1
+setBiotoolPaths libJPEG 1 1 1 0 0 0 0 1
+setBiotoolPaths libXpm 1 1 1 0 0 0 0 1
+setBiotoolPaths annovar 1 0 0 0 0 0 0 0
+setBiotoolPaths BED_Tools 1 0 0 0 0 0 0 0
+setBiotoolPaths breakdancer 1 1 0 0 0 0 0 0 
+setBiotoolPaths breakseq 1 0 0 0 0 0 0 0
+setBiotoolPaths bwa 1 0 0 0 0 0 0 1
+setBiotoolPaths CNVnator 1 0 0 0 0 0 0 0
+setBiotoolPaths EMBOSS 1 1 1 0 0 0 0 0 
+setBiotoolPaths fastx-toolkit 1 0 0 0 0 0 0 0
+setBiotoolPaths FREEC 1 1 1 1 0 0 0 0
+setBiotoolPaths GATK 1 0 0 0 0 0 0 0
+setBiotoolPaths GEM 1 0 0 0 0 0 0 0
+setBiotoolPaths git 1 0 1 1 0 0 0 1
+setBiotoolPaths matrix2png 1 0 0 0 0 0 0 0
+setBiotoolPaths picard 1 0 0 0 0 0 0 1
+setBiotoolPaths pindel 1 0 0 0 0 0 0 1
+setBiotoolPaths R 1 0 0 1 0 0 0 1
+setBiotoolPaths Read_Name_Converter 1 0 0 0 0 0 0 0
+setBiotoolPaths samtools 1 1 1 0 0 0 0 1
+setBiotoolPaths SimpleJobManager 1 0 0 0 0 0 0 1
+setBiotoolPaths StatGen 0 0 1 0 0 0 0 0
+setBiotoolPaths tclap 0 1 1 0 0 0 0 0
+setBiotoolPaths Trimmomatic 1 1 1 0 0 0 0 1
+setBiotoolPaths vcftools 1 0 1 0 0 0 0 1
+prepend-path PERL5LIB /UCHC/HPC/Everson_HPC/vcftools/lib/perl5/site_perl
+prepend-path PERL5LIB /UCHC/HPC/Everson_HPC/vcftools/perl
+setBiotoolPaths tuxedo_tools/cufflinks 1 0 0 0 0 0 0 1
+setBiotoolPaths tuxedo_tools/bowtie 1 0 0 0 0 0 0 1
+setBiotoolPaths tuxedo_tools/bowtie2 1 0 0 0 0 0 0 1
+setBiotoolPaths tuxedo_tools/tophat 1 0 0 0 0 0 0 1
+#setBiotoolPaths tuxedo_tools/crossbow 1 0 0 0 0 0 0 1
+#setBiotoolPaths tuxedo_tools/cummeRbund 1 0 0 0 0 0 0 0
+#setBiotoolPaths tuxedo_tools/myrna 1 0 0 0 0 0 0 0
+setBiotoolPaths gtextutils-0.6 0 1 1 0 0 0 0 0
+setBiotoolPaths bamtools 1 1 1 0 0 0 0 0
+setBiotoolPaths BICseq 1 0 0 0 0 0 0 0
+setBiotoolPaths boost 0 1 1 1 0 0 0 0
+setBiotoolPaths python-2.7 1 1 1 0 0 0 0 1
+setBiotoolPaths python-3.3 1 1 1 0 0 0 0 1
+setBiotoolPaths oracle_jdk/jdk1.7.0_06/jre 1 0 1 0 0 0 0 0
+setBiotoolPaths oracle_jdk/jdk1.7.0_06 1 1 1 0 0 0 0 1
+setBiotoolPaths hugeseq 1 0 0 0 0 0 0 0
+setBiotoolPaths perl 1 0 1 0 0 0 0 1
+setBiotoolPaths Shimmer 1 0 1 0 0 0 0 1
+setBiotoolPaths VarScan 1 0 0 0 0 0 0 0
+setBiotoolPaths conifer 0 0 0 0 0 0 1 0
+
+##following tool not yet ready for use
+
+
+
+##the following are disabled due to changes in cluster environment, TORQE->SGE
+#setBiotoolPaths PBS_DRMAA 1 1 1 0 0 0 0
+#SetAllPaths /cm/shared/apps/torque/current
+#setBiotoolPaths TORQUE
+ 
+#ROOT
+
+prepend-path PATH /UCHC/HPC/Everson_HPC/ROOT/bin
+prepend-path LD_LIBRARY_PATH /UCHC/HPC/Everson_HPC/ROOT/lib/root
+prepend-path LIBRARY_PATH /UCHC/HPC/Everson_HPC/ROOT/lib/root
+prepend-path CPLUS_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
+prepend-path C_INCLUDE_PATH /UCHC/HPC/Everson_HPC/ROOT/include/root
+prepend-path ROOTSYS /UCHC/HPC/Everson_HPC/ROOT
+
+#SGE libraries
+prepend-path LIBRARY_PATH /opt/gridengine/lib/lx26-amd64
+prepend-path LD_LIBRARY_PATH /opt/gridengine/lib/lx26-amd64
+
+##MANPAGE stuff
+set-alias man "man -C /UCHC/HPC/Everson_HPC/cluster_scripts/configs/man.config"
+setenv GDFONTPATH /home/CAM/mgooch/HPC/fonts/msttcorefonts
+setenv GNUPLOT_DEFAULT_GDFONT arial

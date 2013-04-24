@@ -1,0 +1,4 @@
+
+source1	orig1	source2	orig2	ID	LB	PL	PU	SM
+
+source1	orig1	ID2	LB	PL	PU	SM
