@@ -74,36 +74,6 @@ SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
 function Prepare_N_Filter_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
-	#echo Prepare_N_Filter_per_file
-	#echo $1
-	#echo $2
-	#echo $3
-	#echo $4
-	#echo $5
-	#echo $6
-#Step2: 
-#	clean/Reorder/fix/add-replace-read-groups/sort
-SJM_FILE=./Step2-6.$1.sjm
-rm -f $SJM_FILE
-touch $SJM_FILE
-
-prepare4GATK $1.bam $1.4GATK.bam $2 $3 $4 $5 $6
-
-#Step3:
-#	samtools index
-#	Post alignment summary statistics with Picard/samtools flagstat and idxstat
-#	Picard GC bias metrics
-
-getStats $1.4GATK.bam PreFiltered
-SJM_JOB_AFTER PreFiltered_GetStats_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
-
-#Step4: 
-#	GATK BaseRecalibration and the analyze covariates before and after
-#	GATK indelRealignment
-
-recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
-indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
-
 #Step5:
 #	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
 #	picard duplicate filter
