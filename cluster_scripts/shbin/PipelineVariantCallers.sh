@@ -12,7 +12,7 @@ function runMutect {
 	LBLN=$3
 	LBLT=$4
 	FNAME=$3_$4
-	SJM_JOB MUTECT_$FNAME $JAVA_JOB_RAM "mutect -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.$FNAME.txt --coverage_file mutect_coverage.$FNAME.wig.txt --vcf mutect.$FNAME.vcf --tumor_sample_name $LBLT --normal_sample_name $LBLN"
+	SJM_JOB MUTECT_$FNAME $JAVA_JOB_RAM "mutect -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.$FNAME.txt --coverage_file mutect_coverage.$FNAME.wig.txt --vcf mutect.$FNAME.vcf --tumor_sample_name $LBLT --normal_sample_name $LBLN --enable_extended_output"
 }
 function runPileupSingle {
 	FNAME=$2
