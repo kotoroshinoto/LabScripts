@@ -9,8 +9,10 @@ TF=$4.4GATK.recal.realn.filtered.bam
 GROUPLBL=$5
 SJM_FILE=./RunMutect.sjm
 function runMutect {
-	FNAME=$3
-	SJM_JOB MUTECT_$FNAME $JAVA_JOB_RAM "mutect -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.$FNAME.txt --coverage_file mutect_coverage.$FNAME.wig.txt"
+	LBLN=$3
+	LBLT=$4
+	FNAME=$3_$4
+	SJM_JOB MUTECT_$FNAME $JAVA_JOB_RAM "mutect -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.$FNAME.txt --coverage_file mutect_coverage.$FNAME.wig.txt --vcf mutect.$FNAME.vcf --tumor_sample_name $LBLT --normal_sample_name $LBLN"
 }
 
 function runSJMfile {
@@ -21,11 +23,11 @@ function runSJMfile {
 rm $SJM_FILE
 touch $SJM_FILE
 
-runMutect $NC $TC NC_TC
-runMutect $NC $TF NC_TF
-runMutect $NF $TF NF_TF
-runMutect $NC $NF NC_NF
-runMutect $TC $TF TC_TF
+runMutect $NC $TC NC TC
+runMutect $NC $TF NC TF
+runMutect $NF $TF NF TF
+runMutect $NC $NF NC NF
+runMutect $TC $TF TC TF
 
 mkdir -p sjm_logs
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
