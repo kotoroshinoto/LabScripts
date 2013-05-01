@@ -27,6 +27,7 @@ runMutect $NC $TC NC TC
 runMutect $NC $TF NC TF
 runMutect $NF $TF NF TF
 runMutect $NC $NF NC NF
+runMutect $NF $NC NF NC
 runMutect $TC $TF TC TF
 
 mkdir -p sjm_logs
