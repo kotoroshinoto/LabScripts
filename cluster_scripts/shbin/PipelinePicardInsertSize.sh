@@ -11,7 +11,7 @@ function InsertSizePerSample {
 
 for var in "$@"
 do
-	ARGS=$(echo $var | tr "," "\n")
-	echo "ARGS: $ARGS"
-    InsertSizePerSample $ARGS
+	#ARGS=$(echo $var | tr "," "\n")
+	#echo "ARGS: $ARGS"
+    InsertSizePerSample $var
 done
