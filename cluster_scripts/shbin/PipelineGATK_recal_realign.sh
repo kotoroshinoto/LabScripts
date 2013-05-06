@@ -71,7 +71,7 @@ SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
 #-noOriginalAlignmentTags 	boolean 	false 	Don't output the original cigar or alignment start tags for each realigned read in the output bam
 }
 
-function Prepare_N_Filter_per_file {
+function Recal_Realn_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
 #Step5:
@@ -92,5 +92,5 @@ for var in "$@"
 do
 	ARGS=$(echo $var | tr "," "\n")
 	echo "ARGS: $ARGS"
-    Prepare_N_Filter_per_file $ARGS
+    Recal_Realn_per_file $ARGS
 done
