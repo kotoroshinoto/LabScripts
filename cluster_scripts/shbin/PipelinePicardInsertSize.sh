@@ -17,3 +17,4 @@ do
 	#echo "ARGS: $ARGS"
     InsertSizePerSample $var
 done
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
