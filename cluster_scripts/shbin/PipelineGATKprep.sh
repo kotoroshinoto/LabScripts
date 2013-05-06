@@ -111,7 +111,7 @@ function getStats {
 	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM PipelineGetStats.sh $1 $JAVA_RAM $CURDIR $MRECORDS $GENOME
 }
 
-function Prepare_N_Filter_per_file {
+function Prepare_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
 	#echo Prepare_N_Filter_per_file
@@ -144,5 +144,5 @@ for var in "$@"
 do
 	ARGS=$(echo $var | tr "," "\n")
 	echo "ARGS: $ARGS"
-    Prepare_N_Filter_per_file $ARGS
+    Prepare_per_file $ARGS
 done
