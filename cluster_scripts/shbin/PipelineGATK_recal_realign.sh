@@ -90,7 +90,7 @@ echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 
 for var in "$@"
 do
-	ARGS=$(echo $var | tr "," "\n")
-	echo "ARGS: $ARGS"
-    Recal_Realn_per_file $ARGS
+	#ARGS=$(echo $var | tr "," "\n")
+	#echo "ARGS: $ARGS"
+    Recal_Realn_per_file $var
 done
