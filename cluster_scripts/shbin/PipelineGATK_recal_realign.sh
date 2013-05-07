@@ -3,9 +3,6 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 
 GROUPLBL=$1
 shift
-SJM_FILE=./GATKrecal_realn.sjm
-
-rm -f $SJM_FILE
 
 function getStats {
 #1 filename
@@ -86,12 +83,14 @@ SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
 function Recal_Realn_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
-
+SJM_FILE=./GATKrecal_realn.$1.sjm
+rm -f $SJM_FILE
 #Step4: 
 #	GATK BaseRecalibration and the analyze covariates before and after
 #	GATK indelRealignment
 recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
 indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
 
 for var in "$@"
@@ -100,4 +99,3 @@ do
 	#echo "ARGS: $ARGS"
     Recal_Realn_per_file $var
 done
-echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
