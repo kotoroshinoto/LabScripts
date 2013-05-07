@@ -4,6 +4,16 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 GROUPLBL=$1
 shift
 SJM_FILE=./GATKrecal_realn.sjm
+
+function getStats {
+#1 filename
+#2 RAM
+#3 curdir
+#4 mrecords
+#5 genome
+	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM PipelineGetStats.sh $1 $JAVA_RAM $CURDIR $MRECORDS $GENOME
+}
+
 function recalibrateBaseQual {
 	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM samtools index $1
 	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
@@ -74,16 +84,12 @@ SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
 function Recal_Realn_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
-#Step5:
-#	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
-#	picard duplicate filter
-#	Bedtools intersectBed region filter 
 
-filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
-
-#Step6: (repeat step 3 on filtered files)
-getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
-SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
+#Step4: 
+#	GATK BaseRecalibration and the analyze covariates before and after
+#	GATK indelRealignment
+recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
+indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
