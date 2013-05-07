@@ -54,12 +54,16 @@ function getStats {
 function Filter_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
-#Step4: 
-#	GATK BaseRecalibration and the analyze covariates before and after
-#	GATK indelRealignment
 
-recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
-indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
+#Step5:
+#	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
+#	picard duplicate filter
+#	Bedtools intersectBed region filter 
+filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
+
+#Step6: (repeat step 3 on filtered files)
+getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
+SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
