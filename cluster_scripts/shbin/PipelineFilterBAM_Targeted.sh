@@ -4,6 +4,9 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 GROUPLBL=$1
 shift
 SJM_FILE=./FiltersTargeted.sjm
+
+rm -f $SJM_FILE
+
 function filterRegions {
 
 mkdir -p filters
