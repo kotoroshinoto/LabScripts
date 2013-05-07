@@ -3,7 +3,7 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 
 GROUPLBL=$1
 shift
-
+SJM_FILE=./GATKrecal_realn.sjm
 function recalibrateBaseQual {
 	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM samtools index $1
 	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
@@ -22,7 +22,7 @@ function recalibrateBaseQual {
 -BQSR $1.grp \
 -o $2
 
-SJM_JOB_AFTER Prep6A_Recalibrate_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
+#SJM_JOB_AFTER Prep6A_Recalibrate_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
 SJM_JOB_AFTER Prep6B_Recalibrate_$SAMPLE Prep6A_Recalibrate_$SAMPLE
 SJM_JOB_AFTER Prep6C_Recalibrate_$SAMPLE Prep6B_Recalibrate_$SAMPLE
 }
