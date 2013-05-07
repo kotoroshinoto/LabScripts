@@ -5,7 +5,7 @@ GROUPLBL=$1
 #echo "group label: $GROUPLBL" 
 shift
 
-SJM_FILE=./Step1.sjm
+SJM_FILE=./AlignBWA.sjm
 
 #function runBWA {
 #bwa aln -t 10 $BWAINDEX \
