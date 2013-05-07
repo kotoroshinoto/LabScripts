@@ -4,7 +4,7 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 
 GROUPLBL=$1
 shift
-
+SJM_FILE=./GATKprep.sjm
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
 #O=File                        Output file (bam or sam).  Required.

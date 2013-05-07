@@ -3,7 +3,7 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 
 GROUPLBL=$1
 shift
-
+SJM_FILE=./Filters.sjm
 function filterRegions {
 
 mkdir -p filters
@@ -12,7 +12,7 @@ mkdir -p filters/tmp
 
 SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM PipelineFilterBedtoolsCMD1.sh $1 $TARGET_BED ./filters/$1.bedfiltered.bam
 
-SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
+#SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
 
 SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL -o ./filters/$1.samtools_filtered.bam ./filters/$1.bedfiltered.bam
 
