@@ -4,7 +4,6 @@ source /UCHC/HPC/Everson_HPC/cluster_scripts/shbin/ScriptSettings.lib.sh
 
 GROUPLBL=$1
 shift
-SJM_FILE=./GATKprep.sjm
 #Clean options
 #I=File                        Input file (bam or sam).  Required.
 #O=File                        Output file (bam or sam).  Required.
@@ -123,7 +122,7 @@ SAMPLE=$1
 	#echo $6
 #Step2: 
 #	clean/Reorder/fix/add-replace-read-groups/sort
-SJM_FILE=./Step2-6.$1.sjm
+SJM_FILE=./GATKprep.$1.sjm
 rm -f $SJM_FILE
 touch $SJM_FILE
 
