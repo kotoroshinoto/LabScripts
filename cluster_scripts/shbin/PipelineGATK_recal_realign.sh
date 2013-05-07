@@ -5,6 +5,8 @@ GROUPLBL=$1
 shift
 SJM_FILE=./GATKrecal_realn.sjm
 
+rm -f $SJM_FILE
+
 function getStats {
 #1 filename
 #2 RAM
