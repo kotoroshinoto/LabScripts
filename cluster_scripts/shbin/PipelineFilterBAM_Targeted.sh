@@ -13,13 +13,13 @@ mkdir -p filters
 
 mkdir -p filters/tmp
 
-#SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM PipelineFilterBedtoolsCMD1.sh $1 $TARGET_BED ./filters/$1.bedfiltered.bam
+SJM_JOB Filter1_BEDtools_$SAMPLE $GENERIC_JOB_RAM PipelineFilterBedtoolsCMD1.sh $1 $TARGET_BED ./filters/$1.bedfiltered.bam
 
 #SJM_JOB_AFTER Filter1_BEDtools_$SAMPLE Prep7B_Realign_$SAMPLE
 
 SJM_JOB Filter2_SAMtools_$SAMPLE $GENERIC_JOB_RAM samtools view -bh -f 0x3 -F 0x60C -q $MAPQUAL -o ./filters/$1.samtools_filtered.bam ./filters/$1.bedfiltered.bam
 
-#SJM_JOB_AFTER Filter2_SAMtools_$SAMPLE Filter1_BEDtools_$SAMPLE
+SJM_JOB_AFTER Filter2_SAMtools_$SAMPLE Filter1_BEDtools_$SAMPLE
 
 SJM_JOB Filter3_RMDuplicates_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
 -jar /UCHC/HPC/Everson_HPC/picard/bin/MarkDuplicates.jar \
@@ -57,12 +57,16 @@ function getStats {
 function Filter_per_file {
 	mkdir -p sjm_logs
 SAMPLE=$1
-#Step4: 
-#	GATK BaseRecalibration and the analyze covariates before and after
-#	GATK indelRealignment
 
-recalibrateBaseQual $1.4GATK.bam $1.4GATK.recal.bam
-indelrealign $1.4GATK.recal.bam $1.4GATK.recal.realn.bam
+#Step5:
+#	samtools view filter (Map Q 40, remove unmapped, keep mapped in proper pair, keep meeting vendor QC requirement)
+#	picard duplicate filter
+#	Bedtools intersectBed region filter 
+filterRegions $1.4GATK.recal.realn.bam $1.4GATK.recal.realn.filtered.bam
+
+#Step6: (repeat step 3 on filtered files)
+getStats $1.4GATK.recal.realn.filtered.bam PostFiltered
+SJM_JOB_AFTER PostFiltered_GetStats_$SAMPLE Filter4_SORT_$SAMPLE
 
 echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
 }
