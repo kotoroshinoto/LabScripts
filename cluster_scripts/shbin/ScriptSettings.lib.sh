@@ -66,7 +66,7 @@ function SJM_JOB {
 	module EversonLabBiotools/1.0
 	queue all.q
 	directory $CURDIR
-	cmd $HANDLER_SCRIPT $@
+	cmd $HANDLER_SCRIPT \"$@\"
 job_end" >> $SJM_FILE
 }
 function SJM_JOB_AFTER {
