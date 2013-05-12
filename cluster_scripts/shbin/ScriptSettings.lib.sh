@@ -1,7 +1,7 @@
 source /UCHC/HPC/Everson_HPC/cluster_scripts/user_profile/modules.sh
 module load /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0
 
-HANDLER_SCRIPT=/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh
+HANDLER_SCRIPT="perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0"
 #gatk bundle indices
 GENOME=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa
 BWAINDEX=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa
