@@ -18,7 +18,7 @@ function runSJMfile {
 }
 
 function doCuffMerge {
-	SJM_JOB CuffMerge_$1_$2 25G "printf \"%s\n%s\" \"./$1_CUFFLINKS/transcripts.gtf\" \"./$2_CUFFLINKS/transcripts.gtf\" | cuffmerge -g $GENES -s $BWAINDEX -p 8 -o $1_$2_Merge /dev/stdin"
+	SJM_JOB CuffMerge_$1_$2 25G "printf \\\"%s\\\n%s\\\" \\\"./$1_CUFFLINKS/transcripts.gtf\\\" \\\"./$2_CUFFLINKS/transcripts.gtf\\\" | cuffmerge -g $GENES -s $BWAINDEX -p 8 -o $1_$2_Merge /dev/stdin"
 #CuffMerge.sh $1 $2 
 }
 
