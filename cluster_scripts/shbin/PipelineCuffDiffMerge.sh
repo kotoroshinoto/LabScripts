@@ -18,11 +18,13 @@ function runSJMfile {
 }
 
 function doCuffMerge {
-	SJM_JOB CuffMerge_$1_$2 25G CuffMerge.sh $1 $2 
+	SJM_JOB CuffMerge_$1_$2 25G "echo \"./$1_CUFFLINKS/transcripts.gtf
+./$2_CUFFLINKS/transcripts.gtf\" | cuffmerge -g $GENES -s $BWAINDEX -p 8 -o $1_$2_Merge /dev/stdin"
+#CuffMerge.sh $1 $2 
 }
 
 function doCuffDiff {
-	SJM_JOB CuffDiff_$1_$2 25G cuffdiff -o $1_$2_Diff -b $GENOME -p 8 -L $1,$2 -u ./$1_$2_Merge/merged.gtf ./$1_TOPHAT/accepted_hits.bam ./$2_TOPHAT/accepted_hits.bam
+	SJM_JOB CuffDiff_$1_$2 25G "cuffdiff -o $1_$2_Diff -b $GENOME -p 8 -L $1,$2 -u ./$1_$2_Merge/merged.gtf ./$1_TOPHAT/accepted_hits.bam ./$2_TOPHAT/accepted_hits.bam"
 	SJM_JOB_AFTER CuffDiff_$1_$2 CuffMerge_$1_$2 
 }
 

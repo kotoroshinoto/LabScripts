@@ -10,26 +10,35 @@ function getStats {
 #3 curdir
 #4 mrecords
 #5 genome
-	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM PipelineGetStats.sh $1 $JAVA_RAM $CURDIR $MRECORDS $GENOME
+	SJM_JOB $2_GetStats_$SAMPLE $JAVA_JOB_RAM "samtools index $1 && \
+samtools flagstat $1 >$1.flagstat && \
+samtools idxstats $1 >$1.idxstat && \
+java -Xmx$JAVA_RAM  -Xms$JAVA_RAM -Djava.io.tmpdir=$CURDIR/GATK_prep/tmp \
+-jar ~/HPC/picard/bin/CollectAlignmentSummaryMetrics.jar \
+TMP_DIR=$CURDIR \
+MAX_RECORDS_IN_RAM=$MRECORDS \
+I=$1 \
+O=$1.align_sum_metrics.txt \
+R=$GENOME"
 }
 
 function recalibrateBaseQual {
-	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM samtools index $1
-	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
+	SJM_JOB Prep6A_Recalibrate_$SAMPLE $JAVA_JOB_RAM "samtools index $1"
+	SJM_JOB Prep6B_Recalibrate_$SAMPLE $JAVA_JOB_RAM "java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
 -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T BaseRecalibrator \
 -I $1 \
 -R $GENOME \
 -knownSites $DBSNP \
--o $1.grp
+-o $1.grp"
 
-	SJM_JOB Prep6C_Recalibrate_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
+	SJM_JOB Prep6C_Recalibrate_$SAMPLE $JAVA_JOB_RAM "java -Xmx$JAVA_RAM -Xms$JAVA_RAM \
 	-jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T PrintReads \
 -I $1 \
 -R $GENOME \
 -BQSR $1.grp \
--o $2
+-o $2"
 
 #SJM_JOB_AFTER Prep6A_Recalibrate_$SAMPLE Prep5_MarkDuplicates_$SAMPLE
 SJM_JOB_AFTER Prep6B_Recalibrate_$SAMPLE Prep6A_Recalibrate_$SAMPLE
@@ -39,12 +48,12 @@ SJM_JOB_AFTER Prep6C_Recalibrate_$SAMPLE Prep6B_Recalibrate_$SAMPLE
 
 function indelrealign {
 	##create target intervals file
-	SJM_JOB Prep7A_Realign_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+	SJM_JOB Prep7A_Realign_$SAMPLE $JAVA_JOB_RAM "java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator \
 -R $GENOME \
 -I $1 \
 -o $1.indel.intervals \
--L $TARGET_BED
+-L $TARGET_BED"
 #Optional
 #-known 	List[RodBinding[VariantContext]] 	[] 	Input VCF file with known indels
 #-maxIntervalSize 	int 	500 	maximum interval size; any intervals larger than this value will be dropped
@@ -53,12 +62,12 @@ function indelrealign {
 #-windowSize 	int 	10 	window size for calculating entropy or SNP clusters
 
 ##use target intervals file & realign
-SJM_JOB Prep7B_Realign_$SAMPLE $JAVA_JOB_RAM java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
+SJM_JOB Prep7B_Realign_$SAMPLE $JAVA_JOB_RAM "java -Xmx$JAVA_RAM -Xms$JAVA_RAM -jar /UCHC/HPC/Everson_HPC/GATK/bin/GenomeAnalysisTK.jar \
 -T IndelRealigner \
 -R $GENOME \
 -I $1 \
 -targetIntervals $1.indel.intervals \
--o $2
+-o $2"
 
 SJM_JOB_AFTER Prep7A_Realign_$SAMPLE Prep6C_Recalibrate_$SAMPLE
 SJM_JOB_AFTER Prep7B_Realign_$SAMPLE Prep7A_Realign_$SAMPLE
