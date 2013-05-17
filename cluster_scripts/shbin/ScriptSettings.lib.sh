@@ -35,6 +35,10 @@ GENERIC_JOB_RAM=30G
 rRNA=/UCHC/HPC/Everson_HPC/reference_data/igenomes/Homo_sapiens/UCSC/hg19/Sequence/AbundantSequences/humRibosomal.fa
 ENSEMBL_GENES_GC=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/ENSEMBL_ANNOTATIONS/GC/gencode.v7.gc.txt
 ENSEMBL_GENES=/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/ENSEMBL_ANNOTATIONS/GTF/gencode.v7.annotation.gtf
+function SJM_RESET {
+		echo "#!/usr/bin/env sjm" > $SJM_FILE	
+}
+
 function SJM_MULTILINE_JOB_START {
 	JOBNAME=$1
 	shift
