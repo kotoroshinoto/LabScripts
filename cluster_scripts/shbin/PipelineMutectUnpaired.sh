@@ -21,15 +21,15 @@ function runSJMfile {
 	sjm $SJM_FILE
 }
 
-rm $SJM_FILE
-touch $SJM_FILE
-
-runMutect $NC $TC NC TC
-runMutect $NC $TF NC TF
-runMutect $NF $TF NF TF
-runMutect $NC $NF NC NF
-runMutect $NF $NC NF NC
-runMutect $TC $TF TC TF
+#rm $SJM_FILE
+#touch $SJM_FILE
+echo "#!/usr/bin/env sjm" > $SJM_FILE
+#runMutect $NC $TC NC TC
+#runMutect $NC $TF NC TF
+#runMutect $NF $TF NF TF
+#runMutect $NC $NF NC NF
+#runMutect $NF $NC NF NC
+#runMutect $TC $TF TC TF
 
 for var in "$@"
 do
