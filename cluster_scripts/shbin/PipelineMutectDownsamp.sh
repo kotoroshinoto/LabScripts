@@ -16,7 +16,7 @@ function runMutect {
 	LBLN=$3
 	LBLT=$4
 	FNAME=$3_$4
-	SJM_JOB MUTECT__DOWNSAMP_$FNAME $JAVA_JOB_RAM "mutect --downsample_to_coverage $DOWNCOUNT -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.downsample.$FNAME.txt --coverage_file mutect_coverage.downsample.$FNAME.wig.txt --vcf mutect.downsample.$FNAME.vcf --tumor_sample_name $LBLT --normal_sample_name $LBLN --enable_extended_output"
+	SJM_JOB MUTECT_DOWNSAMP_$FNAME $JAVA_JOB_RAM "mutect --downsample_to_coverage $DOWNCOUNT -R $GENOME --cosmic $COSMIC --dbsnp $DBSNP --intervals $TARGET_BED --input_file:normal $1 --input_file:tumor $2 --out mutect_call_stats.downsample.$FNAME.txt --coverage_file mutect_coverage.downsample.$FNAME.wig.txt --vcf mutect.downsample.$FNAME.vcf --tumor_sample_name $LBLT --normal_sample_name $LBLN --enable_extended_output"
 }
 
 function runSJMfile {
