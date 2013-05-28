@@ -5,7 +5,7 @@ GROUPLBL=$1
 #echo "group label: $GROUPLBL" 
 shift
 
-SJM_FILE=./RunMutect.sjm
+SJM_FILE=./RunMutectUnpaired.sjm
 
 #NC=$1.4GATK.recal.realn.filtered.bam
 #NF=$2.4GATK.recal.realn.filtered.bam
