@@ -2,35 +2,35 @@
 #version 2013.06.10
 #group of methods that can be called by the main script
 """New: change and streamline outputTable arguments"""
-
+ 
 # Takes data from file and makes a table
 def importTable(input_file_name, a_directory):
 	import os
-	
+ 	
 	# Set directory
 	old_dir = os.getcwd()
 	os.chdir(a_directory)
-	
+ 	
 	# Read data from input file and place in table
 	f = open(input_file_name, 'r')
 	# BACKUP f = open('test.txt', 'r')
 	f.readline() # reads and ignores the first line
 	doc = f.read()
 	table = [s.strip().split('\t') for s in doc.splitlines()]
-
+ 
 	# Find table size
 	rows = len(table)
 	print 'Input table has %r positions' % rows
 	cols = len(table[0])
 	# print 'Table has %r categories' % cols
-	
+ 	
 	os.chdir(old_dir)
 	return table
-
+ 
 # Writes the table to a text file
 def outputTable(a_book, a_table, sheet_name, output_directory):
 	import xlwt
-	
+ 	
 	book = a_book
 	sheet = book.add_sheet(sheet_name)
 	try:
@@ -42,7 +42,7 @@ def outputTable(a_book, a_table, sheet_name, output_directory):
 	for x in range(0, rows):
 		for y in range(0, cols):
 			sheet.write(x, y, a_table[x][y])
-
+ 
 # Saves rows based on a category value (such as KEEP under judgement)
 def saveByValue(a_table, a_category, a_value):
 	rows = len(a_table)
@@ -56,7 +56,7 @@ def saveByValue(a_table, a_category, a_value):
 		if a_table[x][category_col_num] == a_value: # compare value at col
 			table_new.append(a_table[x])
 	return table_new
-
+ 
 # Compares position of two tables
 def compareTables(first_table, second_table):
 	rows_first_table = len(first_table)
@@ -91,7 +91,7 @@ def compareTables(first_table, second_table):
 				hash_table_second[second_table[y][1]] = second_table[y]
 	compact_result = [same_first_table, same_second_table, diff_first_table, diff_second_table]
 	return compact_result
-
+ 
 #Saves columns by category
 def saveByCategory(a_table):
 	rows = len(a_table)
@@ -104,5 +104,5 @@ def saveByCategory(a_table):
 			new_row.append(a_table[x][y])
 		new_table.append(new_row)
 	return new_table
-
+ 
 #End
