@@ -6,6 +6,9 @@ GROUPLBL=$1
 shift
 
 function Genotype_per_file {
+	echo "arg1 $1"
+	echo "arg2 $2"
+	echo "arg3 $3"
 	SJM_JOB $2_GATK_GENOTYPE_COV_$3 $JAVA_JOB_RAM "GATK \
 -T UnifiedGenotyper \
 -R $GENOME \
