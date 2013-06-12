@@ -18,6 +18,8 @@ function Genotype_per_file {
 	#dcov [50 for 4x, 200 for >30x WGS or Whole exome]
 }
 
+SJM_FILE=./GATKgenotype.sjm
+SJM_RESET()
 for var in "$@"
 do
 	ARGS=$(echo $var | tr "," "\n")
