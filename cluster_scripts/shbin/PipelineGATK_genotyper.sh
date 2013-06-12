@@ -25,5 +25,5 @@ for var in "$@"
 do
 	ARGS=$(echo $var | tr "," "\n")
 	echo "ARGS: $ARGS"
-    #Genotype_per_file $ARGS
+    Genotype_per_file $ARGS
 done
