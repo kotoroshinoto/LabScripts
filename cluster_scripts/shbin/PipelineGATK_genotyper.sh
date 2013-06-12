@@ -6,7 +6,7 @@ GROUPLBL=$1
 shift
 
 function Genotype_per_file {
-	SJM_JOB $2_GATK_GENOTYPE $JAVA_JOB_RAM "GATK \
+	SJM_JOB $2_GATK_GENOTYPE_COV_$3 $JAVA_JOB_RAM "GATK \
 -T UnifiedGenotyper \
 -R $GENOME \
 -I $1 \
