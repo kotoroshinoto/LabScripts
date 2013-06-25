@@ -27,3 +27,5 @@ do
 	#echo "ARGS: $ARGS"
     Genotype_per_file $ARGS
 done
+
+echo "log_dir $CURDIR/sjm_logs" >> $SJM_FILE
