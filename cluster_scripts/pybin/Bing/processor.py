@@ -1,18 +1,16 @@
-"""
-processor.py
-version 2013.06.21
+# processor.py
+# version 2013.06.21
 
-"""
 def processMutations(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
+	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
-	import xlwt
 	import os
 	
 	# Set directory
 	old_dir = os.getcwd()
 	os.chdir(output_directory)
 	
-	print '\nStarting at %r' % input_directory
+	print('\nStarting at %r' % input_directory)
 	
 	# Import text to tables
 	table1 = ml.importTable(first_file, input_directory, lines_skip)
@@ -56,7 +54,7 @@ def processMutations(first_file, second_file , input_directory, output_file, out
 	concordance_table = ml.calcCondordance(unmatched_keeps1, unmatched_keeps2, matched_keeps1)
 	
 	# Write tables to text files
-	book = xlwt.Workbook()
+	book = Workbook(output_file)
 	
 	ml.outputTable(book, concordance_table, 'Concordance Summary', output_directory)
 	ml.outputTable(book, keeps1, 'NC TC KEEP', output_directory)
@@ -64,20 +62,20 @@ def processMutations(first_file, second_file , input_directory, output_file, out
 	ml.outputTable(book, matched_reject2_unmatched1, 'NF TF Matched REJECTS', output_directory)
 	ml.outputTable(book, matched_reject1_unmatched2, 'NC TC Matched REJECTS', output_directory)
 	
-	book.save(output_file)
+	book.close()
 	os.chdir(old_dir)
 	print('Finished')
 	
 def processGeneCalls(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
+	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
-	import xlwt
 	import os
 	
 	# Set directory
 	old_dir = os.getcwd()
 	os.chdir(output_directory)
 	
-	print '\nStarting at %r' % input_directory
+	print('\nStarting at %r' % input_directory)
 
 	# Import text to tables
 	table1 = ml.importTable(first_file, input_directory, lines_skip)
@@ -102,17 +100,17 @@ def processGeneCalls(first_file, second_file , input_directory, output_file, out
 	condordance_table = ml.calcCondordance(unmatched1, unmatched2, matched1)
 	
 	# Write tables to text files
-	book = xlwt.Workbook()
+	book = Workbook(output_file)
 	
 	ml.outputTable(book, condordance_table, 'Concordance Summary', output_directory)
 	ml.outputTable(book, table1, 'NC TC Input', output_directory)
 	ml.outputTable(book, table2, 'NF TF Input', output_directory)
 	ml.outputTable(book, matched1, 'NC TC Matches', output_directory)
 	ml.outputTable(book, matched2, 'NF TF Matches', output_directory)
-	book.save(output_file)
+	book.close()
 	os.chdir(old_dir)
 	
-	print 'Finished'
+	print('Finished')
 	
 def processNucleotides(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	import methodslist as ml
@@ -122,7 +120,7 @@ def processNucleotides(first_file, second_file , input_directory, output_file, o
 	# Set directory
 	old_dir = os.getcwd()
 	os.chdir(output_directory)
-	print '\nStarting at %r' % input_directory
+	print('\nStarting at %r' % input_directory)
 
 	# Import text to tables
 	table1 = ml.importTable(first_file, input_directory, lines_skip)
@@ -304,7 +302,7 @@ def processNucleotides(first_file, second_file , input_directory, output_file, o
 	sheet = book.add_sheet('Nucleotide Changes')
 	
 	rows = len(table1)
-	print 'Output table has %r positions' % rows
+	print('Output table has %r positions' % rows)
 	for x in range(0, rows):
 		sheet.write(x, 0, table0[x])
 		sheet.write(x, 1, table1[x])
@@ -312,4 +310,4 @@ def processNucleotides(first_file, second_file , input_directory, output_file, o
 	book.save(output_file)
 	
 	os.chdir(old_dir)
-	print 'Finished'
+	print('Finished')

@@ -1,10 +1,11 @@
-"""
-methods.py
-version 2013.06.21
-group of methods that can be called by the main script
-new: added function that calculates concordance
+'''
+methodslist.py
+version 2013.06.26
 
-"""
+list of methods used to manipulate data
+new: ported to python 3.3
+
+'''
 # Takes data from file and makes a table
 def importTable(input_file_name, a_directory, lines_skip):
 	import os
@@ -21,28 +22,28 @@ def importTable(input_file_name, a_directory, lines_skip):
 		f.readline()
 	doc = f.read()
 	table = [s.strip().split('\t') for s in doc.splitlines()]
-
+	
 	# Find table size
 	rows = len(table)
 	print('Input table has %r positions' % rows)
 	cols = len(table[0])
-	# print 'Table has %r categories' % cols
+	# print('Table has %r categories' % cols)
 	
 	os.chdir(old_dir)
 	return table
 
 # Writes the table to a text file
 def outputTable(a_book, a_table, sheet_name, output_directory):
-	import xlwt
+	from xlsxwriter.workbook import Workbook
 	
 	book = a_book
-	sheet = book.add_sheet(sheet_name)
+	sheet = book.add_worksheet(sheet_name)
 	try:
 		cols = len(a_table[0])
 	except IndexError:
-		print 'Cannot output an empty table'
+		print('Cannot output an empty table')
 	rows = len(a_table)
-	print 'Output table has %r positions' % rows
+	print('Output table has %r positions' % rows)
 	for x in range(0, rows):
 		for y in range(0, cols):
 			sheet.write(x, y, a_table[x][y])
@@ -83,7 +84,7 @@ def saveByValue(a_table, a_category, a_value):
 def compareTables(first_table, second_table):
 	rows_first_table = len(first_table)
 	rows_second_table = len(second_table)
-	print 'Comparing %r to %r positions' % (rows_first_table, rows_second_table)
+	print('Comparing %r to %r positions' % (rows_first_table, rows_second_table))
 	same_first_table = []
 	same_second_table = []
 	diff_first_table = []

@@ -1,9 +1,11 @@
-"""
+'''
 reader.py
 version 2013.06.21
-new: do not need to put folder paths
 
-"""
+reads the directions.txt and tells the processor.py how to treat the file
+new: added relative input/outupt folder paths
+
+'''
 import processor
 import os
 
@@ -43,6 +45,8 @@ string = f.readline()
 string = f.readline()
 string = f.readline()
 lines_skip = int(string)
+
+processor.processFile(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
 
 if compare_type == 'Mutation':
 	for x in range(0, len(file_directory)):
