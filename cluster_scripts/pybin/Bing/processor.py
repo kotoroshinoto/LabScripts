@@ -1,6 +1,8 @@
-# processor.py
-# version 2013.06.21
+"""
+processor.py
+version 2013.06.21
 
+"""
 def processMutations(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	import methodslist as ml
 	import xlwt

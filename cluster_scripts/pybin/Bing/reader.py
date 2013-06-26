@@ -1,7 +1,9 @@
-#reader.py
-#version 2013.06.21
-'''New: do not need to put folder paths'''
+"""
+reader.py
+version 2013.06.21
+new: do not need to put folder paths
 
+"""
 import processor
 import os
 

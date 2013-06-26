@@ -1,8 +1,10 @@
-# methods.py
-# version 2013.06.21
-# group of methods that can be called by the main script
-"""New: added function that calculates concordance"""
+"""
+methods.py
+version 2013.06.21
+group of methods that can be called by the main script
+new: added function that calculates concordance
 
+"""
 # Takes data from file and makes a table
 def importTable(input_file_name, a_directory, lines_skip):
 	import os
