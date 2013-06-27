@@ -46,8 +46,6 @@ string = f.readline()
 string = f.readline()
 lines_skip = int(string)
 
-processor.processFile(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
-
 if compare_type == 'Mutect':
 	for x in range(0, len(file_directory)):
 		processor.processMutect(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
