@@ -60,13 +60,13 @@ def calcCondordance(first_cols, second_cols, shared_cols):
 	second_percent = second_num/total_num
 	shared_percent = shared_num/total_num
 	
-	# Write condordance to table
+	# Write concordance to table
 	table = [['Concordance', '', '', ''], ['', 'FFPE', 'Both', 'Cryo']]
 	table.append(['', second_num, shared_num, first_num])
 	table.append(['', second_percent, shared_percent, first_percent])
 	return table
 	
-# Saves rows based on a category value (such as KEEP under judgement)
+# Saves rows based on a category value (such as KEEP under judgment)
 def saveByValue(a_table, a_category, a_value):
 	rows = len(a_table)
 	cols = len(a_table[0])

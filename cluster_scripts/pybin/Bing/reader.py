@@ -57,5 +57,5 @@ elif compare_type == 'Somatic':
 		processor.processSomatic(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
 else:
 	print('Unknown type of comparison')
-	
+
 f.close()
