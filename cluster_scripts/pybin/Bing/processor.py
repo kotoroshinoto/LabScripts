@@ -1,6 +1,8 @@
-# processor.py
-# version 2013.06.21
+'''
+processor.py module
+version 2013.06.26
 
+'''
 def processMutations(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
@@ -113,8 +115,8 @@ def processGeneCalls(first_file, second_file , input_directory, output_file, out
 	print('Finished')
 	
 def processNucleotides(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
+	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
-	import xlwt
 	import os
 	
 	# Set directory
@@ -261,45 +263,9 @@ def processNucleotides(first_file, second_file , input_directory, output_file, o
 				c_to_a, c_to_t, c_to_g,
 				g_to_a, g_to_t, g_to_c]
 	
-	'''
-	table2 = []
-	table2.append(a_to_t)
-	table2.append(a_to_c)
-	table2.append(a_to_g)
-
-	table2.append(t_to_a)
-	table2.append(t_to_c)
-	table2.append(t_to_g)
-
-	table2.append(c_to_a)
-	table2.append(c_to_t)
-	table2.append(c_to_g)
-
-	table2.append(g_to_a)
-	table2.append(g_to_t)
-	table2.append(g_to_c)
-	
-	table2 = []
-	table2.append(['A to T', a_to_t])
-	table2.append(['A to C', a_to_c])
-	table2.append(['A to G', a_to_g])
-
-	table2.append(['T to A', t_to_a])
-	table2.append(['T to C', t_to_c])
-	table2.append(['T to G', t_to_g])
-
-	table2.append(['C to A', c_to_a])
-	table2.append(['C to T', c_to_t])
-	table2.append(['C to G', c_to_g])
-
-	table2.append(['G to A', g_to_a])
-	table2.append(['G to T', g_to_t])
-	table2.append(['G to C', g_to_c])
-	'''
-	
 	# Output Table
-	book = xlwt.Workbook()
-	sheet = book.add_sheet('Nucleotide Changes')
+	book = Workbook(output_file)
+	sheet = book.add_worksheet('Nucleotide Changes')
 	
 	rows = len(table1)
 	print('Output table has %r positions' % rows)
@@ -307,7 +273,7 @@ def processNucleotides(first_file, second_file , input_directory, output_file, o
 		sheet.write(x, 0, table0[x])
 		sheet.write(x, 1, table1[x])
 		sheet.write(x, 2, table2[x])
-	book.save(output_file)
+	book.close()
 	
 	os.chdir(old_dir)
 	print('Finished')

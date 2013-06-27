@@ -1,5 +1,5 @@
 '''
-methodslist.py
+methodslist.py module
 version 2013.06.26
 
 list of methods used to manipulate data
@@ -119,7 +119,7 @@ def compareTables(first_table, second_table):
 	return compact_result
 
 #Saves columns by category
-def saveByCategory(a_table):
+def saveByCategory(a_table): #cannot choose categories
 	rows = len(a_table)
 	cols = len(a_table[0])
 	new_table = []

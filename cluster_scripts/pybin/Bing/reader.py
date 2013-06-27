@@ -1,5 +1,5 @@
 '''
-reader.py
+reader.py script
 version 2013.06.21
 
 reads the directions.txt and tells the processor.py how to treat the file
