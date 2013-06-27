@@ -3,7 +3,7 @@ processor.py module
 version 2013.06.26
 
 '''
-def processMutations(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
+def processMutect(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
 	import os
@@ -68,7 +68,7 @@ def processMutations(first_file, second_file , input_directory, output_file, out
 	os.chdir(old_dir)
 	print('Finished')
 	
-def processGeneCalls(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
+def processSomatic(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	from xlsxwriter.workbook import Workbook
 	import methodslist as ml
 	import os

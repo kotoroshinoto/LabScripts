@@ -1,9 +1,9 @@
 '''
 reader.py script
-version 2013.06.21
+version 2013.06.27
 
 reads the directions.txt and tells the processor.py how to treat the file
-new: added relative input/outupt folder paths
+new: change name of functions
 
 '''
 import processor
@@ -48,15 +48,15 @@ lines_skip = int(string)
 
 processor.processFile(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
 
-if compare_type == 'Mutation':
+if compare_type == 'Mutect':
 	for x in range(0, len(file_directory)):
-		processor.processMutations(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
+		processor.processMutect(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
 elif compare_type == 'Nucleotide':
 	for x in range(0, len(file_directory)):
 		processor.processNucleotides(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
-elif compare_type == 'Gene Call':
+elif compare_type == 'Somatic':
 	for x in range(0, len(file_directory)):
-		processor.processGeneCalls(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
+		processor.processSomatic(file_first, file_second, input_directory + file_directory[x], file_output + file_directory[x] + '.xls', output_directory, lines_skip)
 else:
 	print('Unknown type of comparison')
 	
