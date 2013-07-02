@@ -15,13 +15,13 @@ class Usage(Exception):
         #msg is an error message to post before the usage info
         usage="Usage: %s (options)\n" % sys.argv[0]
         usage +="Options:\n"
-        usage +="\t--template|-T=string : set template name\n"
-        usage +="\t--clearsuffixes|-C   : set flag to force suffix reset post-module\n"
-        usage +="\t--cross|-c           : set flag to inform SJM generator that this is a crossjob\n" 
-        usage +="\t                       (depends on pairs of input files from different samples)\n"
-        usage +="\t--variable|-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
-        usage +="\t--suffix|-S=string   : set suffix to be used post-module\n"
-        usage +="\t--subjob|-s=string   : add a subjob to template\n"
+        usage +="\t--template     |-T=string : set template name\n"
+        usage +="\t--clearsuffixes|-C        : set flag to force suffix reset post-module\n"
+        usage +="\t--cross        |-c        : set flag to inform SJM generator that this is a crossjob\n" 
+        usage +="\t                           (depends on pairs of input files from different samples)\n"
+        usage +="\t--variable     |-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
+        usage +="\t--suffix       |-S=string : set suffix to be used post-module\n"
+        usage +="\t--subjob       |-s=string : add a subjob to template\n"
         if msg is not None:
             self.msg = msg.strip() +"\n" + usage
         else:
@@ -63,13 +63,13 @@ def main(argv=None):
             argv=opt_parser.freeValues
             print("defined vars:")
             if pipeline_vars is None:
-                print("(No vars defined)")
+                print("\t(No vars defined)")
             else:
                 for var in pipeline_vars:
                     print("\t%s" % var)
             print("defined subjob commands:")
             if pipeline_subjobs is None:
-                print("(No subjobs defined)")
+                print("\t(No subjobs defined)")
             else:
                 for job in pipeline_subjobs:
                     print("\t%s" % job)
