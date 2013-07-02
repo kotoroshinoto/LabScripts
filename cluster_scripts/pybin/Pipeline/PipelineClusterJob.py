@@ -6,7 +6,7 @@ Created on Mar 18, 2013
 '''
 from Pipeline.PipelineError import PipelineError
 import Pipeline.PipelineUtil as PipelineUtil
-class PipelineSubStep:
+class PipelineClusterJob:
     def __init__(self,parent):
         self.name= None;
         self.subname= None;#used when defining multiple jobs that use same template, will be appended to name
@@ -36,7 +36,7 @@ class PipelineSubStep:
         if self.name is not None:
             tempstr+="\tname "+self.name+"\n"
         else:
-            raise PipelineError("[PipelineSubStep] Attempted to produce template string with no defined name!")
+            raise PipelineError("[PipelineClusterJob] Attempted to produce template string with no defined name!")
         if self.memory is not None:
             tempstr+="\tmemory "+self.memory+"\n"
         if self.queue is not None:
@@ -48,7 +48,7 @@ class PipelineSubStep:
         if self.status is not None:
             tempstr+="\tstatus "+self.status+"\n"
         if len(self.cmd) <= 0:
-            raise PipelineError("[PipelineSubStep] Attempted to produce template string with no defined commands!")
+            raise PipelineError("[PipelineClusterJob] Attempted to produce template string with no defined commands!")
         elif len(self.cmd) == 1:
             tempstr+="\tcmd "+self.cmd[0]+"\n"
         else:
@@ -63,5 +63,5 @@ class PipelineSubStep:
         return tempstr
     def toString(self,grouplbl,cumsuffix,prefix,prefix2=None):
         if self.parent.isCrossJob and prefix2 is None:
-            raise PipelineError("[PipelineSubStep.toString] toString called on crossjob without prefix2 variable\n")
+            raise PipelineError("[PipelineClusterJob.toString] toString called on crossjob without prefix2 variable\n")
         return PipelineUtil.replaceVars(self.toTemplateString(),self,grouplbl,cumsuffix,prefix,prefix2)

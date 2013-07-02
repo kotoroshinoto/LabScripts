@@ -6,7 +6,7 @@ Created on Mar 18, 2013
 import BiotoolsSettings
 import re
 import os
-from Pipeline.PipelineStep import PipelineStep
+from Pipeline.PipelineTemplate import PipelineTemplate
 import Pipeline.PipelineUtil as PipelineUtil
 class AnalysisPipeline:
     def __init__(self):
@@ -63,7 +63,7 @@ class AnalysisPipeline:
             templateFile=open(path2Template,'rU')
             templateLines=templateFile.readlines()
             templateFile.close()
-            template=PipelineStep.readTemplate(templateLines)
+            template=PipelineTemplate.readTemplate(templateLines)
             self.jobtemplates[splitName[0].upper()]=template
             return True
         else:
