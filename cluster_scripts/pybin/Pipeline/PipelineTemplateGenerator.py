@@ -3,6 +3,10 @@ import sys
 import os
 import BiotoolsSettings
 import DPyGetOpt
+from Pipeline.PipelineTemplate import PipelineTemplate
+import Pipeline.PipelineUtil as PipelineUtil
+from Pipeline.PipelineError import PipelineError
+from Pipeline.PipelineClusterJob import PipelineClusterJob
 
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
@@ -52,10 +56,26 @@ def main(argv=None):
             pipeline_crossjob=bool(opt_parser.valueForOption("cross"))
             pipeline_suffix=opt_parser.valueForOption("suffix")
             pipeline_templateName=opt_parser.valueForOption("template")
+            pipeline_subjobs=opt_parser.valueForOption("subjob")
             help_flag=bool(opt_parser.valueForOption("help"))
             if help_flag:
                 raise Usage(err=False)
             argv=opt_parser.freeValues
+            print("defined vars:")
+            for var in pipeline_vars:
+                print("\t%s" % var)
+            print("defined subjob commands:")
+            for job in pipeline_subjobs:
+                print("\t%s" % job)
+            print("suffixes cleared after template:")
+            print("\t%s" % pipeline_clearsuffixes)
+            print("Is a CrossJob:")
+            print("\t%s" % pipeline_crossjob)
+            print("Template Suffix:")
+            print("\t%s" % pipeline_suffix)
+            print("Template Name:")
+            print("\t%s" % pipeline_templateName)
+            #TODO method stub
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
