@@ -62,11 +62,17 @@ def main(argv=None):
                 raise Usage(err=False)
             argv=opt_parser.freeValues
             print("defined vars:")
-            for var in pipeline_vars:
-                print("\t%s" % var)
+            if pipeline_vars is None:
+                print("(No vars defined)")
+            else:
+                for var in pipeline_vars:
+                    print("\t%s" % var)
             print("defined subjob commands:")
-            for job in pipeline_subjobs:
-                print("\t%s" % job)
+            if pipeline_subjobs is None:
+                print("(No subjobs defined)")
+            else:
+                for job in pipeline_subjobs:
+                    print("\t%s" % job)
             print("suffixes cleared after template:")
             print("\t%s" % pipeline_clearsuffixes)
             print("Is a CrossJob:")
