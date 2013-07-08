@@ -96,6 +96,7 @@ def main(argv=None):
             #temp.ClusterJobs=[];
             #temp.vars={};
             #temp.var_keys=[];
+            temp.writeTemplate()
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
