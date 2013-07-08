@@ -100,6 +100,9 @@ def main(argv=None):
             raise Usage("DPyGetOptTermErr: " + DPyGetOptTermErr.__str__())
         except DPyGetOpt.Error as DPyGetOptErr:
             raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
+        except PipelineError as pipe_err:
+            print (pipe_err.msg);
+            return -1;
         raise Usage("")
     except Usage as err:
         sys.stderr.write(err.msg)
