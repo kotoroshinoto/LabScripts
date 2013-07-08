@@ -106,6 +106,10 @@ def main(argv=None):
         sys.stderr.write("for help use --help")
         return err.exit_code
 def parseVars(template,Vars):
+    if template is None:
+        PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
+    if Vars is None:
+        PipelineError("[PipelineTemplateGenerator.parseVars] No variables provided");
     for Var in Vars:
         eqsplit=Var.split("=")
         if (len(eqsplit)!=2):
@@ -115,6 +119,10 @@ def parseVars(template,Vars):
             template.vars[eqsplit[0]]=eqsplit[1];
             template.var_keys=eqsplit[0];
 def parseSubJobs(template,subjobs):
+    if template is None:
+        PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
+    if subjobs is None:
+        PipelineError("[PipelineTemplateGenerator.parseVars] No subjobs provided");
     for subjobopt in subjobs:
         clusterjob=template.getNewClusterJob();
         parseSubJob(subjobopt,clusterjob)
