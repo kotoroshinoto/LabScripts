@@ -105,11 +105,39 @@ def main(argv=None):
         sys.stderr.write(err.msg)
         sys.stderr.write("for help use --help")
         return err.exit_code
-def parseVars(template,jobvars):
-    return None
+def parseVars(template,Vars):
+    for Var in Vars:
+        eqsplit=Var.split("=")
+        if (len(eqsplit)!=2):
+            PipelineError("[PipelineTemplateGenerator.parseVars] Incorrect syntax for var definition: "+ Var);
+        if eqsplit[0] in template.vars:
+            PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
+            template.vars[eqsplit[0]]=eqsplit[1];
+            template.var_keys=eqsplit[0];
 def parseSubJobs(template,subjobs):
-    return None
-def parseSubJob(template,subjob):
+    for subjobopt in subjobs:
+        clusterjob=template.getNewClusterJob();
+        parseSubJob(subjobopt,clusterjob)
+def parseSubJob(subjobopt,clusterjob):
+    #subjobvars={};
+    commasplit=subjobopt.split(",");
+    for commaItem in commasplit:
+        eqsplit=commaItem.split("=")
+        if (len(eqsplit)!=2):
+            PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
+        if eqsplit[0] is "order_after":
+            arr=eqsplit[1].split(":");
+            clusterjob.order_after.append(arr)
+        elif eqsplit[0] is "cmd":
+            clusterjob.cmd.append(eqsplit[1]);
+        else:
+            setattr(clusterjob, eqsplit[0], eqsplit[1])
+        if clusterjob.module is None:
+            clusterjob.module=BiotoolsSettings.getValue("MODULEFILE")
+        if clusterjob.directory is None:
+            clusterjob.directory=BiotoolsSettings.getValue("CURDIR")
+        if clusterjob.queue is None:
+            clusterjob.queue=BiotoolsSettings.getValue("JOBQUEUE")
     return None
 if __name__ == "__main__":
     sys.exit(main())
