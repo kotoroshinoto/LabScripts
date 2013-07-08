@@ -107,7 +107,8 @@ def main(argv=None):
         except PipelineError as pipe_err:
             print (pipe_err.msg);
             return -1;
-        raise Usage("")
+        print("PROGRAM EXECUTION REACHED END OF MAIN")
+        return 0;
     except Usage as err:
         sys.stderr.write(err.msg)
         sys.stderr.write("for help use --help")
