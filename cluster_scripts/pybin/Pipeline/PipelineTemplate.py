@@ -44,6 +44,9 @@ class PipelineTemplate:
         newClusterJob=PipelineClusterJob(self)
         self.ClusterJobs.append(newClusterJob)
         return newClusterJob
+    def writeTemplate(self):
+        #TODO method stub
+        return None;
     @staticmethod
     def readTemplate(lines):
         newStep=PipelineTemplate()
