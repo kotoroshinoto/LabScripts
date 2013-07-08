@@ -12,6 +12,7 @@ class PipelineTemplate:
     def __init__(self):
         #list of files this pipeline uses
         #(only need to include files produced by previous steps that you need)
+        self.name=None;
         self.suffix=None;#this suffix will be appended to the accumulated suffixes for the next job's use with $ADJPREFIX 
         self.clearsuffixes=False;#if this flag is set, this step will ignore suffixes gathered from previous steps, and restart accumulation
         self.ClusterJobs=[];#list of subjobs, in order, that compose this step

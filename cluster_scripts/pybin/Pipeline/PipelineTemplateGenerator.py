@@ -82,6 +82,16 @@ def main(argv=None):
             print("Template Name:")
             print("\t%s" % pipeline_templateName)
             #TODO method stub
+            temp=PipelineTemplate()
+            temp.suffix=pipeline_suffix; 
+            temp.clearsuffixes=pipeline_clearsuffixes;
+            temp.isCrossJob=pipeline_crossjob;
+            temp.name=pipeline_templateName;
+            parseVars(temp,pipeline_vars);
+            parseSubJobs(temp,pipeline_subjobs);
+            #temp.ClusterJobs=[];
+            #temp.vars={};
+            #temp.var_keys=[];
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
@@ -95,6 +105,11 @@ def main(argv=None):
         sys.stderr.write(err.msg)
         sys.stderr.write("for help use --help")
         return err.exit_code
-        
+def parseVars(template,jobvars):
+    return None
+def parseSubJobs(template,subjobs):
+    return None
+def parseSubJob(template,subjob):
+    return None
 if __name__ == "__main__":
     sys.exit(main())
