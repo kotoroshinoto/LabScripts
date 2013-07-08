@@ -67,19 +67,22 @@ def main(argv=None):
             else:
                 for var in pipeline_vars:
                     print("\t%s" % var)
-            print("defined subjob commands:")
             if pipeline_subjobs is None:
                 raise Usage("Must define at least one subjob",err=True)
-                print("\t(No subjobs defined)")
             else:
+                print("defined subjob commands:")
                 for job in pipeline_subjobs:
                     print("\t%s" % job)
             print("suffixes cleared after template:")
             print("\t%s" % pipeline_clearsuffixes)
             print("Is a CrossJob:")
             print("\t%s" % pipeline_crossjob)
+            if pipeline_suffix is None:
+                raise Usage("Must Specify a template suffix",err=True)
             print("Template Suffix:")
             print("\t%s" % pipeline_suffix)
+            if pipeline_suffix is None:
+                raise Usage("Must Specify a template name",err=True)
             print("Template Name:")
             print("\t%s" % pipeline_templateName)
             #TODO method stub
