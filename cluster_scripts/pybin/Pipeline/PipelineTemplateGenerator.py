@@ -110,6 +110,7 @@ def parseVars(template,Vars):
         PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
     if Vars is None:
         PipelineError("[PipelineTemplateGenerator.parseVars] No variables provided");
+    print(Vars)
     for Var in Vars:
         eqsplit=Var.split("=")
         if (len(eqsplit)!=2):
