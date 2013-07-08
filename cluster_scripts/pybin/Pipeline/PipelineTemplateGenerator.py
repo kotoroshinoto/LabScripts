@@ -69,6 +69,7 @@ def main(argv=None):
                     print("\t%s" % var)
             print("defined subjob commands:")
             if pipeline_subjobs is None:
+                raise Usage(err=True,"Must define at least one subjob")
                 print("\t(No subjobs defined)")
             else:
                 for job in pipeline_subjobs:
@@ -111,17 +112,16 @@ def main(argv=None):
 def parseVars(template,Vars):
     if template is None:
         raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
-    if Vars is None:
-        raise PipelineError("[PipelineTemplateGenerator.parseVars] No variables provided");
-    print("Vars: %s" % Vars)
-    for Var in Vars:
-        eqsplit=Var.split("=")
-        if (len(eqsplit)!=2):
-            raise PipelineError("[PipelineTemplateGenerator.parseVars] Incorrect syntax for var definition: "+ Var);
-        if eqsplit[0] in template.vars:
-            raise PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
-            template.vars[eqsplit[0]]=eqsplit[1];
-            template.var_keys=eqsplit[0];
+    if Vars is not None:        
+        print("Vars: %s" % Vars)
+        for Var in Vars:
+            eqsplit=Var.split("=")
+            if (len(eqsplit)!=2):
+                raise PipelineError("[PipelineTemplateGenerator.parseVars] Incorrect syntax for var definition: "+ Var);
+            if eqsplit[0] in template.vars:
+                raise PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
+                template.vars[eqsplit[0]]=eqsplit[1];
+                template.var_keys=eqsplit[0];
 def parseSubJobs(template,subjobs):
     if template is None:
         raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
