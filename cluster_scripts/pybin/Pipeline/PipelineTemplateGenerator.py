@@ -107,23 +107,23 @@ def main(argv=None):
         return err.exit_code
 def parseVars(template,Vars):
     if template is None:
-        PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
+        raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
     if Vars is None:
-        PipelineError("[PipelineTemplateGenerator.parseVars] No variables provided");
+        raise PipelineError("[PipelineTemplateGenerator.parseVars] No variables provided");
     print("Vars: %s" % Vars)
     for Var in Vars:
         eqsplit=Var.split("=")
         if (len(eqsplit)!=2):
-            PipelineError("[PipelineTemplateGenerator.parseVars] Incorrect syntax for var definition: "+ Var);
+            raise PipelineError("[PipelineTemplateGenerator.parseVars] Incorrect syntax for var definition: "+ Var);
         if eqsplit[0] in template.vars:
-            PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
+            raise PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
             template.vars[eqsplit[0]]=eqsplit[1];
             template.var_keys=eqsplit[0];
 def parseSubJobs(template,subjobs):
     if template is None:
-        PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
+        raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
     if subjobs is None:
-        PipelineError("[PipelineTemplateGenerator.parseVars] No subjobs provided");
+        raise PipelineError("[PipelineTemplateGenerator.parseVars] No subjobs provided");
     for subjobopt in subjobs:
         clusterjob=template.getNewClusterJob();
         parseSubJob(subjobopt,clusterjob)
@@ -133,7 +133,7 @@ def parseSubJob(subjobopt,clusterjob):
     for commaItem in commasplit:
         eqsplit=commaItem.split("=")
         if (len(eqsplit)!=2):
-            PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
+            raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         if eqsplit[0] is "order_after":
             arr=eqsplit[1].split(":");
             clusterjob.order_after.append(arr)
