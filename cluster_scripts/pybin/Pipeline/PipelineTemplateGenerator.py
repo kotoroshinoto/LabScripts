@@ -69,7 +69,7 @@ def main(argv=None):
                     print("\t%s" % var)
             print("defined subjob commands:")
             if pipeline_subjobs is None:
-                raise Usage(err=True,"Must define at least one subjob")
+                raise Usage("Must define at least one subjob",err=True)
                 print("\t(No subjobs defined)")
             else:
                 for job in pipeline_subjobs:
