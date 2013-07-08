@@ -81,7 +81,7 @@ def main(argv=None):
                 raise Usage("Must Specify a template suffix",err=True)
             print("Template Suffix:")
             print("\t%s" % pipeline_suffix)
-            if pipeline_suffix is None:
+            if pipeline_templateName is None:
                 raise Usage("Must Specify a template name",err=True)
             print("Template Name:")
             print("\t%s" % pipeline_templateName)
