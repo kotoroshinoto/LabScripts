@@ -145,7 +145,7 @@ def parseSubJob(subjobopt,clusterjob):
         print("split on equal sign: %s" % eqsplit)
         if (len(eqsplit)!=2):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
-        attrib_name=str(eqsplit[0])
+        attrib_name=str(eqsplit[0].strip())
         attrib_val=str(eqsplit[1])
         print("attrib_name:")
         print(attrib_name)
