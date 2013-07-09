@@ -168,6 +168,5 @@ def parseSubJob(subjobopt,clusterjob):
             clusterjob.directory=BiotoolsSettings.getValue("CURDIR")
         if clusterjob.queue is None:
             clusterjob.queue=BiotoolsSettings.getValue("JOBQUEUE")
-    return None
 if __name__ == "__main__":
     sys.exit(main())
