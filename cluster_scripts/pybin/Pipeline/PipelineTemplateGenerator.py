@@ -145,13 +145,16 @@ def parseSubJob(subjobopt,clusterjob):
         if (len(eqsplit)!=2):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         if eqsplit[0] is "order_after":
+            print("found order_after!!!")
             arr=eqsplit[1].split(":");
             print("split order after: %s" % arr)
             clusterjob.order_after.append(arr)
         elif eqsplit[0] is "cmd":
+            print("found cmd!!!")
             print("split cmd: %s" % eqsplit[1])
             clusterjob.cmd.append(eqsplit[1]);
         else:
+            print("found %s!!!" % eqsplit[0])
             setattr(clusterjob, eqsplit[0], eqsplit[1])
         if clusterjob.module is None:
             clusterjob.module=BiotoolsSettings.getValue("MODULEFILE")
