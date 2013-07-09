@@ -49,7 +49,7 @@ class PipelineTemplate:
         #TODO method stub
         path2Template=os.path.join(PipelineUtil.templateDir(),self.name.upper()+".sjt")
         #TODO, file conditions, should either not exist, or be a normal file
-        templateFile=open(path2Template,'wU')
+        templateFile=open(path2Template,'w')
         for Var in self.var_keys:
             print("#&VAR:%s=%s")
         templateFile.close()
