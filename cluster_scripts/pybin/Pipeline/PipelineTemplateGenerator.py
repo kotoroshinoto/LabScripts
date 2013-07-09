@@ -127,6 +127,8 @@ def parseVars(template,Vars):
                 raise PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
             template.vars[eqsplit[0]]=eqsplit[1];
             template.var_keys.append(eqsplit[0]);
+            print("var keys: %s" % template.var_keys)
+            print("vars: %s" % template.vars)
 def parseSubJobs(template,subjobs):
     if template is None:
         raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
