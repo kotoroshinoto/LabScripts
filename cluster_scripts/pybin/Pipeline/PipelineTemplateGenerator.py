@@ -151,7 +151,7 @@ def parseSubJob(subjobopt,clusterjob):
         print(attrib_name)
         print("attrib_val:")
         print(attrib_val)
-        if attrib_name is "order_after":
+        if attrib_name == "order_after":
             print("found order_after!!!");
             print("parsing: " + attrib_val);
             if ':' in attrib_val:
@@ -161,7 +161,7 @@ def parseSubJob(subjobopt,clusterjob):
             else:
                 print("order after: " + attrib_val);
                 clusterjob.order_after.append(attrib_val);
-        elif attrib_name is "cmd":
+        elif attrib_name == "cmd":
             print("found cmd!!!");
             print("split cmd: " + attrib_val);
             clusterjob.cmd.append(attrib_val);
