@@ -147,7 +147,7 @@ def parseSubJob(subjobopt,clusterjob):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         if eqsplit[0] is "order_after":
             print("found order_after!!!")
-            if ':' in eqsplit[1]:
+            if ':' in (eqsplit[1]):
                 arr=eqsplit[1].split(":");
                 print("split order after: %s" % arr)
                 clusterjob.order_after.append(arr)
