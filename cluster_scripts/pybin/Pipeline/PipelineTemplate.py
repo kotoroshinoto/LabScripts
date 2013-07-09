@@ -51,7 +51,7 @@ class PipelineTemplate:
         #TODO, file conditions, should either not exist, or be a normal file
         templateFile=open(path2Template,'w')
         for Var in self.var_keys:
-            sys.stderr.write("#&VAR:%s=%s" % (Var,self.vars[Var]))
+            sys.stderr.write("#&VAR:%s=%s\n" % (Var,self.vars[Var]))
         templateFile.close()
         return None;
     @staticmethod
