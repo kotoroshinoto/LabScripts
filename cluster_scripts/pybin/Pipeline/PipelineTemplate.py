@@ -8,7 +8,7 @@ import re
 from Pipeline.PipelineError import PipelineError
 from Pipeline.PipelineClusterJob import PipelineClusterJob
 import Pipeline.PipelineUtil as PipelineUtil
-import os
+import os,sys
 class PipelineTemplate:
     def __init__(self):
         #list of files this pipeline uses
@@ -51,7 +51,7 @@ class PipelineTemplate:
         #TODO, file conditions, should either not exist, or be a normal file
         templateFile=open(path2Template,'w')
         for Var in self.var_keys:
-            print("#&VAR:%s=%s" % (Var,self.vars[Var]))
+            sys.stderr.write("#&VAR:%s=%s" % (Var,self.vars[Var]))
         templateFile.close()
         return None;
     @staticmethod
