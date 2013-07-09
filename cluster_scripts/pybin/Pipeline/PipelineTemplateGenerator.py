@@ -118,7 +118,7 @@ def parseVars(template,Vars):
     if template is None:
         raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
     if Vars is not None:        
-        print("Vars: %s" % Vars)
+        #print("Vars: %s" % Vars)
         for Var in Vars:
             eqsplit=Var.split("=")
             if (len(eqsplit)!=2):
@@ -126,7 +126,7 @@ def parseVars(template,Vars):
             if eqsplit[0] in template.vars:
                 raise PipelineError("[PipelineTemplateGenerator.parseVars] defined same var twice: "+ eqsplit[0]);
                 template.vars[eqsplit[0]]=eqsplit[1];
-                template.var_keys=eqsplit[0];
+                template.var_keys.append(eqsplit[0]);
 def parseSubJobs(template,subjobs):
     if template is None:
         raise PipelineError("[PipelineTemplateGenerator.parseVars] template object is None");
