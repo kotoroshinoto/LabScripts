@@ -47,7 +47,8 @@ class PipelineClusterJob:
             tempstr+="\tdirectory "+self.directory+"\n"
         if self.status is not None:
             tempstr+="\tstatus "+self.status+"\n"
-            print ("# of commands: " % len(self.cmd))
+            
+        print("# of commands: " % len(self.cmd))
         if len(self.cmd) <= 0:
             raise PipelineError("[PipelineClusterJob] Attempted to produce template string with no defined commands!")
         elif len(self.cmd) == 1:
