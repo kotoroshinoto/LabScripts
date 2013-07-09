@@ -166,7 +166,7 @@ def parseSubJob(subjobopt,clusterjob):
             print("split cmd: " + attrib_val);
             clusterjob.cmd.append(attrib_val);
         else:
-            print("found %s!!!" + attrib_name)
+            print("found " + attrib_name + " !!!")
             setattr(clusterjob, attrib_name, attrib_val)
         if clusterjob.module is None:
             clusterjob.module=BiotoolsSettings.getValue("MODULEFILE")
