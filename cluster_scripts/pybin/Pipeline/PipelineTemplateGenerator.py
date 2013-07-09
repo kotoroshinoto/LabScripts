@@ -142,6 +142,7 @@ def parseSubJob(subjobopt,clusterjob):
     commasplit=subjobopt.split(",");
     for commaItem in commasplit:
         eqsplit=commaItem.split("=")
+        print("split on equal sign: %s" % eqsplit)
         if (len(eqsplit)!=2):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         if eqsplit[0] is "order_after":
