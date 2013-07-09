@@ -52,7 +52,7 @@ class AnalysisPipeline:
         if len(splitName) == 0:
             return False
         #check if step template is already loaded
-        if splitName[0] in self.jobtemplates:
+        if splitName[0].upper() in self.jobtemplates:
             #if loaded, no more work to do
             return True;
         #if not found, check if template exists
@@ -60,10 +60,7 @@ class AnalysisPipeline:
         #print(path2Template)
         if os.path.isfile(path2Template):
             #if template exists
-            templateFile=open(path2Template,'rU')
-            templateLines=templateFile.readlines()
-            templateFile.close()
-            template=PipelineTemplate.readTemplate(templateLines)
+            template=PipelineTemplate.readTemplate(splitName[0].upper())
             self.jobtemplates[splitName[0].upper()]=template
             return True
         else:

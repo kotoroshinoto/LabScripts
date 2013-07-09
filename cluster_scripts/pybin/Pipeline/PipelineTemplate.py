@@ -8,6 +8,7 @@ import re
 from Pipeline.PipelineError import PipelineError
 from Pipeline.PipelineClusterJob import PipelineClusterJob
 import Pipeline.PipelineUtil as PipelineUtil
+import os
 class PipelineTemplate:
     def __init__(self):
         #list of files this pipeline uses
@@ -46,10 +47,27 @@ class PipelineTemplate:
         return newClusterJob
     def writeTemplate(self):
         #TODO method stub
+        path2Template=os.path.join(PipelineUtil.templateDir(),self.name.upper()+".sjt")
+        #TODO, file conditions, should either not exist, or be a normal file
+        templateFile=open(path2Template,'wU')
+        for Var in self.var_keys:
+            print("#&VAR:%s=%s")
+        templateFile.close()
         return None;
     @staticmethod
-    def readTemplate(lines):
+    def readTemplate(name):
+        #get path
+        path2Template=os.path.join(PipelineUtil.templateDir(),name.upper()+".sjt")
+        #check file exists
+        if not os.path.isfile(path2Template):
+            raise PipelineError("Template file does not exist!: " + path2Template)
+        #read file:
+        templateFile=open(path2Template,'rU')
+        templateLines=templateFile.readlines()
+        templateFile.close()
+        #process file:
         newStep=PipelineTemplate()
+        newStep.name=name.upper()
         joblines=[]
         hashMatcher=re.compile(r"^#\S+$")
         varLineMatcher=re.compile(r"^#&VAR:.+$")
@@ -57,7 +75,7 @@ class PipelineTemplate:
         suffixMatcher=re.compile(r"^#&SUFFIX:(.+)$")
         typeMatcher=re.compile(r"^#&TYPE:(.+)$")
         jobtype=None
-        for line in lines:
+        for line in templateLines:
             line=line.strip()
             if hashMatcher.match(line):
                 if varLineMatcher.match(line):
