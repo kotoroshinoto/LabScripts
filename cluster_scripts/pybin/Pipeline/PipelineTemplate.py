@@ -50,13 +50,7 @@ class PipelineTemplate:
         path2Template=os.path.join(PipelineUtil.templateDir(),self.name.upper()+".sjt")
         #TODO, file conditions, should either not exist, or be a normal file
         templateFile=open(path2Template,'w')
-        for Var in self.var_keys:
-            sys.stderr.write("#&VAR:%s=%s\n" % (Var,self.vars[Var]))
-        sys.stderr.write("#&SUFFIX:%s\n" % self.suffix)
-        if self.isCrossJob:
-            sys.stderr.write("#&TYPE:CROSS\n")
-        else:
-            sys.stderr.write("#&TYPE:SOLO\n")
+        sys.stderr.write(self.toTemplateString())
         templateFile.close()
         return None;
     @staticmethod
