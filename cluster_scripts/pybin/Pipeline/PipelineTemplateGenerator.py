@@ -153,20 +153,20 @@ def parseSubJob(subjobopt,clusterjob):
         print(attrib_val)
         if attrib_name is "order_after":
             print("found order_after!!!");
-            print("parsing: %s" % attrib_val);
+            print("parsing: " + attrib_val);
             if ':' in attrib_val:
                 arr=attrib_val.split(":");
-                print("split order after: %s" % arr);
+                print("split order after: " + arr);
                 clusterjob.order_after.append(arr);
             else:
-                print("order after: %s" % attrib_val);
+                print("order after: " + attrib_val);
                 clusterjob.order_after.append(attrib_val);
         elif attrib_name is "cmd":
             print("found cmd!!!");
-            print("split cmd: %s" % attrib_val);
+            print("split cmd: " + attrib_val);
             clusterjob.cmd.append(attrib_val);
         else:
-            print("found %s!!!" % attrib_name)
+            print("found %s!!!" + attrib_name)
             setattr(clusterjob, attrib_name, attrib_val)
         if clusterjob.module is None:
             clusterjob.module=BiotoolsSettings.getValue("MODULEFILE")
