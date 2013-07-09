@@ -52,6 +52,11 @@ class PipelineTemplate:
         templateFile=open(path2Template,'w')
         for Var in self.var_keys:
             sys.stderr.write("#&VAR:%s=%s\n" % (Var,self.vars[Var]))
+        sys.stderr.write("#&SUFFIX:%s" % self.suffix)
+        if self.isCrossJob:
+            sys.stderr.write("#&TYPE:CROSS")
+        else:
+            sys.stderr.write("#&TYPE:SOLO")
         templateFile.close()
         return None;
     @staticmethod
