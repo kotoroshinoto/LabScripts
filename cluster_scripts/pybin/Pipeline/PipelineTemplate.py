@@ -50,7 +50,7 @@ class PipelineTemplate:
         path2Template=os.path.join(PipelineUtil.templateDir(),self.name.upper()+".sjt")
         #TODO, file conditions, should either not exist, or be a normal file
         templateFile=open(path2Template,'w')
-        sys.stderr.write(self.toTemplateString())
+        templateFile.write(self.toTemplateString())
         templateFile.close()
         return None;
     @staticmethod
