@@ -142,31 +142,31 @@ def parseSubJob(subjobopt,clusterjob):
     commasplit=subjobopt.split(",");
     for commaItem in commasplit:
         eqsplit=commaItem.split("=")
-        print("split on equal sign: %s" % eqsplit)
+#        print("split on equal sign: %s" % eqsplit)
         if (len(eqsplit)!=2):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         attrib_name=str(eqsplit[0].strip())
         attrib_val=str(eqsplit[1])
-        print("attrib_name:")
-        print(attrib_name)
-        print("attrib_val:")
-        print(attrib_val)
+#        print("attrib_name:")
+#        print(attrib_name)
+#        print("attrib_val:")
+#        print(attrib_val)
         if attrib_name == "order_after":
-            print("found order_after!!!");
-            print("parsing: " + attrib_val);
+#            print("found order_after!!!");
+#            print("parsing: " + attrib_val);
             if ':' in attrib_val:
                 arr=attrib_val.split(":");
-                print("split order after: " + arr);
+#                print("split order after: " + arr);
                 clusterjob.order_after.append(arr);
             else:
-                print("order after: " + attrib_val);
+#                print("order after: " + attrib_val);
                 clusterjob.order_after.append(attrib_val);
         elif attrib_name == "cmd":
-            print("found cmd!!!");
-            print("split cmd: " + attrib_val);
+#            print("found cmd!!!");
+#            print("split cmd: " + attrib_val);
             clusterjob.cmd.append(attrib_val);
         else:
-            print("found " + attrib_name + " !!!")
+#            print("found " + attrib_name + " !!!")
             setattr(clusterjob, attrib_name, attrib_val)
         if clusterjob.module is None:
             clusterjob.module=BiotoolsSettings.getValue("MODULEFILE")
