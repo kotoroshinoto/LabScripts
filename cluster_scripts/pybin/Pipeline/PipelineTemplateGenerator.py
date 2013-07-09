@@ -147,6 +147,10 @@ def parseSubJob(subjobopt,clusterjob):
             raise PipelineError("[PipelineTemplateGenerator.parseVars] invalid argument syntax! should have 2 elements separated by '=', have: %d" % len(eqsplit));
         attrib_name=eqsplit[0]
         attrib_val=eqsplit[1]
+        print("attrib_name:")
+        print(attrib_name)
+        print("attrib_val:")
+        print(attrib_val)
         if attrib_name is "order_after":
             print("found order_after!!!")
             print("parsing: %s" % attrib_val)
