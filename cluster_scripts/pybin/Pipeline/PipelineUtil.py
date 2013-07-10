@@ -32,7 +32,7 @@ def replaceVars(instr,subjob,grouplbl,cumsuffix,prefix,prefix2=None):
         retstr=re.sub(search,replace,retstr)
 #replace ADJPREFIX with $PREFIX$CUMSUFFIX - totally for convenience, 
 #can still use $CUMSUFFIX directly, for input files that need it
-    if subjob.parent.clearsuffixes:
+    if not subjob.parent.clearsuffixes:
         retstr=re.sub('\$ADJPREFIX','$PREFIX$CUMSUFFIX',retstr)
     else:
         retstr=re.sub('\$ADJPREFIX','$PREFIX',retstr)

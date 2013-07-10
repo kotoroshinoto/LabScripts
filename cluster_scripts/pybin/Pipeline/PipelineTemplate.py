@@ -117,6 +117,7 @@ class PipelineTemplate:
     def setAssume(self):
         for ClusterJob in self.ClusterJobs:
             ClusterJob.status='done'
+
     def toString(self,grouplbl,cumsuffix,prefix,prefix2=None):
         if self.isCrossJob and prefix2 is None:
             raise PipelineError("[PipelineTemplate.toString] toString called on crossjob without prefix2 variable\n")
@@ -128,6 +129,7 @@ class PipelineTemplate:
                     raise PipelineError("[Pipeline.PipelineTemplate.toString()] call to ClusterJob.tostring() returned None")
                 resstr+=result
         return resstr
+    
     def toTemplateString(self):
         tmpstr=""
         for var in self.var_keys:
