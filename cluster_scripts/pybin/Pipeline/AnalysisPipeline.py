@@ -9,17 +9,14 @@ import os
 from Pipeline.PipelineTemplate import PipelineTemplate
 import Pipeline.PipelineUtil as PipelineUtil
 
-from pygraph.classes.graph import graph
-from pygraph.classes.digraph import digraph
-from pygraph.algorithms.searching import breadth_first_search
-from pygraph.algorithms.cycles import find_cycle 
-from pygraph.readwrite.dot import write
+import igraph
 
 class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
         self.jobtemplates={}
-        self.templategraph=
+        self.templategraph= igraph.Graph()
+        self.templategraph.is_dag()
 
     @staticmethod
     def splitJobname(jobspec):

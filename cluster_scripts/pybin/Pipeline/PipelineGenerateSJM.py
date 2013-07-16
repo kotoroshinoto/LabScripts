@@ -4,6 +4,7 @@ import os
 import BiotoolsSettings
 import DPyGetOpt
 import pyswitch
+import igraph
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 #TODO: option for --splitSOLO , sjm generation will result in separate *.sjm files for each input file,
@@ -76,6 +77,10 @@ def main(argv=None):
             if help_flag:
                 raise Usage(err=False)
             argv=opt_parser.freeValues
+            
+            
+            templategraph= igraph.Graph()
+#            templategraph.
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
