@@ -142,7 +142,12 @@ class PipelineTemplate:
         for ClusterJob in self.ClusterJobs:
             tmpstr += ClusterJob.toTemplateString();        
         return tmpstr
-    
+    def getSourceJobs(self):
+        #TODO fill out method stub
+        return None
+    def getSinkJobs(self):
+        #TODO fill out method stub
+        return None
     def parseSubJobs(self,lines):
         newClusterJob=None
         injob=False
