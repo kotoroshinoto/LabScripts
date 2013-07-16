@@ -80,7 +80,7 @@ def main(argv=None):
             
             
             templategraph= igraph.Graph()
-#            templategraph.
+            templategraph.is_dag()#job tree must be a dag, 
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:

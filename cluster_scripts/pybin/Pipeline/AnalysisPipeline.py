@@ -10,14 +10,36 @@ from Pipeline.PipelineTemplate import PipelineTemplate
 import Pipeline.PipelineUtil as PipelineUtil
 
 import igraph
-
+class PipelineNode:
+    def __init__(self,pipeline):
+        #TODO: fill in stub
+        self.pipeline=pipeline
+        self.template=None
+        self.subname=None
+        self.optionfile=None
+    def setValues(self,templatename,subname=None,optionfile=None):
+        if (subname is None) and (optionfile is None):
+            self.template=self.pipeline.getTemplate("%s" % (templatename.upper() ))
+        elif (subname is not None) and (optionfile is not None):
+            self.template=self.pipeline.getTemplate("%s[%s]{%s}" % (templatename.upper(),subname.upper(),optionfile))
+        elif (subname is not None) and (optionfile is None):
+            self.template=self.pipeline.getTemplate("%s[%s]" % (templatename.upper(),subname.upper()))
+        elif (subname is None) and (optionfile is not None):
+            self.template=self.pipeline.getTemplate("%s{%s}" % (templatename.upper(),optionfile))
+    def loadOptionFile(self):
+        #TODO empty method stub
+        return None
 class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
         self.jobtemplates={}
+        #list of nodes in tree
+        self.nodes={}
+        #index with template[subname]
+        #only allow first specification to contain optionfile, blank != ""
+        #allows for easier start point of new branches.
         self.templategraph= igraph.Graph()
         self.templategraph.is_dag()
-
     @staticmethod
     def splitJobname(jobspec):
         #TODO: name format is TemplateName[SubName]
@@ -82,6 +104,9 @@ class AnalysisPipeline:
         else:
             splitName=AnalysisPipeline.splitJobname(jobspec)
             return self.jobtemplates.get(splitName[0])
+    def getNode(self,jobspec):
+        #todo derp
+        return None
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
 #print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
