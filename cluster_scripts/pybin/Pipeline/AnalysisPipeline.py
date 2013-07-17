@@ -86,6 +86,12 @@ class AnalysisPipeline:
     
     def linkNodes(self,source_jobspec,sink):
         return None
+    
+    def getSourceNodes(self):
+        return None
+    
+    def getSinkNodes(self):
+        return None
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
 #print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
