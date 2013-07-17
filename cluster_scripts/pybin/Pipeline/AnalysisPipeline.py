@@ -95,6 +95,9 @@ class AnalysisPipeline:
     def getSinkNodes(self):
         #return list of all nodes that don't have targets
         return None
+    def toSJMStrings(self,sampleSplit=False,templateSplit=True):
+        sjm_strings={}
+        return sjm_strings
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
 #print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
