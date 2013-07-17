@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import sys
-import os
+import sys,os,re
 import BiotoolsSettings
 import DPyGetOpt
 import pyswitch
 import igraph
+
+from Pipeline.PipelineError import PipelineError
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 #TODO: option for --splitSOLO , sjm generation will result in separate *.sjm files for each input file,
@@ -93,6 +94,69 @@ def main(argv=None):
     except Usage as err:
         sys.stderr.write(err.msg)
         return err.exit_code
-        
+@staticmethod
+def splitJobspec(jobspec):
+    #TODO: name format is TemplateName[SubName]
+    _jobspec=jobspec.strip();
+    brack_op= jobspec.count('[')
+    brack_cl= jobspec.count(']')
+    brace_op= jobspec.count('{')
+    brace_cl= jobspec.count('{')
+    if (((brack_op==1) and (not (brack_cl==1))) or ((not (brack_op==1)) and (brack_cl==1))) or (((brace_op==1) and (not (brace_cl==1))) or ((not (brace_op==1)) and (brace_cl==1))):
+        raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: unpaired brace or bracket")
+    if brack_op >1 or brack_cl >1 or brace_op >1 or brace_cl >1:
+        raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: more than one of: '[]{}'")
+    brack=brack_op == 1 and brack_cl == 1
+    brace=brace_op == 1 and brace_cl == 1
+    if brace:
+        brace_start=_jobspec.find('{')
+        brace_end=_jobspec.find('}')
+        if brace_end < brace_start:
+            raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: } before {")
+    if brack:
+        brack_start=_jobspec.find('[')
+        brack_end=_jobspec.find(']')
+        if brack_end < brack_start:
+            raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: ] before [")
+    result={}
+    if brace and brack:
+        brace_start=_jobspec.find('{')
+        brace_end=_jobspec.find('}')
+        brack_start=_jobspec.find('[')
+        brack_end=_jobspec.find(']')
+        # if brace start is after bracket end, no overlaps should be present, and order should be correct
+        if brace_start < brack_end :#other conditions covered by other checks
+            raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: {} was before [] or overlapped ")
+        bothmatch=re.match("^(\S*)\[(\S*)\]\{\S*\}$",_jobspec)
+        if bothmatch:
+            result['template']=bothmatch.group(1).upper()
+            result['subname']=bothmatch.group(2).upper()
+            result['optionfile']=bothmatch.group(3)
+            return result
+        else:
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]{}:%s} % jobspec  ")
+    elif brack:
+        brackmatch=re.match("^(\S*)\[(\S*)\]$",_jobspec)
+        if brackmatch:
+            result['template']=bothmatch.group(1).upper()
+            result['subname']=bothmatch.group(2).upper()
+            result['optionfile']=""
+            return result
+        else:
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]:%s} % jobspec  ")
+    elif brace:
+        bracematch=re.match("^(\S*)\{(\S*)\}$",_jobspec)
+        if bracematch:
+            result['template']=bothmatch.group(1).upper()
+            result['subname']=""
+            result['optionfile']=bothmatch.group(2)
+            return result
+        else:
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec{}:%s} % jobspec  ")
+    else:
+        result['template']=jobspec.upper()
+        result['subname']=""
+        result['optionfile']=""
+        return result
 if __name__ == "__main__":
     sys.exit(main())

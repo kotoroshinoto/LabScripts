@@ -8,6 +8,7 @@ import re
 import os
 from Pipeline.PipelineTemplate import PipelineTemplate
 import Pipeline.PipelineUtil as PipelineUtil
+from Pipeline.PipelineError import PipelineError
 
 import igraph
 class PipelineNode:
@@ -40,72 +41,50 @@ class AnalysisPipeline:
         #allows for easier start point of new branches.
         self.templategraph= igraph.Graph()
         self.templategraph.is_dag()
-    @staticmethod
-    def splitJobname(jobspec):
-        #TODO: name format is TemplateName[SubName]
-        _jobspec=jobspec.strip();
-        match=re.match("^(\S*)\[(\S*)\]$",_jobspec)
-        if match:
-            result=[]
-            for item in match.group(1,2):
-                result.append(item)
-            if result[0] == "":
-                #TODO: change this indication to an exception
-                return []
-            if result[1] == "":
-                del result[1]
-            return result
-        else:
-            numstart=_jobspec.count('[')
-            numend=_jobspec.count(']')
-            if numstart == 0 and numend == 0:
-                result=[]
-                result.append(_jobspec)
-                return result
-            if not(numstart == 1 and numend == 1):
-                #indicate error
-                #TODO: change this indication to an exception
-                return []
-            startpos=_jobspec.find('[')
-            endpos=_jobspec.find(']')
-            if endpos < startpos:
-                #indicate error
-                #TODO: change this indication to an exception
-                return []
-    def loadTemplate(self,jobspec):
+    def loadTemplate(self,templateName):
         template=None
         #TODO: fill in stub
-        splitName=AnalysisPipeline.splitJobname(jobspec)
-        if len(splitName) == 0:
+        if len(templateName) == 0:
             return False
         #check if step template is already loaded
-        if splitName[0].upper() in self.jobtemplates:
+        if templateName.upper() in self.jobtemplates:
             #if loaded, no more work to do
             return True;
         #if not found, check if template exists
-        path2Template=os.path.join(PipelineUtil.templateDir(),splitName[0].upper()+".sjt")
+        path2Template=os.path.join(PipelineUtil.templateDir(),templateName.upper()+".sjt")
         #print(path2Template)
         if os.path.isfile(path2Template):
             #if template exists
-            template=PipelineTemplate.readTemplate(splitName[0].upper())
-            self.jobtemplates[splitName[0].upper()]=template
+            template=PipelineTemplate.readTemplate(templateName.upper())
+            self.jobtemplates[templateName.upper()]=template
             return True
         else:
             #if template doesn't exist, signal error
             return False
-    def TemplateIsLoaded(self,jobspec):
-        splitName=AnalysisPipeline.splitJobname(jobspec)
-        return (splitName[0] in self.jobtemplates)
-    def getTemplate(self,jobspec):
-        if not self.TemplateIsLoaded(jobspec):
-            self.loadTemplate(jobspec)
-            if not self.TemplateIsLoaded(jobspec):
+    def TemplateIsLoaded(self,template):
+        return (template.upper() in self.jobtemplates)
+    def getTemplate(self,template):
+        if not self.TemplateIsLoaded(template):
+            self.loadTemplate(template)
+            if not self.TemplateIsLoaded(template):
                 return None
         else:
-            splitName=AnalysisPipeline.splitJobname(jobspec)
-            return self.jobtemplates.get(splitName[0])
-    def getNode(self,jobspec):
+            return self.jobtemplates.get(template.upper())
+        
+    def getNode(self,template,subname,optionfile):
         #todo derp
+        #check if node already exists (template,subname)
+        #if it does make sure optionfile matches or is blank or None,
+            #if it does return it 
+            #otherwise mismatch is an error
+        #if it doesnt, create it
+        if(subname):
+            self.templategraph.add_vertex(name="%s_%s" % (template,subname))
+        else:
+            self.templategraph.add_vertex(name="template")
+        return None
+    
+    def linkNodes(self,source_jobspec,sink):
         return None
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
