@@ -95,8 +95,31 @@ class AnalysisPipeline:
     def getSinkNodes(self):
         #return list of all nodes that don't have targets
         return None
+    
     def toSJMStrings(self,sampleSplit=False,templateSplit=True):
         sjm_strings={}
+        #produce strings in fully split form
+        #get source nodes
+        #starting with each source node, and tracing the tree parent-first, then children:
+            #use templates to get SJM content,
+            #track cumulative suffixes
+            #if not source node 
+                #add any extra link-related job dependencies manually
+            #add sjm logfile location to end of each file
+        
+        #join strings as appropriate:
+        if sampleSplit and templateSplit:
+            #split between samples AND between
+            return None
+        elif sampleSplit:
+            #split between samples
+            return None
+        elif templateSplit:
+            #split only between templates
+            return None
+        else:
+            #one giant file
+            return None
         return sjm_strings
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
