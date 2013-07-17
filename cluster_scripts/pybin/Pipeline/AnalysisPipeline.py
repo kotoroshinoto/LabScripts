@@ -85,12 +85,15 @@ class AnalysisPipeline:
         return None
     
     def linkNodes(self,source_jobspec,sink):
+        #add edge linking nodes
         return None
     
     def getSourceNodes(self):
+        #return list of all nodes that aren't targets of other nodes
         return None
     
     def getSinkNodes(self):
+        #return list of all nodes that don't have targets
         return None
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
