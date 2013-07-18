@@ -21,10 +21,10 @@ def main():
         usage("no arguments given")
     elif (sys.argv[1].lower() == "template"):
         sys.argv[0]=sys.argv.pop(0)+' '+sys.argv[0].lower()
-        Pipeline.commands.PipelineTemplateGenerator.main(sys.argv)
+        return(Pipeline.commands.PipelineTemplateGenerator.main(sys.argv))
     elif (sys.argv[1].lower() == "pipeline"):
         sys.argv[0]=sys.argv.pop(0)+' '+sys.argv[0].lower()
-        Pipeline.commands.PipelineGenerateSJM.main(sys.argv)
+        return(Pipeline.commands.PipelineGenerateSJM.main(sys.argv))
     else:
         usage("command not recognized")
     return 0
