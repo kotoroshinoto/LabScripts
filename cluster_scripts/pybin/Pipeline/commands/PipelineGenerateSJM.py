@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys,os,re
-import BiotoolsSettings
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings 
 import DPyGetOpt
 import pyswitch
 import igraph
@@ -93,6 +93,7 @@ def main(argv=None):
         raise Usage("")
     except Usage as err:
         sys.stderr.write(err.msg)
+#         sys.stderr.write("for help use --help\n")
         return err.exit_code
 def splitJobspec(jobspec):
     #TODO: name format is TemplateName[SubName]

@@ -13,7 +13,8 @@ def main():
     sys.stderr.write("args: '%s'" % (' '.join(sys.argv)))
     if (sys.argv[1].lower() == "maketemplate"):
         Pipeline.commands.PipelineTemplateGenerator.main(sys.argv)
+    elif (sys.argv[1].lower() == "maketemplate"):
+        Pipeline.commands.PipelineGenerateSJM.main(sys.argv)
     return 0
 if __name__ == '__main__':
     sys.exit(main())
-    

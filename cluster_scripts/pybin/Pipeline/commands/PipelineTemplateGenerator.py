@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os
-import BiotoolsSettings
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 import DPyGetOpt
 from Pipeline.core.PipelineTemplate import PipelineTemplate
 import Pipeline.core.PipelineUtil as PipelineUtil
@@ -112,7 +112,7 @@ def main(argv=None):
         return 0;
     except Usage as err:
         sys.stderr.write(err.msg)
-        sys.stderr.write("for help use --help")
+        sys.stderr.write("for help use --help\n")
         return err.exit_code
 def parseVars(template,Vars):
     if template is None:

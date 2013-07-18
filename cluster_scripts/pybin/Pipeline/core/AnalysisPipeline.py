@@ -3,7 +3,7 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import BiotoolsSettings
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 import re,os
 from Pipeline.core.PipelineTemplate import PipelineTemplate
 import Pipeline.core.PipelineUtil as PipelineUtil
