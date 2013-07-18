@@ -35,7 +35,7 @@ class AnalysisPipeline:
         #TODO: fill in stub
         self.jobtemplates={}
         #list of nodes in tree
-        self.nodes={}
+        self.nodes={}#info about nodes stored in PipelineNode object in this dictionary
         #index with template[subname]
         #only allow first specification to contain optionfile, blank != ""
         #allows for easier start point of new branches.
