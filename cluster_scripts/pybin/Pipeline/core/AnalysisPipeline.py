@@ -71,19 +71,32 @@ class AnalysisPipeline:
             return self.jobtemplates.get(template.upper())
         
     def getNode(self,template,subname,optionfile):
-        #todo derp
-        #check if node already exists (template,subname)
-        #if it does make sure optionfile matches or is blank or None,
-            #if it does return it 
-            #otherwise mismatch is an error
-        #if it doesnt, create it
+        vertName=""
         if(subname):
-            self.templategraph.add_vertex(name="%s_%s" % (template,subname))
+            vertName="%s|%s" % (template.upper(),subname.upper())
         else:
-            self.templategraph.add_vertex(name="template")
-        return None
+            vertName="%s" % (template.upper())
+        #check if node already exists (template,subname)
+        if self.nodes.has_key(vertName):
+            node=self.nodes.get(vertName)
+            if (node.subname.upper() != subname.upper()) or (node.template.name.upper() != template.upper()):
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline] template in expected location did not match\n")
+            #if it does make sure optionfile matches or is blank or None,
+            if optionfile != node.optionfile:
+                #otherwise mismatch is an error
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline] matched template & subname, but mismatched optionfile\n")
+            #if it does return it
+            return node
+        #if it doesnt, create it
+        newNode=PipelineNode(self)
+        newNode.template=self.getTemplate(template)
+        newNode.subname=subname
+        newNode.optionfile=optionfile
+        self.nodes[vertName]=newNode
+        self.templategraph.add_vertex(name=vertName)
+        return newNode
     
-    def linkNodes(self,source_jobspec,sink):
+    def linkNodes(self,source_name,source_subname,sink_name,sink_subname):
         #add edge linking nodes
         return None
     
