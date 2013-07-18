@@ -22,6 +22,7 @@ class Usage(Exception):
         usage +="\t--variable     |-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
         usage +="\t--suffix       |-S=string : set suffix to be used post-module\n"
         usage +="\t--subjob       |-s=string : add a subjob to template\n"
+        usage +="for help use --help\n"
         if msg is not None:
             self.msg = msg.strip() +"\n" + usage
         else:
@@ -112,7 +113,6 @@ def main(argv=None):
         return 0;
     except Usage as err:
         sys.stderr.write(err.msg)
-        sys.stderr.write("for help use --help\n")
         return err.exit_code
 def parseVars(template,Vars):
     if template is None:
