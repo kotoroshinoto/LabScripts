@@ -3,9 +3,10 @@ Created on Mar 26, 2013
 
 @author: mgooch
 '''
+import re,sys,os
 import BiotoolsSettings
-from Pipeline.PipelineError import PipelineError
-import re,sys
+from Pipeline.core.PipelineError import PipelineError
+
 def replaceVars(instr,subjob,grouplbl,cumsuffix,prefix,prefix2=None):
     #TODO: fill in stub
     errors=[]

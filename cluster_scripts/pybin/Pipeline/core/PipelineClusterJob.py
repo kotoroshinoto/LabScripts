@@ -4,8 +4,8 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-from Pipeline.PipelineError import PipelineError
-import Pipeline.PipelineUtil as PipelineUtil
+from Pipeline.core.PipelineError import PipelineError
+import Pipeline.core.PipelineUtil as PipelineUtil
 class PipelineClusterJob:
     def __init__(self,parent):
         self.name= None;

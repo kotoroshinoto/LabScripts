@@ -5,7 +5,7 @@ import DPyGetOpt
 import pyswitch
 import igraph
 
-from Pipeline.PipelineError import PipelineError
+from Pipeline.core.PipelineError import PipelineError
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 #TODO: option for --splitSOLO , sjm generation will result in separate *.sjm files for each input file,

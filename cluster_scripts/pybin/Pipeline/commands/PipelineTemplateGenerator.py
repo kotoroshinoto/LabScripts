@@ -3,10 +3,10 @@ import sys
 import os
 import BiotoolsSettings
 import DPyGetOpt
-from Pipeline.PipelineTemplate import PipelineTemplate
-import Pipeline.PipelineUtil as PipelineUtil
-from Pipeline.PipelineError import PipelineError
-from Pipeline.PipelineClusterJob import PipelineClusterJob
+from Pipeline.core.PipelineTemplate import PipelineTemplate
+import Pipeline.core.PipelineUtil as PipelineUtil
+from Pipeline.core.PipelineError import PipelineError
+from Pipeline.core.PipelineClusterJob import PipelineClusterJob
 
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829

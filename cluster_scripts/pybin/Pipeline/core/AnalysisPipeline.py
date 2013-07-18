@@ -4,11 +4,10 @@ Created on Mar 18, 2013
 @author: Gooch
 '''
 import BiotoolsSettings
-import re
-import os
-from Pipeline.PipelineTemplate import PipelineTemplate
-import Pipeline.PipelineUtil as PipelineUtil
-from Pipeline.PipelineError import PipelineError
+import re,os
+from Pipeline.core.PipelineTemplate import PipelineTemplate
+import Pipeline.core.PipelineUtil as PipelineUtil
+from Pipeline.core.PipelineError import PipelineError
 
 import igraph
 class PipelineNode:

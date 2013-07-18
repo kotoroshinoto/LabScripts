@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import sys
-import os
+import sys,os
 class SampleData:
     def __init__(self):
         self.paired=None
