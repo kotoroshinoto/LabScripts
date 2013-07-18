@@ -10,10 +10,15 @@ import Pipeline.commands.PipelineTemplateGenerator
 import Pipeline.commands.PipelineGenerateSJM
 def main():
     sys.stderr.write("This is currently a placeholder, it will eventually be implemented to forward commandline args to the appropriate python module\n")
-    sys.stderr.write("args: '%s'" % (' '.join(sys.argv)))
-    if (sys.argv[1].lower() == "maketemplate"):
+    sys.stderr.write("args: '%s'\n" % (' '.join(sys.argv)))
+    if(len(sys.argv) == 1 ):
+        sys.stderr.write("no arguments given\n")
+        sys.stderr.write("options are\n")
+        sys.stderr.write("template: create new template\n")
+        sys.stderr.write("pipeline: use templates to construct a pipeline\n")
+    if (sys.argv[1].lower() == "template"):
         Pipeline.commands.PipelineTemplateGenerator.main(sys.argv)
-    elif (sys.argv[1].lower() == "maketemplate"):
+    elif (sys.argv[1].lower() == "pipeline"):
         Pipeline.commands.PipelineGenerateSJM.main(sys.argv)
     return 0
 if __name__ == '__main__':
