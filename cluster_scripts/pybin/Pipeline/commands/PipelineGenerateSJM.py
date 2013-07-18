@@ -94,7 +94,6 @@ def main(argv=None):
     except Usage as err:
         sys.stderr.write(err.msg)
         return err.exit_code
-@staticmethod
 def splitJobspec(jobspec):
     #TODO: name format is TemplateName[SubName]
     _jobspec=jobspec.strip();
