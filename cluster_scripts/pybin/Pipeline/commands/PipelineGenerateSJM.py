@@ -4,6 +4,8 @@ import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 import DPyGetOpt
 import pyswitch
 import igraph
+from Pipeline.core.AnalysisPipeline import PipelineNode
+from Pipeline.core.AnalysisPipeline import AnalysisPipeline
 
 from Pipeline.core.PipelineError import PipelineError
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
@@ -78,10 +80,19 @@ def main(argv=None):
             if help_flag:
                 raise Usage(err=False)
             argv=opt_parser.freeValues
+            pipeline=AnalysisPipeline()
+            pipeline.getNode("BWA_ALIGN_PAIRED", "FIRST", "")
+            pipeline.getNode("BWA_ALIGN_PAIRED", "SECOND", "")
+            pipeline.getNode("BWA_ALIGN_PAIRED", "THIRD", "")
+            pipeline.getNode("BWA_ALIGN_PAIRED", "FOURTH", "")
+            pipeline.getNode("BWA_ALIGN_PAIRED", "", "")
+            pipeline.linkNodes("BWA_ALIGN_PAIRED", "FIRST", "BWA_ALIGN_PAIRED", "SECOND") 
+            pipeline.linkNodes("BWA_ALIGN_PAIRED", "FIRST", "BWA_ALIGN_PAIRED", "THIRD")
+            pipeline.linkNodes("BWA_ALIGN_PAIRED", "THIRD", "BWA_ALIGN_PAIRED", "FOURTH")
+            print("%s" % pipeline.getSourceNodes())
+            print("%s" % pipeline.getSinkNodes())
             
-            
-            templategraph= igraph.Graph()
-            templategraph.is_dag()#job tree must be a dag, 
+#             pipeline.templategraph.write("/dev/stdout","graphml")
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
         except DPyGetOpt.SpecificationError as DPyGetOptSpecErr:
@@ -90,7 +101,11 @@ def main(argv=None):
             raise Usage("DPyGetOptTermErr: " + DPyGetOptTermErr.__str__())
         except DPyGetOpt.Error as DPyGetOptErr:
             raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
-        raise Usage("")
+        except PipelineError as pipe_err:
+            sys.stderr.write(pipe_err.msg);
+            return -1;
+        print("PROGRAM EXECUTION REACHED END OF MAIN")
+        return 0;
     except Usage as err:
         sys.stderr.write(err.msg)
         return err.exit_code

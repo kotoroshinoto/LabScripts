@@ -107,7 +107,7 @@ def main(argv=None):
         except DPyGetOpt.Error as DPyGetOptErr:
             raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
         except PipelineError as pipe_err:
-            print (pipe_err.msg);
+            sys.stderr.write (pipe_err.msg);
             return -1;
         print("PROGRAM EXECUTION REACHED END OF MAIN")
         return 0;

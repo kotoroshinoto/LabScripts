@@ -38,7 +38,7 @@ class AnalysisPipeline:
         #index with template[subname]
         #only allow first specification to contain optionfile, blank != ""
         #allows for easier start point of new branches.
-        self.templategraph= igraph.Graph()
+        self.templategraph= igraph.Graph(directed=True)
         self.templategraph.is_dag()
     def loadTemplate(self,templateName):
         template=None
@@ -66,7 +66,7 @@ class AnalysisPipeline:
         if not self.TemplateIsLoaded(template):
             self.loadTemplate(template)
             if not self.TemplateIsLoaded(template):
-                return None
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline] requested template does not exist: %s\n" % template)
         else:
             return self.jobtemplates.get(template.upper())
         
@@ -76,6 +76,7 @@ class AnalysisPipeline:
             vertName="%s|%s" % (template.upper(),subname.upper())
         else:
             vertName="%s" % (template.upper())
+        print ("using vertex name: '%s'" % vertName)
         #check if node already exists (template,subname)
         if self.nodes.has_key(vertName):
             node=self.nodes.get(vertName)
@@ -93,20 +94,41 @@ class AnalysisPipeline:
         newNode.subname=subname
         newNode.optionfile=optionfile
         self.nodes[vertName]=newNode
-        self.templategraph.add_vertex(name=vertName)
+        self.templategraph.add_vertex(name=vertName,data=newNode)
         return newNode
     
     def linkNodes(self,source_name,source_subname,sink_name,sink_subname):
         #add edge linking nodes
-        return None
-    
+        sourceVertName=""
+        sinkVertName=""
+        if(source_subname):
+            sourceVertName="%s|%s" % (source_name.upper(),source_subname.upper())
+        else:
+            sourceVertName="%s" % (source_name.upper())
+        print ("source vertex name: '%s'" % sourceVertName)
+        if(sink_subname):
+            sinkVertName="%s|%s" % (sink_name.upper(),sink_subname.upper())
+        else:
+            sinkVertName="%s" % (sink_name.upper())
+        print ("sink vertex name: '%s'" % sinkVertName)
+        self.templategraph.add_edge(sourceVertName,sinkVertName)
     def getSourceNodes(self):
         #return list of all nodes that aren't targets of other nodes
-        return None
+        degrees=self.templategraph.indegree()
+        result=[]
+        for i in range(0,len(degrees)):
+            if not degrees[i]:
+                result.append(self.templategraph.vs[i].attributes()['name'])
+        return result
     
     def getSinkNodes(self):
         #return list of all nodes that don't have targets
-        return None
+        degrees=self.templategraph.outdegree()
+        result=[]
+        for i in range(0,len(degrees)):
+            if not degrees[i]:
+                result.append(self.templategraph.vs[i].attributes()['name'])
+        return result
     
     def toSJMStrings(self,sampleSplit=False,templateSplit=True):
         sjm_strings={}
