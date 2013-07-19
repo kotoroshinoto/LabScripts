@@ -4,11 +4,10 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import re
-from Pipeline.PipelineError import PipelineError
-from Pipeline.PipelineClusterJob import PipelineClusterJob
-import Pipeline.PipelineUtil as PipelineUtil
-import os,sys
+import re,os,sys
+from Pipeline.core.PipelineError import PipelineError
+from Pipeline.core.PipelineClusterJob import PipelineClusterJob
+import Pipeline.core.PipelineUtil as PipelineUtil
 class PipelineTemplate:
     def __init__(self):
         #list of files this pipeline uses

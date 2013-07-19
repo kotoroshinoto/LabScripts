@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import sys
 import os
-import BiotoolsSettings
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 import DPyGetOpt
-from Pipeline.PipelineTemplate import PipelineTemplate
-import Pipeline.PipelineUtil as PipelineUtil
-from Pipeline.PipelineError import PipelineError
-from Pipeline.PipelineClusterJob import PipelineClusterJob
+from Pipeline.core.PipelineTemplate import PipelineTemplate
+import Pipeline.core.PipelineUtil as PipelineUtil
+from Pipeline.core.PipelineError import PipelineError
+from Pipeline.core.PipelineClusterJob import PipelineClusterJob
 
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
@@ -22,6 +22,7 @@ class Usage(Exception):
         usage +="\t--variable     |-V=string : add pipeline variable to be used during variable replacement (multi-use)\n"
         usage +="\t--suffix       |-S=string : set suffix to be used post-module\n"
         usage +="\t--subjob       |-s=string : add a subjob to template\n"
+        usage +="for help use --help\n"
         if msg is not None:
             self.msg = msg.strip() +"\n" + usage
         else:
@@ -106,13 +107,12 @@ def main(argv=None):
         except DPyGetOpt.Error as DPyGetOptErr:
             raise Usage("DPyGetOptErr: " + DPyGetOptErr.__str__())
         except PipelineError as pipe_err:
-            print (pipe_err.msg);
+            sys.stderr.write (pipe_err.msg);
             return -1;
         print("PROGRAM EXECUTION REACHED END OF MAIN")
         return 0;
     except Usage as err:
         sys.stderr.write(err.msg)
-        sys.stderr.write("for help use --help")
         return err.exit_code
 def parseVars(template,Vars):
     if template is None:
