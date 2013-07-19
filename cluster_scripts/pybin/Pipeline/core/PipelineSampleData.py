@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys,os
+from Pipeline.core.PipelineError import PipelineError
 class SampleData:
     def __init__(self):
         self.paired=None
@@ -50,16 +51,15 @@ class SampleData:
                         sd.PU=cols[7]
                         sd.SM=cols[8]
                     else:
-                        sys.stderr.write("[SampleData.readBatch] tried to parse line with wrong # of columns")
+                        raise PipelineError("[SampleData.readBatch] tried to parse line with wrong # of columns\n")
                         return None
                     #print (cols)
                     if files.get(sd.ID) is not None:
-                        sys.stderr.write("[SampleData.readBatch] entry already exists for ID: \"%s\"" % sd.ID)
+                        raise PipelineError("[SampleData.readBatch] entry already exists for ID: \"%s\"\n" % sd.ID)
                         return None
                     files[sd.ID]=sd
             return files
         except IOError as ioex:
-            sys.stderr.write("IOError exception when trying to open %s: %s" % (filename,os.strerror(ioex.errno)))
-            return None
-        finally:#should not ever get here
-            return None
+            raise PipelineError("[SampleData.readBatch]IOError exception when trying to open %s: %s\n" % (filename,os.strerror(ioex.errno)))
+#         finally:#should not ever get here
+#             raise PipelineError("[SampleData.readBatch] entered finally block, should never enter finally block\n")

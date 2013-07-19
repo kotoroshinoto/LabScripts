@@ -8,6 +8,7 @@ import re,os
 from Pipeline.core.PipelineTemplate import PipelineTemplate
 import Pipeline.core.PipelineUtil as PipelineUtil
 from Pipeline.core.PipelineError import PipelineError
+from Pipeline.core.PipelineSampleData import SampleData
 
 import igraph
 class PipelineNode:
@@ -18,17 +19,12 @@ class PipelineNode:
         self.subname=None
         self.optionfile=None
     def setValues(self,templatename,subname=None,optionfile=None):
-        if (subname is None) and (optionfile is None):
-            self.template=self.pipeline.getTemplate("%s" % (templatename.upper() ))
-        elif (subname is not None) and (optionfile is not None):
-            self.template=self.pipeline.getTemplate("%s[%s]{%s}" % (templatename.upper(),subname.upper(),optionfile))
-        elif (subname is not None) and (optionfile is None):
-            self.template=self.pipeline.getTemplate("%s[%s]" % (templatename.upper(),subname.upper()))
-        elif (subname is None) and (optionfile is not None):
-            self.template=self.pipeline.getTemplate("%s{%s}" % (templatename.upper(),optionfile))
-    def loadOptionFile(self):
+        self.subname=subname.upper()
+        self.template=self.pipeline.getTemplate(templatename.upper())
+        self.loadOptionFile(optionfile)        
+    def loadOptionFile(self,filename):
         #TODO empty method stub
-        return None
+        self.optionfile=filename
 class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
@@ -40,6 +36,9 @@ class AnalysisPipeline:
         #allows for easier start point of new branches.
         self.templategraph= igraph.Graph(directed=True)
         self.templategraph.is_dag()
+        self.samples=None
+    def loadSampleData(self,filename):
+        self.samples=SampleData.readBatch(filename)
     def loadTemplate(self,templateName):
         template=None
         #TODO: fill in stub
@@ -67,21 +66,32 @@ class AnalysisPipeline:
             self.loadTemplate(template)
             if not self.TemplateIsLoaded(template):
                 raise PipelineError("[PipelineTemplate.AnalysisPipeline] requested template does not exist: %s\n" % template)
-        else:
-            return self.jobtemplates.get(template.upper())
+        return self.jobtemplates.get(template.upper())
         
     def getNode(self,template,subname,optionfile):
+#         print("searching for:")
+#         print ("\ttemplate: %s" % template)
+#         print ("\tsubname: %s" % subname)
+#         print ("\toptionfile: %s" % optionfile)
         vertName=""
         if(subname):
             vertName="%s|%s" % (template.upper(),subname.upper())
         else:
             vertName="%s" % (template.upper())
-        print ("using vertex name: '%s'" % vertName)
+#         print ("using vertex name: '%s'" % vertName)
         #check if node already exists (template,subname)
         if self.nodes.has_key(vertName):
+#             print ("getting existing node")
             node=self.nodes.get(vertName)
-            if (node.subname.upper() != subname.upper()) or (node.template.name.upper() != template.upper()):
-                raise PipelineError("[PipelineTemplate.AnalysisPipeline] template in expected location did not match\n")
+            if node:
+                subnames_match=node.subname.upper() == subname.upper()
+                
+#                 print ("\ttemplate: %s" % node.template)
+#                 print ("\tsubname: %s" % node.subname)
+#                 print ("\toptionfile: %s" % node.optionfile)
+                names_match=node.template.name.upper() == template.upper()
+                if not(subnames_match and names_match):
+                    raise PipelineError("[PipelineTemplate.AnalysisPipeline] template in expected location did not match\n")
             #if it does make sure optionfile matches or is blank or None,
             if optionfile != node.optionfile:
                 #otherwise mismatch is an error
@@ -89,14 +99,24 @@ class AnalysisPipeline:
             #if it does return it
             return node
         #if it doesnt, create it
+#         print("creating new node")
         newNode=PipelineNode(self)
-        newNode.template=self.getTemplate(template)
-        newNode.subname=subname
-        newNode.optionfile=optionfile
+        newNode.setValues(template,subname,optionfile)
+#         print ("\ttemplate: %s" % newNode.template)
+#         print ("\tsubname: %s" % newNode.subname)
+#         print ("\toptionfile: %s" % newNode.optionfile)
+#         newNode.template=self.getTemplate(template)
+#         newNode.subname=subname
+#         newNode.optionfile=optionfile
         self.nodes[vertName]=newNode
         self.templategraph.add_vertex(name=vertName,data=newNode)
         return newNode
-    
+    def getNodeWithDict(self,data):
+        if not isinstance(data,dict):
+            raise PipelineError("[PipelineTemplate.AnalysisPipeline.getNodeWithDict] gave wrong type: %s" % type(data))
+        if not(data.has_key('template') and data.has_key('subname') and data.has_key('optionfile')):
+            raise PipelineError("[PipelineTemplate.AnalysisPipeline.getNodeWithDict] missing an entry, has:(template:%s,subname:%s,optionfile:%s)\n" %(data.has_key('template') , data.has_key('subname') , data.has_key('optionfile')))
+        return self.getNode(data['template'], data['subname'], data['optionfile'])
     def linkNodes(self,source_name,source_subname,sink_name,sink_subname):
         #add edge linking nodes
         sourceVertName=""
@@ -105,12 +125,12 @@ class AnalysisPipeline:
             sourceVertName="%s|%s" % (source_name.upper(),source_subname.upper())
         else:
             sourceVertName="%s" % (source_name.upper())
-        print ("source vertex name: '%s'" % sourceVertName)
+#         print ("source vertex name: '%s'" % sourceVertName)
         if(sink_subname):
             sinkVertName="%s|%s" % (sink_name.upper(),sink_subname.upper())
         else:
             sinkVertName="%s" % (sink_name.upper())
-        print ("sink vertex name: '%s'" % sinkVertName)
+#         print ("sink vertex name: '%s'" % sinkVertName)
         self.templategraph.add_edge(sourceVertName,sinkVertName)
     def getSourceNodes(self):
         #return list of all nodes that aren't targets of other nodes
@@ -130,7 +150,19 @@ class AnalysisPipeline:
                 result.append(self.templategraph.vs[i].attributes()['name'])
         return result
     
-    def toSJMStrings(self,sampleSplit=False,templateSplit=True):
+    def getTargetsOf(self,source_name,source_subname):
+        sourceVertName=""
+        result=[]
+        if(source_subname):
+            sourceVertName="%s|%s" % (source_name.upper(),source_subname.upper())
+        else:
+            sourceVertName="%s" % (source_name.upper())
+        sourceVert=self.templategraph.vs.find(name=sourceVertName)
+        for node in sourceVert.successors():
+            result.append(node.attributes()['name'])            
+        
+        return result
+    def toSJMStrings(self,sampleSplit=False,templateSplit=True,splitCompares=False):
         sjm_strings={}
         #produce strings in fully split form
         #get source nodes
@@ -140,18 +172,18 @@ class AnalysisPipeline:
         #join strings as appropriate:
         if sampleSplit and templateSplit:
             #split between samples AND between
-            return None
+            return dict()
         elif sampleSplit:
             #split between samples
             #add any extra link-related job dependencies manually
-            return None
+            return dict()
         elif templateSplit:
             #split only between templates
-            return None
+            return dict()
         else:
             #one giant file
             #add any extra link-related job dependencies manually
-            return None
+            return dict()
         #add sjm logfile location to end of each file
         return sjm_strings
 #apl=AnalysisPipeline()

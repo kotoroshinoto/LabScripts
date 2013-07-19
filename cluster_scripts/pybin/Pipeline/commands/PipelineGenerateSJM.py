@@ -6,7 +6,6 @@ import pyswitch
 import igraph
 from Pipeline.core.AnalysisPipeline import PipelineNode
 from Pipeline.core.AnalysisPipeline import AnalysisPipeline
-
 from Pipeline.core.PipelineError import PipelineError
 #http://ipython.org/ipython-doc/rel-0.10.2/html/api/generated/IPython.DPyGetOpt.html
 #http://www.artima.com/weblogs/viewpost.jsp?thread=4829
@@ -24,16 +23,21 @@ class Usage(Exception):
         usage="Usage: %s (options)\n" % sys.argv[0]
         usage +="Options:\n"
         usage +="\t--pipeline|-P : list of steps to run IN ORDER\n" 
-        usage +="\t--list|-L     : list of files that will be run through pipeline !!Specific format required!!\n" 
-        usage +="\t--pairs|-p    : file with list of sample pairs (only affects steps that use sample pairing)\n"
+        usage +="\t--list|-L     : path to text file containing a list of files that will be run through pipeline !!Specific format required!!\n" 
         usage +="\t--help|-h     : prints this help menu\n"
-        usage +="Options not yet implemented:\n"
-        usage +="\t--joinSamples|-j   : SJM files for all Samples* will be merged into 1 sjm file**\n"
-        usage +="\t--joinSteps|-J     : SJM files for all Steps will be merged into 1 sjm file**\n"
-        usage +="\t--splitCompares|-S : Jobs that use pairs of files will produce 1 SJM file for each pairing instead of 1-per-step***\n"
-        usage +="*  -joinSamples will have no effect on paired steps, they're already joined by default\n"
-        usage +="** -these effects can stack, if both flags are set, only 1 sjm file will be produced, containing all jobs\n"
-        usage +="***-cannot use splitCompares with joinSteps or joinSamples, will cause an exception\n"
+        usage +="SJM file behavior: (values must be either 'join' or 'split')\n"
+        usage +="\t--sampleOpt|-S=value\n"
+        usage +="\t\tif join: SJM text for all Samples will be merged into 1 sjm file\n"
+        usage +="\t\tif split: SJM text for each Sample will be output to separate files\n"
+        usage +="\t--stepOpt|-s=value\n"
+        usage +="\t\tif join: SJM text for all Steps will be merged into 1 sjm file\n"
+        usage +="\t\tif split: SJM text for each Step will be output to separate files\n"
+        usage +="\t--pairOpt|-p=value\n"
+        usage +="\t\tif join: Jobs that use pairs of files will keep all text for pairs together\n"
+        usage +="\t\tif split: Jobs that use pairs of files will produce 1 SJM file for each pairing\n"
+        usage +="--sampleOpt will have no effect on paired steps\n"
+        usage +="these effects can stack, if all are set to join, only 1 sjm file will be produced, containing all jobs\n"
+        usage +="if you split pairs, but join Steps or join Samples, remember that a split will still occur at any point where a paired template is placed\n"
         if msg is not None:
             self.msg = msg.strip() +"\n" + usage
         else:
@@ -51,11 +55,10 @@ def main(argv=None):
         try:
             opts=[]
             opts.append("pipeline|P=s")
-            opts.append("list|L=s")
-            opts.append("pairs|p=s")
-            opts.append("joinSamples|j")
-            opts.append("joinSteps|J")
-            opts.append("splitCompares|S")
+            opts.append("list|l=s")
+            opts.append("stepOpt|s=s")
+            opts.append("sampleOpt|S=s")
+            opts.append("pairOpt|p=s")
             opts.append("help|h")
             opt_parser=DPyGetOpt.DPyGetOpt()
             opt_parser.setIgnoreCase(False)
@@ -65,10 +68,21 @@ def main(argv=None):
             opt_parser.processArguments(sys.argv)
             pipeline_opt=opt_parser.valueForOption("pipeline")
             list_opt=opt_parser.valueForOption("list")
-            pairs_opt=opt_parser.valueForOption("pairs")
-            joinSamples_opt=bool(opt_parser.valueForOption("joinSamples"))
-            joinSteps_opt=bool(opt_parser.valueForOption("joinSteps"))
-            splitCompare_opt=bool(opt_parser.valueForOption("splitCompares"))
+            sampleOpt=opt_parser.valueForOption("sampleOpt")
+            stepOpt=opt_parser.valueForOption("stepOpt")
+            pairOpt=opt_parser.valueForOption("pairOpt")
+            if sampleOpt is None:
+                sampleOpt='join'
+            else:
+                sampleOpt=sampleOpt.lower()
+            if stepOpt is None:
+                stepOpt='split'
+            else:
+                stepOpt=stepOpt.lower()
+            if pairOpt is None:
+                pairOpt='join'
+            else:
+                pairOpt=pairOpt.lower()
             help_flag=bool(opt_parser.valueForOption("help"))
 #            print(pipeline_opt)
 #            print(list_opt)
@@ -78,20 +92,25 @@ def main(argv=None):
 #            print(splitCompare_opt)
 #            print(help_flag)
             if help_flag:
-                raise Usage(err=False)
+                raise Usage("",err=False)
             argv=opt_parser.freeValues
-            pipeline=AnalysisPipeline()
-            pipeline.getNode("BWA_ALIGN_PAIRED", "FIRST", "")
-            pipeline.getNode("BWA_ALIGN_PAIRED", "SECOND", "")
-            pipeline.getNode("BWA_ALIGN_PAIRED", "THIRD", "")
-            pipeline.getNode("BWA_ALIGN_PAIRED", "FOURTH", "")
-            pipeline.getNode("BWA_ALIGN_PAIRED", "", "")
-            pipeline.linkNodes("BWA_ALIGN_PAIRED", "FIRST", "BWA_ALIGN_PAIRED", "SECOND") 
-            pipeline.linkNodes("BWA_ALIGN_PAIRED", "FIRST", "BWA_ALIGN_PAIRED", "THIRD")
-            pipeline.linkNodes("BWA_ALIGN_PAIRED", "THIRD", "BWA_ALIGN_PAIRED", "FOURTH")
-            print("%s" % pipeline.getSourceNodes())
-            print("%s" % pipeline.getSinkNodes())
-            
+            if not(pipeline_opt):
+                raise Usage("pipeline argument is required")
+            if not(list_opt):
+                raise Usage("list argument is required")
+            if not(sampleOpt == 'split' or sampleOpt == 'join'):
+                raise Usage("invalid value for --sampleOpt")
+            if not(stepOpt == 'split' or stepOpt == 'join'):
+                raise Usage("invalid value for --stepOpt")
+            if not(pairOpt == 'split' or pairOpt == 'join'):
+                raise Usage("invalid value for --pairOpt")
+            print("sample option: %s" % sampleOpt)
+            print("step option: %s" % stepOpt)
+            print("pair option: %s" % pairOpt)
+            pipeline=parsePipelineOpt(pipeline_opt)
+            pipeline.loadSampleData(list_opt)
+            output=pipeline.toSJMStrings(sampleOpt=='split', stepOpt =='split', pairOpt == 'split')
+            writeFiles(output)
 #             pipeline.templategraph.write("/dev/stdout","graphml")
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
             raise Usage("DPyGetOptArgErr: " + DPyGetOptArgErr.__str__())
@@ -141,36 +160,56 @@ def splitJobspec(jobspec):
         # if brace start is after bracket end, no overlaps should be present, and order should be correct
         if brace_start < brack_end :#other conditions covered by other checks
             raise PipelineError("[Pipeline.AnalysisPipeline] improper format for jobspec: {} was before [] or overlapped ")
-        bothmatch=re.match("^(\S*)\[(\S*)\]\{\S*\}$",_jobspec)
+        bothmatch=re.match("^(.*)\[(.*)\]\{(.*)\}$",_jobspec)
         if bothmatch:
             result['template']=bothmatch.group(1).upper()
             result['subname']=bothmatch.group(2).upper()
             result['optionfile']=bothmatch.group(3)
             return result
         else:
-            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]{}:%s} % jobspec  ")
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]{}:%s}" % jobspec  )
     elif brack:
-        brackmatch=re.match("^(\S*)\[(\S*)\]$",_jobspec)
+        brackmatch=re.match("^(.*)\[(.*)\]$",_jobspec)
         if brackmatch:
-            result['template']=bothmatch.group(1).upper()
-            result['subname']=bothmatch.group(2).upper()
+            result['template']=brackmatch.group(1).upper()
+            result['subname']=brackmatch.group(2).upper()
             result['optionfile']=""
             return result
         else:
-            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]:%s} % jobspec  ")
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec[]:%s}" % jobspec  )
     elif brace:
-        bracematch=re.match("^(\S*)\{(\S*)\}$",_jobspec)
+        bracematch=re.match("^(.*)\{(.*)\}$",_jobspec)
         if bracematch:
-            result['template']=bothmatch.group(1).upper()
+            result['template']=bracematch.group(1).upper()
             result['subname']=""
-            result['optionfile']=bothmatch.group(2)
+            result['optionfile']=bracematch.group(2)
             return result
         else:
-            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec{}:%s} % jobspec  ")
+            raise PipelineError("[Pipeline.AnalysisPipeline] problem parsing jobspec{}:%s}" % jobspec  )
     else:
         result['template']=jobspec.upper()
         result['subname']=""
         result['optionfile']=""
         return result
+def parsePipelineOpt(pipelineOpt):
+    pipeline=AnalysisPipeline()
+    for item in pipelineOpt.split(","):
+        previous=None
+        for spec in item.strip().split("-"):
+            current=splitJobspec(spec)
+            pipeline.getNodeWithDict(current)
+            if previous:
+                pipeline.linkNodes(previous['template'], previous['subname'], current['template'], current['subname'])
+#                 print ("%s|%s -> %s|%s" % (previous['template'], previous['subname'], current['template'], current['subname']))
+#             else:
+#                 print ("-> %s|%s" % (current['template'], current['subname']))
+            previous=current
+#         print("-----------")
+#             pipeline.getNodeWithDict(splitJobspec(spec))
+    return pipeline
+def writeFiles(output):
+    for filename in output.keys():
+#         open()
+        print("writing %s" % filename)
 if __name__ == "__main__":
     sys.exit(main())
