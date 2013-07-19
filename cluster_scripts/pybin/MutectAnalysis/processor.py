@@ -2,6 +2,9 @@
 processor.py module
 version 2013.06.26
 
+@author: Bing
+contains functions for processing mutation, nuceotide, and somatic comparisions
+
 '''
 def processMutect(first_file, second_file , input_directory, output_file, output_directory, lines_skip):
 	from xlsxwriter.workbook import Workbook
@@ -39,7 +42,7 @@ def processMutect(first_file, second_file , input_directory, output_file, output
 	# Save rows with no detected mutations
 	rejects1 = ml.saveByValue(table1, 'judgement', 'REJECT')
 	rejects2 = ml.saveByValue(table2, 'judgement', 'REJECT')
-
+	
 	# Compare unmatched KEEP rows of one table to REJECT rows of other table
 	total_compare_reject2_unmatched1 = ml.compareTables(unmatched_keeps1, rejects2)
 	matched_reject2_unmatched1 = total_compare_reject2_unmatched1[1] # 1 is the second column

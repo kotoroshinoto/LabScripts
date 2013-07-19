@@ -2,6 +2,7 @@
 methodslist.py module
 version 2013.06.26
 
+@author: Bing
 list of methods used to manipulate data
 new: ported to python 3.3
 
