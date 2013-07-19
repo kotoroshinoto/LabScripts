@@ -209,7 +209,7 @@ def parsePipelineOpt(pipelineOpt):
     return pipeline
 def writeFiles(output):
     if len(output.keys()) == 0:
-        raise PipelineError("Error: No files were produced")
+        raise PipelineError("Error: No files were produced\n")
     for filename in output.keys():
 #         open()
         print("writing %s" % filename)
