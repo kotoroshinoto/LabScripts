@@ -208,6 +208,8 @@ def parsePipelineOpt(pipelineOpt):
 #             pipeline.getNodeWithDict(splitJobspec(spec))
     return pipeline
 def writeFiles(output):
+    if len(output.keys) == 0:
+        raise PipelineError("Error: No files were produced")
     for filename in output.keys():
 #         open()
         print("writing %s" % filename)
