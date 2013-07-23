@@ -109,7 +109,11 @@ def main(argv=None):
             print("pair option: %s" % pairOpt)
             pipeline=parsePipelineOpt(pipeline_opt)
             pipeline.loadSampleData(list_opt)
-            output=pipeline.toSJMStrings(sampleOpt=='split', stepOpt =='split', pairOpt == 'split')
+            splitOpts={}
+            splitOpts['sample']=sampleOpt=='split'
+            splitOpts['step']=stepOpt =='split'
+            splitOpts['pair']=pairOpt == 'split' 
+            output=pipeline.toSJMStrings(splitOpts,"TEST_RUN")
             writeFiles(output)
 #             pipeline.templategraph.write("/dev/stdout","graphml")
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:

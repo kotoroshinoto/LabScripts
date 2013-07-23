@@ -138,7 +138,7 @@ class AnalysisPipeline:
         result=[]
         for i in range(0,len(degrees)):
             if not degrees[i]:
-                result.append(self.templategraph.vs[i].attributes()['name'])
+                result.append(self.templategraph.vs[i].attributes()['data'])
         return result
     
     def getSinkNodes(self):
@@ -147,10 +147,26 @@ class AnalysisPipeline:
         result=[]
         for i in range(0,len(degrees)):
             if not degrees[i]:
-                result.append(self.templategraph.vs[i].attributes()['name'])
+                result.append(self.templategraph.vs[i].attributes()['data'])
         return result
-    
-    def getTargetsOf(self,source_name,source_subname):
+    def getParentOfNode(self,node):
+        source_name=node.template.name
+        source_subname=node.subname
+        sourceVertName=""
+        if(source_subname):
+            sourceVertName="%s|%s" % (source_name.upper(),source_subname.upper())
+        else:
+            sourceVertName="%s" % (source_name.upper())
+        sourceVert=self.templategraph.vs.find(name=sourceVertName)
+        parentList=sourceVert.predecessors()
+        if len(parentList) > 1:
+            raise PipelineError("[PipelineTemplate.AnalysisPipeline.getParentOfNode] graph indicates node does not only have 1 parent")
+        if len(parentList) == 0:
+            return None
+        return parentList[0].attributes()['data']
+    def getTargetsOfNode(self,node):
+        source_name=node.template.name
+        source_subname=node.subname
         sourceVertName=""
         result=[]
         if(source_subname):
@@ -159,25 +175,53 @@ class AnalysisPipeline:
             sourceVertName="%s" % (source_name.upper())
         sourceVert=self.templategraph.vs.find(name=sourceVertName)
         for node in sourceVert.successors():
-            result.append(node.attributes()['name'])            
+            result.append(node.attributes()['data'])
         
         return result
-    def toSJMStrings(self,sampleSplit=False,templateSplit=True,splitCompares=False):
+    def toSJMStrings(self,splitOpts,baseName):
         sjm_strings={}
+        #get name of string content should be added to:
+        nodeQueue=[]
+        cumsuffixQueue=[]
+        #set starting nodes
+        for item in self.getSourceNodes():
+            nodeQueue.append(item)
+            cumsuffixQueue.append("")
+        while len(nodeQueue) > 0:
+            node=nodeQueue.pop(0)
+            cumsuffix=cumsuffixQueue.pop(0)
+            for sample in self.samples.keys():
+                Sample=self.samples[sample]
+                stringName=self.getFileNameForString(splitOpts,baseName, node, Sample)
+                if not (sjm_strings.has_key(stringName)):
+                    sjm_strings[stringName]=""
+                parentNode=self.getParentOfNode(node)
+                #TODO get template string & append it to sjm_strings[stringName]
+                #TODO add any extra link-related job dependencies manually
+                if parentNode is not None: 
+                    print("%s <<< %s | %s <- %s | % s : %s" % (stringName, node.template.name,node.subname,parentNode.template.name,parentNode.subname, Sample.ID))
+                else:
+                    print("%s <<< %s | %s : %s" % (stringName, node.template.name,node.subname,Sample.ID))
+            for item in self.getTargetsOfNode(node):
+                nodeQueue.append(item)
+                if node.template.clearsuffixes:
+                    cumsuffixQueue.append("")
+                else:
+                    cumsuffixQueue.append(cumsuffix+node.template.suffix)
         #produce strings in fully split form
         #get source nodes
         #starting with each source node, and tracing the tree parent-first, then children:
             #use templates to get SJM content,
             #track cumulative suffixes
         #join strings as appropriate:
-        if sampleSplit and templateSplit:
+        if splitOpts['sample'] and splitOpts['step']:
             #split between samples AND between
             return dict()
-        elif sampleSplit:
+        elif splitOpts['sample']:
             #split between samples
-            #add any extra link-related job dependencies manually
+            
             return dict()
-        elif templateSplit:
+        elif splitOpts['step']:
             #split only between templates
             return dict()
         else:
@@ -186,6 +230,44 @@ class AnalysisPipeline:
             return dict()
         #add sjm logfile location to end of each file
         return sjm_strings
+    def getFileNameForString(self,splitOpts,baseName,node=None,sample=None):
+        if splitOpts['sample'] and splitOpts['step']:
+            #split between samples AND between
+            if node.subname:
+                return "%s.%s.%s.sjm" % (baseName,node.template.name,sample.ID)
+            else:
+                return "%s.%s.%s.%s.sjm" % (baseName,node.template.name,node.subname,sample.ID)
+        elif splitOpts['sample']:
+            #split between samples
+            #add any extra link-related job dependencies manually
+            return "%s.%s.sjm" % (baseName,sample.ID)
+        elif splitOpts['step']:
+            #split only between templates
+            if node.subname:
+                return "%s.%s.%s.sjm" % (baseName,node.template.name,node.subname)
+            else:
+                return "%s.%s.sjm" % (baseName,node.template.name)
+        else:
+            #one giant file
+            #add any extra link-related job dependencies manually
+            return "%s.sjm" % baseName
+    def recursiveVertToString(self,strings,splitOpts,baseName,grouplbl,node,cumsuffix):
+        
+        #split on templates but keep samples together, join pairs
+        if node.template.isCrossJob:
+            derp=""
+        else:
+            #get one string for each file
+            for sample in self.samples.keys():
+                mystring=node.template.toString(grouplbl,cumsuffix,sample.source1,sample.source2)
+            for nextnode in self.getTargetsOf(node.template.name,node.subname):
+                if node.clearsuffixes:
+                    mystring+=self.recursiveVertToString(nextnode,strings,grouplbl,node.template.suffix)
+                else:
+                    mystring+=self.recursiveVertToString(nextnode,strings,grouplbl,cumsuffix+node.template.suffix)
+        #if templates are joined, append extra order_after strings
+        if(splitOpts['step']):
+            derp=""
 #apl=AnalysisPipeline()
 #worked=apl.loadTemplate("BWA_ALIGN_PAIRED")
 #print (apl.TemplateIsLoaded("BWA_ALIGN_PAIRED"))
