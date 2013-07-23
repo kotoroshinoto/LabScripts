@@ -81,15 +81,16 @@ for line in input:
     if readcount == readlimit:
         break
 writecount = 0
-writelimit = 100
+writelimit = 10
 for key in transcript_list:
     writecount += 1
+    print('Writing line {0}'.format(writecount))
     instance = transcript_list[key]
-    if instance.count > 0:
-        output.write("%s contains %s exons and %s counts\n" % (instance.name, instance.num_exons, instance.count))
-        #output.write('Instance name is %s\n' % instance.name)
-        #output.write('Number of exons is %s\n' % instance.num_exons)
-        #output.write('Expression number is %s\n' % instance.count)
+    #if instance.count > 0:
+    output.write("%s contains %s exons and %s counts\n" % (instance.name, instance.num_exons, instance.count))
+    #output.write('Instance name is %s\n' % instance.name)
+    #output.write('Number of exons is %s\n' % instance.num_exons)
+    #output.write('Expression number is %s\n' % instance.count)
     if writecount == writelimit:
         break
 input.close()
