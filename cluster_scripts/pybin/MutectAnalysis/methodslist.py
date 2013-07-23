@@ -5,7 +5,6 @@ version 2013.06.26
 @author: Bing
 list of methods used to manipulate data
 new: ported to python 3.3
-
 '''
 # Takes data from file and makes a table
 def importTable(input_file_name, a_directory, lines_skip):
