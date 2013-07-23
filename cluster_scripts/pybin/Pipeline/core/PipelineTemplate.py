@@ -51,7 +51,6 @@ class PipelineTemplate:
         templateFile=open(path2Template,'w')
         templateFile.write(self.toTemplateString())
         templateFile.close()
-        return None;
     @staticmethod
     def readTemplate(name):
         #get path

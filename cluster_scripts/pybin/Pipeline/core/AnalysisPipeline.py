@@ -178,7 +178,7 @@ class AnalysisPipeline:
             result.append(node.attributes()['data'])
         
         return result
-    def toSJMStrings(self,splitOpts,baseName):
+    def toSJMStrings(self,splitOpts,baseName,grouplbl):
         sjm_strings={}
         #get name of string content should be added to:
         nodeQueue=[]
@@ -197,6 +197,7 @@ class AnalysisPipeline:
                     sjm_strings[stringName]=""
                 parentNode=self.getParentOfNode(node)
                 #TODO get template string & append it to sjm_strings[stringName]
+                sjm_strings[stringName]+=node.template.toString(grouplbl,cumsuffix,Sample.ID)
                 #TODO add any extra link-related job dependencies manually
                 if parentNode is not None: 
                     print("%s <<< %s | %s <- %s | % s : %s" % (stringName, node.template.name,node.subname,parentNode.template.name,parentNode.subname, Sample.ID))
@@ -208,6 +209,7 @@ class AnalysisPipeline:
                     cumsuffixQueue.append("")
                 else:
                     cumsuffixQueue.append(cumsuffix+node.template.suffix)
+        return sjm_strings
         #produce strings in fully split form
         #get source nodes
         #starting with each source node, and tracing the tree parent-first, then children:

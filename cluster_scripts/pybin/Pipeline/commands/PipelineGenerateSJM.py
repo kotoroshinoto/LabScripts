@@ -113,7 +113,7 @@ def main(argv=None):
             splitOpts['sample']=sampleOpt=='split'
             splitOpts['step']=stepOpt =='split'
             splitOpts['pair']=pairOpt == 'split' 
-            output=pipeline.toSJMStrings(splitOpts,"TEST_RUN")
+            output=pipeline.toSJMStrings(splitOpts,"TEST_RUN","TEST_GROUP")
             writeFiles(output)
 #             pipeline.templategraph.write("/dev/stdout","graphml")
         except DPyGetOpt.ArgumentError as DPyGetOptArgErr:
@@ -217,5 +217,6 @@ def writeFiles(output):
     for filename in output.keys():
 #         open()
         print("writing %s" % filename)
+        print(output[filename])
 if __name__ == "__main__":
     sys.exit(main())
