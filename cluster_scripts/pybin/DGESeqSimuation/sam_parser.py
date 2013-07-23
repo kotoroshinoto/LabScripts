@@ -73,7 +73,7 @@ output = open(output_file, 'w')
 
 # read SAM file up to limit and run comparisons to transcript list
 readcount = 0
-readlimit = 1000
+readlimit = 5000
 for line in input:
     readcount += 1
     sam = SAMInstance(line)
@@ -81,12 +81,12 @@ for line in input:
     if readcount == readlimit:
         break
 writecount = 0
-writelimit = 10
+writelimit = 100
 for key in transcript_list:
     writecount += 1
     instance = transcript_list[key]
     if instance.count > 0:
-        output.write("%s contains %s exons and %s counts\r\n" % (instance.name, instance.num_exons, instance.count))
+        output.write("%s contains %s exons and %s counts\n" % (instance.name, instance.num_exons, instance.count))
         #output.write('Instance name is %s\n' % instance.name)
         #output.write('Number of exons is %s\n' % instance.num_exons)
         #output.write('Expression number is %s\n' % instance.count)
