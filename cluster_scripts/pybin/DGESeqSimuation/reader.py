@@ -11,7 +11,6 @@ input_directory = os.path.join(os.path.dirname(__file__), 'Input/')
  
 old_dir = os.getcwd()
 os.chdir(os.path.dirname(__file__))
- 
 f = open(filename,"r")
             for line in f:
 				line = line.split("\t")
