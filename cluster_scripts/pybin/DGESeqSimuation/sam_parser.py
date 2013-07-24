@@ -7,7 +7,7 @@ run location: ssh mgooch@sig2-glx.cam.uchc.edu
 run command: samtools view /UCHC/Everson/umar/cluster/align_bam/RNA_Pt5/NC5R_aligned_clean.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin testresults.txt
 
 """
-import os, sys
+import os, sys, csv
 import gtf_reader as greader
 
 class SAMInstance:
@@ -66,6 +66,8 @@ def inputTranscriptList(gtf_filename):
         print('\n\n\nTranscript list already exists!')
         print('Delete old list if you wish to build a new transcript list.\n\n\n')
     list_file = open('transcript_list.txt', 'r')
+    reader = csv.reader(list_file, 'rb')
+    transcription_list = dict(x for x in reader)
     return list_file.read()
 
 # START of script
