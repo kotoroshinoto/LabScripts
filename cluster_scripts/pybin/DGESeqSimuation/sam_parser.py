@@ -49,7 +49,7 @@ class SAMInstance:
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
         print('Comparing to list')
-        print()
+        print(transcript_list)
         for key in transcript_list:
             transcript = transcript_list[key]
             print(transcript)
@@ -60,6 +60,7 @@ class SAMInstance:
                     transcript.expression_positions.extend(self.position)
                     print('Found match!')
                 transcript_list[key] = transcript
+        break
         return transcript_list
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
