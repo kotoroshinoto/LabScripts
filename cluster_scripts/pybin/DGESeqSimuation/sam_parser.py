@@ -49,14 +49,15 @@ class SAMInstance:
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
         for key in transcript_list:
-            instance = transcript_list[key]
-            if instance.chromosome == self.chromosome:
+            transcript = transcript_list[key]
+            print(transcript.chromosome)
+            if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
-                if instance.end == self.end:
-                    instance.expression_count += 1
-                    instance.expression_positions.extend(self.position)
+                if transcript.end == self.end:
+                    transcript.expression_count += 1
+                    transcript.expression_positions.extend(self.position)
                     print('Found match!')
-                transcript_list[key] = instance
+                transcript_list[key] = transcript
         return transcript_list
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
@@ -88,26 +89,26 @@ input = open(input_file,'r')
 output = open(output_file, 'w')
 
 # read SAM file up to limit and run comparisons to transcript list
-readcount = 0
-readlimit = 100000
+##readcount = 0
+##readlimit = 100000
 for line in input:
-    readcount += 1
+    ##readcount += 1
     ##print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
-    #if readcount == readlimit:
-    #    break
+    ##if readcount == readlimit:
+    ##    break
 writecount = 0
 writelimit = 8
 for key in transcript_list:
     writecount += 1
     print('Writing line %d' % writecount)
-    instance = transcript_list[key]
-    #if instance.count > 0:
-    output.write("%s contains %s exons and %s counts\n" % (instance.name, instance.num_exons, instance.count))
-    #output.write('Instance name is %s\n' % instance.name)
-    #output.write('Number of exons is %s\n' % instance.num_exons)
-    #output.write('Expression number is %s\n' % instance.count)
+    transcript = transcript_list[key]
+    #if transcript.count > 0:
+    output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.count))
+    #output.write('Instance name is %s\n' % transcript.name)
+    #output.write('Number of exons is %s\n' % transcript.num_exons)
+    #output.write('Expression number is %s\n' % transcript.count)
     if writecount == writelimit:
         break
 input.close()
