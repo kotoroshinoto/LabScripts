@@ -69,6 +69,8 @@ def buildList(exon, transcript_list):
         transcript.name = exon.name
         transcript.chromosome = exon.chromosome
         transcript.direction = exon.direction
+        transcript.exon_starts.extend(exon.start)
+        transcript.exon_ends.extend(exon.end)
         transcript.num_exons += 1
         transcript_list[transcript.name] = transcript
         print('Added new %s to transcript list' % exon.name)
