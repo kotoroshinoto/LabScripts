@@ -25,11 +25,11 @@ class Exon:
             self.chromosome = line[0]
             self.direction = line[6]
             if self.direction == '+':
-                self.start.append(line[3])
-                self.end.append(line[4])
+                self.start = int(line[3])
+                self.end = int(line[4])
             elif self.direction == '-':
-                self.start.append(line[4])
-                self.end.append(line[3])
+                self.start = int(line[4])
+                self.end = int(line[3])
             else:
                 raise SyntaxError('Data incorrectly states whether exon is foward/reverse read\n')
         else:
@@ -40,8 +40,8 @@ class Transcript:
         self.name = None
         self.chromosome = None
         ##self.direction = None
-        self.start = []
-        self.end = []
+        self.start = 0
+        self.end = 0
         self.num_exons = 0
         self.expression_count = 0
         self.expression_positions = [] # positions in BAM fil 
@@ -70,8 +70,8 @@ def buildList(exon, transcript_list):
     else:
         transcript_stored = transcript_list[exon.name]
         transcript_stored.num_exons += 1
-        transcript_stored.start.extend(int(exon.start))
-        transcript_stored.end.extend(int(exon.end))
+        transcript_stored.start.extend(exon.start)
+        transcript_stored.end.extend(exon.end)
         ##transcript_stored.end.sort()
         transcript_list[exon.name] = transcript_stored
     return transcript_list
