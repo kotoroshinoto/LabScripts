@@ -48,6 +48,7 @@ class SAMInstance:
         #self.program_flags = line[11]
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
+        print('Comparing to list')
         for key in transcript_list:
             transcript = transcript_list[key]
             print(transcript.chromosome)
@@ -89,11 +90,11 @@ input = open(input_file,'r')
 output = open(output_file, 'w')
 
 # read SAM file up to limit and run comparisons to transcript list
-##readcount = 0
+readcount = 0
 ##readlimit = 100000
 for line in input:
-    ##readcount += 1
-    ##print('Reading line %d' % readcount)
+    readcount += 1
+    print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
     ##if readcount == readlimit:
