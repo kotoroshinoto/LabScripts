@@ -52,7 +52,6 @@ class SAMInstance:
         #print('Transcript list is')
         for key in transcript_list:
             transcript = transcript_list[key]
-            print(transcript)
             if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
                 if transcript.end == self.end:
@@ -66,14 +65,12 @@ def inputTranscriptList(gtf_filename):
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     old_dir = os.getcwd()
     os.chdir(input_directory)
-    #if not os.path.exists('transcript_list.csv'):
-    greader.processGTF(input_directory, gtf_filename)
-    #else:
-    #    print('\n######\n\nTranscript list already exists!')
-    #    print('Delete old list if you wish to build a new transcript list.\n\n######\n')
-    list_file = open('transcript_list.csv', 'rb')
-    #reader = csv.reader(list_file)
-    #transcript_list = dict(x for x in reader)
+    if not os.path.exists('transcript_list.csv'):
+        greader.processGTF(input_directory, gtf_filename)
+    else:
+        print('\n######\n\nTranscript list already exists!')
+        print('Delete old list if you wish to build a new transcript list.\n\n######\n')
+    list_file = open('transcript_list.p', 'rb')
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list

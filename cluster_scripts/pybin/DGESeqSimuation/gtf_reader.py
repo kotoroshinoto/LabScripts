@@ -51,21 +51,10 @@ def processGTF(input_directory, filename):
         transcript_list[key] = instance
         ##print('%s contains %s exons and ends at %s on %s' % (instance.name, instance.num_exons, instance.threeprimeloc, instance.chromosome))
     
-    # reset file IO
+    # write transcript list to file
     f.close()
-    
     output = open('transcript_list.csv', 'wb')
     pickle.dump(transcript_list, output)
-    
-    #with open('transcript_list', 'wb') as handle:
-    #    pickle.dump(transcript_list, handle)
-    '''
-    output = open('transcript_list.csv', 'wb')
-    writer = csv.writer(output)
-    for key, value in transcript_list.items():
-        writer.writerow([key, value])
-    ##g.write(transcript_list)
-    '''
     output.close()
     print('\n\n\nNew transcript list is made!\n\n\n')
     os.chdir(old_dir)
