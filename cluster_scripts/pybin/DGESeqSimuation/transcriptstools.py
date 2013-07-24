@@ -39,7 +39,7 @@ class Transcript:
     def __init__(self):
         self.name = None
         self.chromosome = None
-        ##self.direction = None
+        self.direction = None
         self.exon_starts = []
         self.exon_ends = []
         self.start = 0
@@ -66,6 +66,7 @@ def buildList(exon, transcript_list):
         transcript = Transcript()
         transcript.name = exon.name
         transcript.chromosome = exon.chromosome
+        transcript.direction = exon.direction
         transcript.num_exons += 1
         transcript_list[transcript.name] = transcript
         print('Added new %s to transcript list' % exon.name)
