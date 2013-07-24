@@ -1,6 +1,6 @@
 """
 gtf_reader.py module
-Version 2013.07.23
+Version 2013.07.24
 
 @author: Bing
 
@@ -13,7 +13,6 @@ def processGTF(input_directory, filename):
     ##input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     ##filename = 'test.gtf'
     transcript_list = {}
-    gtf_table = []
 
     # file IO
     old_dir = os.getcwd()
@@ -40,30 +39,10 @@ def processGTF(input_directory, filename):
         line.pop()
         line.extend(last_col)
         
-        # store transcript information in object
-        transcript = ttools.Transcript()
-        id_index = 10
-        if line[id_index] == 'transcript_id':
-            transcript.confirmation = True
-            transcript.name = line[id_index + 1]
-            transcript.chromosome = line[0]
-            transcript.direction = line[6]
-            if transcript.direction == '+':
-                transcript.start.append(line[3])
-                transcript.end.append(line[4])
-            elif transcript.direction == '-':
-                transcript.start.append(line[4])
-                transcript.end.append(line[3])
-            else:
-                raise SyntaxError('Data incorrectly states whether transcript is foward/reverse read\n')
-        else:
-            raise IOError('transcript_id is not in the correct column\n')
-        
-        # add transcript to hash list
-        transcript_list = ttools.buildList(transcript, transcript_list)
-        
-        # store lines in table
-        gtf_table.append(line)
+        # store exon information in object
+        exon = ttools.Exon(line)
+        # add exon to hash list
+        transcript_list = ttools.buildList(exon, transcript_list)
     
     # print frequency of each transcript + calculate 3' end of gene
     for key in transcript_list:
@@ -71,9 +50,11 @@ def processGTF(input_directory, filename):
         instance.setGeneEnd()
         transcript_list[key] = instance
         ##print('%s contains %s exons and ends at %s on %s' % (instance.name, instance.num_exons, instance.threeprimeloc, instance.chromosome))
-        
+    
     # reset file IO
     f.close()
+    
+    g = open('transcript_list.txt', 'w')
+    g.write(transcript_list)
+    print('\n\n\nNew transcript list is made!\n\n\n')
     os.chdir(old_dir)
-    print('\n\n\nTranscript is made!\n\n\n')
-    return transcript_list
