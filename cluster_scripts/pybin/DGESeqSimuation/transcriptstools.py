@@ -12,8 +12,8 @@ class Exon:
         self.name = None
         self.chromosome = None
         self.direction = None
-        self.start = []
-        self.end = []
+        self.start = 0
+        self.end = 0
         if line is not None:
             self.__parseGTFLine(line)
     def __parseGTFLine(self, line):
@@ -40,8 +40,8 @@ class Transcript:
         self.name = None
         self.chromosome = None
         ##self.direction = None
-        self.start = 0
-        self.end = 0
+        self.start = []
+        self.end = []
         self.num_exons = 0
         self.expression_count = 0
         self.expression_positions = [] # positions in BAM fil 
