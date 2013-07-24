@@ -82,10 +82,3 @@ def buildList(exon, transcript_list):
         ##transcript_stored.end.sort()
         transcript_list[exon.name] = transcript_stored
     return transcript_list
-'''
-def printList(transcript_list):
-    """prints gene expression level for each gene in transcript list"""
-    for key in transcript_list:
-        instance = transcript_list[key]
-        print('%s contains %s exons and ends at %s on %s' % (instance.name, instance.num_exons, instance.threeprimeloc, instance.chromosome))
-'''

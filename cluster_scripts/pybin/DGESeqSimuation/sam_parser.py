@@ -88,15 +88,15 @@ output = open(output_file, 'w')
 
 # read SAM file up to limit and run comparisons to transcript list
 readcount = 0
-##readlimit = 100000
+readlimit = 500000
 print('Reading...')
 for line in input:
-    #readcount += 1
+    readcount += 1
     #print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
-    ##if readcount == readlimit:
-    ##    break
+    if readcount == readlimit:
+        break
 print('Writing...')
 writecount = 0
 writelimit = 8
@@ -104,11 +104,8 @@ for key in transcript_list:
     writecount += 1
     print('Writing line %d' % writecount)
     transcript = transcript_list[key]
-    #if transcript.count > 0:
-    output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.count))
-    #output.write('Instance name is %s\n' % transcript.name)
-    #output.write('Number of exons is %s\n' % transcript.num_exons)
-    #output.write('Expression number is %s\n' % transcript.count)
+    if transcript.count > 0:
+        output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
     if writecount == writelimit:
         break
 input.close()
