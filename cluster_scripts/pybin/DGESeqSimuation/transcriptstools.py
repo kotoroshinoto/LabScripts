@@ -51,7 +51,6 @@ class Transcript:
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
         self.exon_ends.sort()
         if self.direction == '+':
-            print(self.exon_ends[-1])
             last_element = self.exon_ends[-1]
             self.end = int(last_element)
         elif self.direction == '-':
@@ -78,6 +77,7 @@ def buildList(exon, transcript_list):
         transcript_stored.num_exons += 1
         transcript_stored.exon_starts.extend(exon.start)
         transcript_stored.exon_ends.extend(exon.end)
+        print(exon.end)
         ##transcript_stored.end.sort()
         transcript_list[exon.name] = transcript_stored
     return transcript_list
