@@ -54,7 +54,8 @@ class SAMInstance:
                 ##print('Chromosomes match!')
                 if transcript.start < self.end and transcript.end > self.start:
                         transcript.expression_count += 1
-                        transcript.expression_positions.extend(self.start)
+                        transcript.read_names.extend(self.read_name)
+                        transcript.read_quality.extend(self.read_quality)
                         print('Found match!')
                 transcript_list[key] = transcript
         return transcript_list
@@ -66,8 +67,7 @@ def inputTranscriptList(gtf_filename):
     if not os.path.exists('transcript_list.csv'):
         greader.processGTF(input_directory, gtf_filename)
     else:
-        print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 5 minutes of your life.')
-        print('Delete old list if you wish to build a new transcript list.\n\n######\n')
+        print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 5 minutes of your life. Delete old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)

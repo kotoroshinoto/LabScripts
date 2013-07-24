@@ -46,7 +46,9 @@ class Transcript:
         self.end = 0
         self.num_exons = 0
         self.expression_count = 0
-        self.expression_positions = [] # positions in BAM file 
+        #self.expression_positions = [] # positions in BAM file 
+        self.read_names = []
+        self.read_quality = []
     def setGeneEnd(self):
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
         self.exon_ends.sort()
