@@ -12,8 +12,8 @@ class Exon:
         self.name = None
         self.chromosome = None
         self.direction = None
-        self.start = 0
-        self.end = 0
+        self.start = None
+        self.end = None
         if line is not None:
             self.__parseGTFLine(line)
     def __parseGTFLine(self, line):
