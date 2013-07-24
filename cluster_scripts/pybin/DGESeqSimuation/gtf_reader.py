@@ -13,7 +13,7 @@ def processGTF(input_directory, filename):
     ##input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     ##filename = 'test.gtf'
     transcript_list = {}
-
+    
     # file IO
     old_dir = os.getcwd()
     os.chdir(input_directory)
