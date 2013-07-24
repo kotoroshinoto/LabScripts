@@ -65,8 +65,8 @@ def inputTranscriptList(gtf_filename):
     else:
         print('\n\n\nTranscript list already exists!')
         print('Delete old list if you wish to build a new transcript list.\n\n\n')
-    list_file = open('transcript_list.txt', 'r')
-    reader = csv.reader(list_file, 'rb')
+    list_file = open('transcript_list.csv', 'rb')
+    reader = csv.reader(list_file)
     transcription_list = dict(x for x in reader)
     return list_file.read()
 

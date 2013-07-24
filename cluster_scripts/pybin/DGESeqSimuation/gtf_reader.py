@@ -58,7 +58,7 @@ def processGTF(input_directory, filename):
     writer = csv.writer(output)
     for key, value in transcript_list.items():
         writer.writerow([key, value])
-    #g.write(transcript_list)
+    ##g.write(transcript_list)
     output.close()
     print('\n\n\nNew transcript list is made!\n\n\n')
     os.chdir(old_dir)
