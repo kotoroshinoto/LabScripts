@@ -51,6 +51,7 @@ class SAMInstance:
         for key in transcript_list:
             instance = transcript_list[key]
             if instance.chromosome == self.chromosome:
+                print('Chromosomes match!')
                 if instance.end == self.end:
                     instance.expression_count += 1
                     instance.expression_positions.extend(self.position)
@@ -91,7 +92,7 @@ readcount = 0
 readlimit = 100000
 for line in input:
     readcount += 1
-    print('Reading line %d' % readcount)
+    ##print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
     if readcount == readlimit:
