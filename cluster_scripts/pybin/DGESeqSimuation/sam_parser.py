@@ -49,6 +49,7 @@ class SAMInstance:
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
         print('Comparing to list')
+        print()
         for key in transcript_list:
             transcript = transcript_list[key]
             print(transcript)
@@ -95,7 +96,7 @@ readcount = 0
 print('reading!')
 for line in input:
     #readcount += 1
-    print('Reading line %d' % readcount)
+    #print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
     ##if readcount == readlimit:
