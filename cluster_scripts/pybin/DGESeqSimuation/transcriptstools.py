@@ -71,7 +71,7 @@ def buildList(exon, transcript_list):
         transcript.exon_ends.append(exon.end)
         transcript.num_exons += 1
         transcript_list[transcript.name] = transcript
-        print('Added new %s to transcript list' % exon.name)
+        ##print('Added new %s to transcript list' % exon.name)
     else:
         transcript_stored = transcript_list[exon.name]
         transcript_stored.num_exons += 1
