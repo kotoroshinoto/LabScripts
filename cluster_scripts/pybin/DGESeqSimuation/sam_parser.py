@@ -48,12 +48,10 @@ class SAMInstance:
         #self.program_flags = line[11]
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
-        #print('Comparing to list')
-        #print('Transcript list is')
         for key in transcript_list:
             transcript = transcript_list[key]
             if transcript.chromosome == self.chromosome:
-                print('Chromosomes match!')
+                ##print('Chromosomes match!')
                 if transcript.end == self.end:
                     transcript.expression_count += 1
                     transcript.expression_positions.extend(self.position)
