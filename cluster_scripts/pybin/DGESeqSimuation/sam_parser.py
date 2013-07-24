@@ -75,6 +75,8 @@ def inputTranscriptList(gtf_filename):
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
     transcript_list = dict(x for x in reader)
+    print('Transcript list is')
+    print(transcript_list)
     os.chdir(old_dir)
     return transcript_list
 
