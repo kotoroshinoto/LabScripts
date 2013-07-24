@@ -48,8 +48,8 @@ class SAMInstance:
         #self.program_flags = line[11]
     def compareToGTF(self, transcript_list):
         """finds and counts positions that match to gene transcripts list"""
-        print('Comparing to list')
-        print('Transcript list is')
+        #print('Comparing to list')
+        #print('Transcript list is')
         print(transcript_list)
         for key in transcript_list:
             transcript = transcript_list[key]
