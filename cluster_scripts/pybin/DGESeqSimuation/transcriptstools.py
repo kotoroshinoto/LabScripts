@@ -69,7 +69,6 @@ def buildList(exon, transcript_list):
         transcript.direction = exon.direction
         transcript.exon_starts.append(exon.start)
         transcript.exon_ends.append(exon.end)
-        print(transcript.exon_ends)
         transcript.num_exons += 1
         transcript_list[transcript.name] = transcript
         print('Added new %s to transcript list' % exon.name)
@@ -79,6 +78,7 @@ def buildList(exon, transcript_list):
         transcript_stored.exon_starts.extend(exon.start)
         transcript_stored.exon_ends.extend(exon.end)
         ##transcript_stored.end.sort()
+        print(transcript.exon_ends)
         transcript_list[exon.name] = transcript_stored
     return transcript_list
 '''
