@@ -51,7 +51,6 @@ class Transcript:
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
         self.exon_ends.sort()
         if self.direction == '+':
-            print(self.exon_ends)
             print(self.exon_ends[-1])
             last_element = self.exon_ends[-1]
             self.end = int(last_element)
