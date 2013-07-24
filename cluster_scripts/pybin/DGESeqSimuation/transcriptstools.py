@@ -16,7 +16,7 @@ class Exon:
         self.end = []
         if line is not None:
             self.parseGTFLine(line)
-    def __praseGTFLine(self, line):
+    def __parseGTFLine(self, line):
         """assign values in line as exon attributes"""
         check_format_index = 10
         if line[check_format_index] == 'transcript_id':
