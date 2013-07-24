@@ -50,7 +50,7 @@ class SAMInstance:
         """finds and counts positions that match to gene transcripts list"""
         #print('Comparing to list')
         #print('Transcript list is')
-        print(transcript_list)
+        #print(transcript_list)
         for key in transcript_list:
             transcript = transcript_list[key]
             print(transcript)
