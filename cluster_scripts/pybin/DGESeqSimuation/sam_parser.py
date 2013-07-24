@@ -53,7 +53,7 @@ class SAMInstance:
         #print(transcript_list)
         for key in transcript_list:
             transcript = transcript_list[key]
-            print(transcript)
+            ##print(transcript)
             if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
                 if transcript.end == self.end:
