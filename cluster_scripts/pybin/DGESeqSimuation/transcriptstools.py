@@ -25,11 +25,11 @@ class Exon:
             self.chromosome = line[0]
             self.direction = line[6]
             if self.direction == '+':
-                self.start = int(line[3])
-                self.end = int(line[4])
+                self.start = line[3]
+                self.end = line[4]
             elif self.direction == '-':
-                self.start = int(line[4])
-                self.end = int(line[3])
+                self.start = line[4]
+                self.end = line[3]
             else:
                 raise SyntaxError('Data incorrectly states whether exon is foward/reverse read\n')
         else:
@@ -40,20 +40,22 @@ class Transcript:
         self.name = None
         self.chromosome = None
         ##self.direction = None
-        self.start = []
-        self.end = []
+        self.exon_starts = []
+        self.exon_ends = []
+        self.start = 0
+        self.end = 0
         self.num_exons = 0
         self.expression_count = 0
         self.expression_positions = [] # positions in BAM fil 
     def setGeneEnd(self):
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
-        self.end.sort()
+        self.exon_ends.sort()
         if self.direction == '+':
-            last_element = self.end[len(self.end) - 1]
-            self.end = last_element
+            last_element = self.exon_ends[len(self.end) - 1]
+            self.end = int(last_element)
         elif self.direction == '-':
-            first_element = self.end[0]
-            self.end = first_element
+            first_element = self.exon_ends[0]
+            self.end = int(first_element)
         self.start = self.end - 300
         if self.start < 0:
             print('Length Error: gene starts at negative position')
@@ -70,8 +72,8 @@ def buildList(exon, transcript_list):
     else:
         transcript_stored = transcript_list[exon.name]
         transcript_stored.num_exons += 1
-        transcript_stored.start.extend(exon.start)
-        transcript_stored.end.extend(exon.end)
+        transcript_stored.exon_starts.extend(exon.start)
+        transcript_stored.exon_ends.extend(exon.end)
         ##transcript_stored.end.sort()
         transcript_list[exon.name] = transcript_stored
     return transcript_list
