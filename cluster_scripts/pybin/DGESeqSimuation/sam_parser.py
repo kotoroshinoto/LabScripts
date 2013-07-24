@@ -95,8 +95,8 @@ for line in input:
     ##print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
-    if readcount == readlimit:
-        break
+    #if readcount == readlimit:
+    #    break
 writecount = 0
 writelimit = 8
 for key in transcript_list:
