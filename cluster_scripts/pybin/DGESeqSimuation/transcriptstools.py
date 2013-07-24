@@ -15,7 +15,7 @@ class Exon:
         self.start = []
         self.end = []
         if line is not None:
-            self.parseGTFLine(line)
+            self.__parseGTFLine(line)
     def __parseGTFLine(self, line):
         """assign values in line as exon attributes"""
         check_format_index = 10
