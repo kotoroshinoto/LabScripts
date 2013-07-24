@@ -31,7 +31,7 @@ class Exon:
                 self.start = line[4]
                 self.end = line[3]
             else:
-                raise SyntaxError('Data incorrectly states whether exon is foward/reverse read\n')
+                raise SyntaxError('Data incorrectly states whether exon is forward/reverse read\n')
         else:
             raise IOError('transcript_id is not in the correct column\n')
 class Transcript:
@@ -46,17 +46,17 @@ class Transcript:
         self.end = 0
         self.num_exons = 0
         self.expression_count = 0
-        self.expression_positions = [] # positions in BAM fil 
-    def setGeneEnd(self):
+        self.expression_positions = [] # positions in BAM file 
+    def setGeneEnd(self, exon):
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
         self.exon_ends.sort()
         if self.direction == '+':
-            last_element = self.exon_ends[len(self.end) - 1]
+            last_element = self.exon_ends[len(self.exon_end) - 1]
             self.end = int(last_element)
         elif self.direction == '-':
             first_element = self.exon_ends[0]
             self.end = int(first_element)
-        self.start = self.end - 300
+        self.start = self.end - 250
         if self.start < 0:
             print('Length Error: gene starts at negative position')
 def buildList(exon, transcript_list):

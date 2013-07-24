@@ -52,7 +52,7 @@ class SAMInstance:
             instance = transcript_list[key]
             if instance.chromosome == self.chromosome:
                 if instance.end == self.end:
-                    instance.count += 1
+                    instance.expression_count += 1
                     instance.expression_positions.extend(self.position)
                     print('Found match!')
                 transcript_list[key] = instance
