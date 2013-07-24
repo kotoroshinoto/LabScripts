@@ -47,7 +47,7 @@ class Transcript:
         self.num_exons = 0
         self.expression_count = 0
         self.expression_positions = [] # positions in BAM file 
-    def setGeneEnd(self, exon):
+    def setGeneEnd(self):
         """determines 3' end of entire gene based on read direction and ends of individual exons"""
         self.exon_ends.sort()
         if self.direction == '+':
