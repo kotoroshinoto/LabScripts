@@ -52,10 +52,10 @@ class SAMInstance:
             transcript = transcript_list[key]
             if transcript.chromosome == self.chromosome:
                 ##print('Chromosomes match!')
-                if transcript.end == self.end:
-                    transcript.expression_count += 1
-                    transcript.expression_positions.extend(self.position)
-                    print('Found match!')
+                if transcript.start < self.end and transcript.end > self.start:
+                        transcript.expression_count += 1
+                        transcript.expression_positions.extend(self.position)
+                        print('Found match!')
                 transcript_list[key] = transcript
         return transcript_list
 def inputTranscriptList(gtf_filename):
