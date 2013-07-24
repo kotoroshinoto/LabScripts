@@ -70,7 +70,6 @@ def inputTranscriptList(gtf_filename):
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
     transcription_list = dict(x for x in reader)
-    print(transcription_list)
     os.chdir(old_dir)
     return list_file.read()
 
@@ -92,6 +91,7 @@ readcount = 0
 readlimit = 100000
 for line in input:
     readcount += 1
+    print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
     if readcount == readlimit:
