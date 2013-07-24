@@ -70,7 +70,7 @@ def inputTranscriptList(gtf_filename):
     else:
         print('\n######\n\nTranscript list already exists!')
         print('Delete old list if you wish to build a new transcript list.\n\n######\n')
-    list_file = open('transcript_list.p', 'rb')
+    list_file = open('transcript_list.csv', 'rb')
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
