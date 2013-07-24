@@ -75,8 +75,8 @@ def buildList(exon, transcript_list):
     else:
         transcript_stored = transcript_list[exon.name]
         transcript_stored.num_exons += 1
-        transcript_stored.exon_starts.extend(exon.start)
-        transcript_stored.exon_ends.extend(exon.end)
+        transcript_stored.exon_starts.append(exon.start)
+        transcript_stored.exon_ends.append(exon.end)
         ##transcript_stored.end.sort()
         print(transcript_stored.exon_ends)
         transcript_list[exon.name] = transcript_stored
