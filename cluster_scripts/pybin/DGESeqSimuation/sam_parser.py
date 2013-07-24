@@ -86,8 +86,6 @@ input_file = sys.argv[1] # when using from samtools view: samtools view filename
 output_file = sys.argv[2]
 
 transcript_list = inputTranscriptList('genes.gtf')
-print('\n\ntranscript_list is')
-print(transcript_list)
 
 # SAM file IO
 input = open(input_file,'r')
