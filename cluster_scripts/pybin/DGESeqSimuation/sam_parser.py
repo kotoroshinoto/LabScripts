@@ -70,6 +70,7 @@ def inputTranscriptList(gtf_filename):
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
     transcription_list = dict(x for x in reader)
+    print(transcription_list)
     os.chdir(old_dir)
     return list_file.read()
 
@@ -96,7 +97,7 @@ for line in input:
     if readcount == readlimit:
         break
 writecount = 0
-writelimit = 5
+writelimit = 8
 for key in transcript_list:
     writecount += 1
     print('Writing line %d' % writecount)
