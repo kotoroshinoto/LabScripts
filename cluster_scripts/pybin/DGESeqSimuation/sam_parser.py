@@ -76,7 +76,7 @@ def inputTranscriptList(gtf_filename):
     reader = csv.reader(list_file)
     transcript_list = dict(x for x in reader)
     os.chdir(old_dir)
-    return list_file.read()
+    return transcript_list
 
 # START of script
 # define command line argument input
