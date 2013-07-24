@@ -60,7 +60,7 @@ class SAMInstance:
                     transcript.expression_positions.extend(self.position)
                     print('Found match!')
                 transcript_list[key] = transcript
-        break
+        bla
         return transcript_list
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
