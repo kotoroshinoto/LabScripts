@@ -74,7 +74,7 @@ def inputTranscriptList(gtf_filename):
         print('Delete old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
-    transcription_list = dict(x for x in reader)
+    transcript_list = dict(x for x in reader)
     os.chdir(old_dir)
     return list_file.read()
 
