@@ -65,8 +65,8 @@ def inputTranscriptList(gtf_filename):
     if not os.path.exists('transcript_list.csv'):
         greader.processGTF(input_directory, gtf_filename)
     else:
-        print('\n# # # #\n\nTranscript list already exists!')
-        print('Delete old list if you wish to build a new transcript list.\n# # # #\n\n')
+        print('\n######\n\nTranscript list already exists!')
+        print('Delete old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
     transcription_list = dict(x for x in reader)
@@ -88,7 +88,7 @@ output = open(output_file, 'w')
 
 # read SAM file up to limit and run comparisons to transcript list
 readcount = 0
-readlimit = 10000
+readlimit = 100000
 for line in input:
     readcount += 1
     sam = SAMInstance(line)
