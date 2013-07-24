@@ -60,13 +60,13 @@ class SAMInstance:
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
+    old_dir = os.getcwd()
+    os.chdir(input_directory)
     if not os.path.exists('transcript_list.csv'):
         greader.processGTF(input_directory, gtf_filename)
     else:
         print('\n\n\nTranscript list already exists!')
         print('Delete old list if you wish to build a new transcript list.\n\n\n')
-    old_dir = os.getcwd()
-    os.chdir(input_directory)
     list_file = open('transcript_list.csv', 'rb')
     reader = csv.reader(list_file)
     transcription_list = dict(x for x in reader)
