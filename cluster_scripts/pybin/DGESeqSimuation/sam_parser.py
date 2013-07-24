@@ -54,7 +54,7 @@ class SAMInstance:
                 ##print('Chromosomes match!')
                 if transcript.start < self.end and transcript.end > self.start:
                         transcript.expression_count += 1
-                        transcript.read_names.append(self.read_name)
+                        #transcript.read_names.append(self.read_name)
                         #transcript.read_quality.append(self.read_quality)
                         print('Found match!')
                 transcript_list[key] = transcript
