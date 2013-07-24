@@ -7,7 +7,7 @@ run location: ssh mgooch@sig2-glx.cam.uchc.edu
 run command: samtools view /UCHC/Everson/umar/cluster/align_bam/RNA_Pt5/NC5R_aligned_clean.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin testresults.txt
 
 """
-import os, sys, csv
+import os, sys, pickle
 import gtf_reader as greader
 
 class SAMInstance:
@@ -50,10 +50,9 @@ class SAMInstance:
         """finds and counts positions that match to gene transcripts list"""
         #print('Comparing to list')
         #print('Transcript list is')
-        #print(transcript_list)
         for key in transcript_list:
             transcript = transcript_list[key]
-            ##print(transcript)
+            print(transcript)
             if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
                 if transcript.end == self.end:
@@ -69,12 +68,13 @@ def inputTranscriptList(gtf_filename):
     os.chdir(input_directory)
     if not os.path.exists('transcript_list.csv'):
         greader.processGTF(input_directory, gtf_filename)
-    else:
-        print('\n######\n\nTranscript list already exists!')
-        print('Delete old list if you wish to build a new transcript list.\n\n######\n')
+    #else:
+    #    print('\n######\n\nTranscript list already exists!')
+    #    print('Delete old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
-    reader = csv.reader(list_file)
-    transcript_list = dict(x for x in reader)
+    #reader = csv.reader(list_file)
+    #transcript_list = dict(x for x in reader)
+    transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
 
