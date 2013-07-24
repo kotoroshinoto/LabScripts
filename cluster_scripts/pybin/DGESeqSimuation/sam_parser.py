@@ -51,7 +51,7 @@ class SAMInstance:
         print('Comparing to list')
         for key in transcript_list:
             transcript = transcript_list[key]
-            print(transcript.chromosome)
+            print(transcript)
             if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
                 if transcript.end == self.end:
@@ -92,13 +92,15 @@ output = open(output_file, 'w')
 # read SAM file up to limit and run comparisons to transcript list
 readcount = 0
 ##readlimit = 100000
+print('reading!')
 for line in input:
-    readcount += 1
+    #readcount += 1
     print('Reading line %d' % readcount)
     sam = SAMInstance(line)
     transcript_list = sam.compareToGTF(transcript_list) ## figure out how input transcript list
     ##if readcount == readlimit:
     ##    break
+print('writing!')
 writecount = 0
 writelimit = 8
 for key in transcript_list:
