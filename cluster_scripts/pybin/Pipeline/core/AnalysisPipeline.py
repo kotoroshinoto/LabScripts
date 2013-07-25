@@ -228,7 +228,7 @@ class AnalysisPipeline:
         else:
             os.mkdir(logdir)
         for sjm in sjm_strings.keys():
-            sjm_strings.get(sjm)+"log_dir %s" % logdir
+            sjm_strings[sjm]=sjm_strings.get(sjm)+"log_dir %s" % logdir
         return sjm_strings
         #produce strings in fully split form
         #get source nodes
