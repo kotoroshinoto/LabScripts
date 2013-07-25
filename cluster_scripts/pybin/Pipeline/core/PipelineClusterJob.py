@@ -54,7 +54,7 @@ class PipelineClusterJob:
             raise PipelineError("[PipelineClusterJob] Attempted to produce template string with no defined commands!")
         elif len(self.cmd) == 1:
             #TODO make these paths come from settings
-            tempstr+="\tcmd %s\"%s\" \n" %(BiotoolsSettings.getValue("HANDLER_SCRIPT"),self.cmd[0])
+            tempstr+="\tcmd %s \"%s\" \n" %(BiotoolsSettings.getValue("HANDLER_SCRIPT"),self.cmd[0])
         else:
             tempstr+="\tcmd_begin\n"
             for cmd in self.cmd:
