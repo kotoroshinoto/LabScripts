@@ -3,8 +3,8 @@ Created on Mar 18, 2013
 
 @author: Gooch
 '''
-import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 import re,os
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 from Pipeline.core.PipelineTemplate import PipelineTemplate
 import Pipeline.core.PipelineUtil as PipelineUtil
 from Pipeline.core.PipelineError import PipelineError
@@ -207,6 +207,9 @@ class AnalysisPipeline:
                     #TODO get template string & append it to sjm_strings[stringName]
                     sjm_strings[stringName]+=node.template.toString(grouplbl,cumsuffix,Sample.ID)
                     #TODO add any extra link-related job dependencies manually
+                    if not (splitOpts['step']):
+                        #TODO link across templates, link back to parents
+                        derp=""
                     if parentNode is not None: 
                         print("%s <<< %s | %s <- %s | % s : %s" % (stringName, node.template.name,node.subname,parentNode.template.name,parentNode.subname, Sample.ID))
                     else:
@@ -217,6 +220,15 @@ class AnalysisPipeline:
                     cumsuffixQueue.append("")
                 else:
                     cumsuffixQueue.append(cumsuffix+node.template.suffix)
+        #TODO add log_dir line to strings
+        logdir=BiotoolsSettings.getValue("CURDIR")+os.sep+"sjm_logs"
+        if os.path.exists(logdir):
+            if not (os.path.isdir(logdir)):
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline.toSJMStrings] log directory path: %s already exists and is not a directory" % logdir)
+        else:
+            os.mkdir(logdir)
+        for sjm in sjm_strings.keys():
+            sjm_strings.get(sjm)+"log_dir %s" % logdir
         return sjm_strings
         #produce strings in fully split form
         #get source nodes
@@ -224,22 +236,22 @@ class AnalysisPipeline:
             #use templates to get SJM content,
             #track cumulative suffixes
         #join strings as appropriate:
-        if splitOpts['sample'] and splitOpts['step']:
-            #split between samples AND between
-            return dict()
-        elif splitOpts['sample']:
-            #split between samples
-            
-            return dict()
-        elif splitOpts['step']:
-            #split only between templates
-            return dict()
-        else:
-            #one giant file
-            #add any extra link-related job dependencies manually
-            return dict()
-        #add sjm logfile location to end of each file
-        return sjm_strings
+#         if splitOpts['sample'] and splitOpts['step']:
+#             #split between samples AND between
+#             return dict()
+#         elif splitOpts['sample']:
+#             #split between samples
+#             
+#             return dict()
+#         elif splitOpts['step']:
+#             #split only between templates
+#             return dict()
+#         else:
+#             #one giant file
+#             #add any extra link-related job dependencies manually
+#             return dict()
+#         #add sjm logfile location to end of each file
+#         return sjm_strings
     def getFileNameForString(self,splitOpts,baseName,node=None,sample=None):
         if splitOpts['sample'] and splitOpts['step']:
             #split between samples AND between
