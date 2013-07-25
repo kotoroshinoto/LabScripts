@@ -73,7 +73,7 @@ def inputTranscriptList(gtf_filename):
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
-def processSAMFile(sam_filename):
+def processSAMFile(sam_filename, transcript_list):
     # SAM file IO
     input = open(sam_filename,'r')
     
@@ -87,7 +87,7 @@ def processSAMFile(sam_filename):
         readcount += 1
         #print('Reading line %d' % readcount)
         sam = SAMInstance(line)
-        transcript_list, findcount = sam.compareToGTF(transcript_list, findcount) ## figure out how input transcript list
+        transcript_list, findcount = sam.compareToGTF(transcript_list, findcount)
         '''
         if readcount == readlimit:
             break
@@ -133,6 +133,6 @@ if len(sys.argv) != 3:
 input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename
 output_file = sys.argv[2]
 transcript_list = inputTranscriptList('genes.gtf')
-transcript_list = processSAMFile(input_file)
+transcript_list = processSAMFile(input_file, transcript_list)
 outputMatches(output_file, transcript_list)
 print('Job is Finished!')
