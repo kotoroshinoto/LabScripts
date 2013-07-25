@@ -227,6 +227,8 @@ class AnalysisPipeline:
                 raise PipelineError("[PipelineTemplate.AnalysisPipeline.toSJMStrings] log directory path: %s already exists and is not a directory" % logdir)
         else:
             os.mkdir(logdir)
+            if not (os.path.isdir(logdir)):
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline.toSJMStrings] failed to create log directory")
         for sjm in sjm_strings.keys():
             sjm_strings[sjm]=sjm_strings.get(sjm)+"log_dir %s" % logdir
         return sjm_strings
