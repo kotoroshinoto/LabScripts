@@ -104,15 +104,15 @@ for line in input:
         break
 print('Writing...')
 writecount = 0
-writelimit = 8
+#writelimit = 8
 for key in transcript_list:
     writecount += 1
     print('Writing line %d' % writecount)
     transcript = transcript_list[key]
     if transcript.expression_count > 0:
         output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-    if writecount == writelimit:
-        break
+    #if writecount == writelimit:
+    #    break
 input.close()
 output.close()
 print('Job is Finished!')
