@@ -73,6 +73,58 @@ def inputTranscriptList(gtf_filename):
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
+def processSAMFile(sam_filename):
+    # SAM file IO
+    input = open(sam_filename,'r')
+    
+    # read SAM file up to limit and run comparisons to transcript list
+    readcount = 0
+    #readlimit = 500000
+    findcount = 0
+    #findlimit = 8
+    print('Reading...')
+    for line in input:
+        readcount += 1
+        #print('Reading line %d' % readcount)
+        sam = SAMInstance(line)
+        transcript_list, findcount = sam.compareToGTF(transcript_list, findcount) ## figure out how input transcript list
+        '''
+        if readcount == readlimit:
+            break
+        if findcount == findlimit:
+            break
+        '''
+    input.close()
+    return transcript_list
+def outputMatches(output_filename, transcript_list):
+    import xlsxwriter.workbook as xlsx
+    
+    print('Writing...')
+    output = open(output_filename, 'w')
+    book = xlsx.Workbook(output_filename + '.xls')
+    sheet = book.add_worksheet('Expression Levels')
+    sheet.write(0, 0, 'Transcript Name')
+    sheet.write(1, 0, 'Number of Exons')
+    sheet.write(2, 0, 'Number of Expressions')
+    rowscount = 1
+    try:
+        rowslimit = len(transcript_list)
+        ##print('Output table has %r transcripts' % rowslimit)
+    except IndexError:
+        print('Cannot output an empty table')
+    for key in transcript_list:
+        print('Writing line %d' % rowscount)
+        transcript = transcript_list[key]
+        if transcript.expression_count > 0:
+            sheet.write(rowscount, 0, transcript.name)
+            sheet.write(rowscount, 1, transcript.num_exons)
+            sheet.write(rowscount, 2, transcript.expression_count)
+            output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
+        if rowscount == rowslimit:
+            break
+        rowscount += 1
+    output.close()
+    book.close()
 
 # START of script
 # define command line argument input
@@ -80,39 +132,7 @@ if len(sys.argv) != 3:
     sys.stderr.write("script must be given 2 arguments: input and output filenames")
 input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename
 output_file = sys.argv[2]
-
 transcript_list = inputTranscriptList('genes.gtf')
-
-# SAM file IO
-input = open(input_file,'r')
-output = open(output_file, 'w')
-
-# read SAM file up to limit and run comparisons to transcript list
-readcount = 0
-readlimit = 500000
-findcount = 0
-findlimit = 8
-print('Reading...')
-for line in input:
-    readcount += 1
-    #print('Reading line %d' % readcount)
-    sam = SAMInstance(line)
-    transcript_list, findcount = sam.compareToGTF(transcript_list, findcount) ## figure out how input transcript list
-    if readcount == readlimit:
-        break
-    if findcount == findlimit:
-        break
-print('Writing...')
-writecount = 0
-#writelimit = 8
-for key in transcript_list:
-    writecount += 1
-    print('Writing line %d' % writecount)
-    transcript = transcript_list[key]
-    if transcript.expression_count > 0:
-        output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-    #if writecount == writelimit:
-    #    break
-input.close()
-output.close()
+transcript_list = processSAMFile(input_file)
+outputMatches(output_file, transcript_list)
 print('Job is Finished!')
