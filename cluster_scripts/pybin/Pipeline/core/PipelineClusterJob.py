@@ -6,6 +6,7 @@ Created on Mar 18, 2013
 '''
 from Pipeline.core.PipelineError import PipelineError
 import Pipeline.core.PipelineUtil as PipelineUtil
+import Pipeline.settings.BiotoolsSettings as BiotoolsSettings
 class PipelineClusterJob:
     def __init__(self,parent):
         self.name= None;
@@ -52,12 +53,14 @@ class PipelineClusterJob:
         if len(self.cmd) <= 0:
             raise PipelineError("[PipelineClusterJob] Attempted to produce template string with no defined commands!")
         elif len(self.cmd) == 1:
-            tempstr+="\tcmd "+self.cmd[0]+"\n"
+            #TODO make these paths come from settings
+            tempstr+="\tcmd %s\"%s\" \n" %(BiotoolsSettings.getValue("HANDLER_SCRIPT"),self.cmd[0])
         else:
-            tempstr+="\tcmd_begin "+self.cmd[0]+"\n"
+            tempstr+="\tcmd_begin\n"
             for cmd in self.cmd:
+                #TODO find out how multi-line commands work, & whether you can run these with the runwithenv commands
                 tempstr+="\t\t"+cmd+"\n"
-            tempstr+="\tcmd_end "+self.cmd[0]+"\n"
+            tempstr+="\tcmd_end\n"
         tempstr+="job_end\n"
         if len(self.order_after) > 0:
             for prior in self.order_after:

@@ -5,7 +5,7 @@ SettingsList={}
 #SettingsList["GROUPLBL"]="";
 #SettingsList["SJM_FILE"]="";
 #REST ARE OK FOR NOW
-SettingsList["HANDLER_SCRIPT"]="/UCHC/HPC/Everson_HPC/cluster_scripts/shbin/run_qsub.sh";
+SettingsList["HANDLER_SCRIPT"]="perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0"
 SettingsList["GENOME"]="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/FASTA/ucsc.hg19.fa";
 SettingsList["BWAINDEX"]="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BWA/ucsc.hg19.fa";
 SettingsList["BOWTIEINDEX"]="/UCHC/HPC/Everson_HPC/reference_data/gatk_bundle/hg19/BOWTIE/ucsc.hg19";

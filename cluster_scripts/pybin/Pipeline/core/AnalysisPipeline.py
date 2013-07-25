@@ -29,6 +29,7 @@ class AnalysisPipeline:
     def __init__(self):
         #TODO: fill in stub
         self.jobtemplates={}
+        self.optionfiles={}
         #list of nodes in tree
         self.nodes={}#info about nodes stored in PipelineNode object in this dictionary
         #index with template[subname]
@@ -190,19 +191,26 @@ class AnalysisPipeline:
         while len(nodeQueue) > 0:
             node=nodeQueue.pop(0)
             cumsuffix=cumsuffixQueue.pop(0)
-            for sample in self.samples.keys():
-                Sample=self.samples[sample]
-                stringName=self.getFileNameForString(splitOpts,baseName, node, Sample)
-                if not (sjm_strings.has_key(stringName)):
-                    sjm_strings[stringName]=""
-                parentNode=self.getParentOfNode(node)
-                #TODO get template string & append it to sjm_strings[stringName]
-                sjm_strings[stringName]+=node.template.toString(grouplbl,cumsuffix,Sample.ID)
-                #TODO add any extra link-related job dependencies manually
-                if parentNode is not None: 
-                    print("%s <<< %s | %s <- %s | % s : %s" % (stringName, node.template.name,node.subname,parentNode.template.name,parentNode.subname, Sample.ID))
-                else:
-                    print("%s <<< %s | %s : %s" % (stringName, node.template.name,node.subname,Sample.ID))
+            #if job is comparing pairs of samples,
+            if node.template.isCrossJob:
+                raise PipelineError("[PipelineTemplate.AnalysisPipeline.toSJMStrings] CrossJob Translation not yet implemented")
+                #handle selected pairs
+                #TODO, what to do with no selection (missing optionfile)? Fail or do ALL pairwise?
+            else:
+                #otherwise translate template once per file
+                for sample in self.samples.keys():
+                    Sample=self.samples[sample]
+                    stringName=self.getFileNameForString(splitOpts,baseName, node, Sample)
+                    if not (sjm_strings.has_key(stringName)):
+                        sjm_strings[stringName]=""
+                    parentNode=self.getParentOfNode(node)
+                    #TODO get template string & append it to sjm_strings[stringName]
+                    sjm_strings[stringName]+=node.template.toString(grouplbl,cumsuffix,Sample.ID)
+                    #TODO add any extra link-related job dependencies manually
+                    if parentNode is not None: 
+                        print("%s <<< %s | %s <- %s | % s : %s" % (stringName, node.template.name,node.subname,parentNode.template.name,parentNode.subname, Sample.ID))
+                    else:
+                        print("%s <<< %s | %s : %s" % (stringName, node.template.name,node.subname,Sample.ID))
             for item in self.getTargetsOfNode(node):
                 nodeQueue.append(item)
                 if node.template.clearsuffixes:
