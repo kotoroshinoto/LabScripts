@@ -117,7 +117,7 @@ def outputMatches(output_filename, transcript_list):
     except IndexError:
         print('Cannot output an empty table')
     for key in transcript_list:
-        print('Writing line %d' % rowscount)
+        #print('Writing line %d' % rowscount)
         transcript = transcript_list[key]
         if transcript.expression_count > 0:
             #sheet.write(rowscount, 0, transcript.name)
