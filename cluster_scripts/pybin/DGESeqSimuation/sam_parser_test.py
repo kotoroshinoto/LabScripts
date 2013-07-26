@@ -7,7 +7,6 @@ run location: ssh mgooch@sig2-glx.cam.uchc.edu
 run command: samtools view /UCHC/Everson/umar/cluster/align_bam/RNA_Pt5/NC5R_aligned_clean.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin testresults.txt
 or command: samtools view /UCHC/Everson/umar/Patient5A/BAM_aligned_GATK_Hg19_Galaxy_FASTQ/NF5A.4gatk.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin gatktestresults.txt
 
-
 """
 import os, sys, pickle
 import gtf_reader as greader
