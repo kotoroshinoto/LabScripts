@@ -13,13 +13,13 @@ def processGTF(input_directory, filename):
     ##input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     ##filename = 'test.gtf'
     transcript_list = {}
+    transcript_count = 1
     
     # file IO
     old_dir = os.getcwd()
     os.chdir(input_directory)
     f = open(filename,'r')
-
-    transcript_count = 1
+    
     for line in f:
         # parse and format GTF lines of text
         line = line.split('\t')
@@ -57,5 +57,5 @@ def processGTF(input_directory, filename):
     output = open('transcript_list.csv', 'wb')
     pickle.dump(transcript_list, output)
     output.close()
-    print('\n\n\nNew transcript list is made!\n\n\n')
+    print('\n\nNew transcript list is made!\n\n')
     os.chdir(old_dir)
