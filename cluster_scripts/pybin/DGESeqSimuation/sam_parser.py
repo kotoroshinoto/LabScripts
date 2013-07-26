@@ -52,7 +52,7 @@ class SAMInstance:
             transcript = transcript_list[key]
             if transcript.chromosome == self.chromosome:
                 print('Chromosomes match!')
-                if transcript.start < self.end and transcript.end > self.start:
+                if transcript.start <= self.end and transcript.end >= self.start:
                     transcript.expression_count += 1
                     #findcount += 1
                     #transcript.read_names.append(self.read_name)

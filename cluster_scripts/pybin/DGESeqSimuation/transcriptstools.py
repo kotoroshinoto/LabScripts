@@ -27,6 +27,9 @@ class Exon:
             else:
                 self.chromosome = line[0]
             self.direction = line[6]
+            self.start = line[3]
+            self.end = line[4]
+            '''
             if self.direction == '+':
                 self.start = line[3]
                 self.end = line[4]
@@ -35,6 +38,7 @@ class Exon:
                 self.end = line[3]
             else:
                 raise SyntaxError('Data incorrectly states whether exon is forward/reverse read\n')
+            '''
         else:
             raise IOError('transcript_id is not in the correct column\n')
 class Transcript:
@@ -59,10 +63,11 @@ class Transcript:
         if self.direction == '+':
             last_element = self.exon_ends[-1]
             self.end = int(last_element)
+            self.start = self.end - 250
         elif self.direction == '-':
-            first_element = self.exon_ends[0]
-            self.end = int(first_element)
-        self.start = self.end - 250
+            first_element = self.exon_starts[0]
+            self.start = int(first_element)
+            self.end = self.start + 250
         if self.start < 0:
             print('Length Error: gene starts at negative position')
 def buildList(exon, transcript_list, transcript_count):
