@@ -1,0 +1,8 @@
+job_begin
+        name DGESeqSimulation
+        memory 50G
+        module EversonLabBiotools/1.0
+        queue all.q
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /home/CAM/mgooch/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5.4GATK.recal.realn.filtered.bam | python sam_parser.py /dev/stdin gatktestresults.txt"		
+job_end
