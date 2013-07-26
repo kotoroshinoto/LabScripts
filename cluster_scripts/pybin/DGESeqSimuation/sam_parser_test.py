@@ -68,6 +68,7 @@ def inputTranscriptList(gtf_filename):
     old_dir = os.getcwd()
     os.chdir(input_directory)
     if not os.path.exists('transcript_list.csv'):
+        print('Building new transcript list...')
         greader.processGTF(input_directory, gtf_filename)
     else:
         print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 5 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
