@@ -64,7 +64,6 @@ class SAMInstance:
         return transcript_list, readcount
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
-    print('Loading Transcript List...')
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     old_dir = os.getcwd()
     os.chdir(input_directory)
@@ -73,6 +72,7 @@ def inputTranscriptList(gtf_filename):
     else:
         print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 5 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
+    print('Loading Transcript List...')
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
@@ -104,7 +104,7 @@ def outputMatches(output_filename, transcript_list):
     old_dir = os.getcwd()
     os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
     output = open(output_filename, 'w')
-    output.write('Transcript Name\tNumber of Exons\tNumber of Expressions')
+    output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\n')
     #book = xlsx.Workbook(output_filename + '.xls')
     #sheet = book.add_worksheet('Expression Levels')
     #sheet.write(0, 0, 'Transcript Name')
