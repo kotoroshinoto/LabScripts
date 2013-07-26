@@ -22,7 +22,10 @@ class Exon:
         if line[check_format_index] == 'transcript_id':
             ##exon.correct_input = True
             self.name = line[check_format_index + 1]
-            self.chromosome = line[0]
+            if line[0].find('chr') != -1:
+                self.chromosome = line[0][2]
+            else:
+                self.chromosome = line[0]
             self.direction = line[6]
             if self.direction == '+':
                 self.start = line[3]

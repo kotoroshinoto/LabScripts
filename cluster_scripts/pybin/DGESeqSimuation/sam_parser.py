@@ -50,16 +50,16 @@ class SAMInstance:
         """finds and counts positions that match to gene transcripts list"""
         for key in transcript_list:
             transcript = transcript_list[key]
-            #if transcript.chromosome == self.chromosome:
-                #print('Chromosomes match!')
-            if transcript.start < self.end and transcript.end > self.start:
-                transcript.expression_count += 1
-                #findcount += 1
-                #transcript.read_names.append(self.read_name)
-                #transcript.read_quality.append(self.read_quality)
-                print('Found match on line %d1' % readcount)
-                transcript_list[key] = transcript
-                break
+            if transcript.chromosome == self.chromosome:
+                print('Chromosomes match!')
+                if transcript.start < self.end and transcript.end > self.start:
+                    transcript.expression_count += 1
+                    #findcount += 1
+                    #transcript.read_names.append(self.read_name)
+                    #transcript.read_quality.append(self.read_quality)
+                    print('Found match on line %d1' % readcount)
+                    transcript_list[key] = transcript
+                    break
         return transcript_list, readcount
 def inputTranscriptList(gtf_filename):
     """reads existing transcript list or generates new list if needed from GTF file"""
