@@ -19,6 +19,7 @@ def processGTF(input_directory, filename):
     os.chdir(input_directory)
     f = open(filename,'r')
 
+    transcript_count = 1
     for line in f:
         # parse and format GTF lines of text
         line = line.split('\t')
@@ -42,7 +43,6 @@ def processGTF(input_directory, filename):
         # store exon information in object
         exon = ttools.Exon(line)
         # add exon to hash list
-        transcript_count = 1
         transcript_list, transcript_count = ttools.buildList(exon, transcript_list, transcript_count)
     
     # print frequency of each transcript + calculate 3' end of gene

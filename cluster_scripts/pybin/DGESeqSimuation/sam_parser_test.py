@@ -71,7 +71,7 @@ def inputTranscriptList(gtf_filename):
         print('Building new transcript list...')
         greader.processGTF(input_directory, gtf_filename)
     else:
-        print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 5 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
+        print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 3 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
     print('Loading Transcript List...')
     transcript_list = pickle.load(list_file)
@@ -83,7 +83,7 @@ def processSAMFile(sam_filename, transcript_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 2000
+    readlimit = 1000
     #findcount = 0
     #findlimit = 8
     print('Reading...')
