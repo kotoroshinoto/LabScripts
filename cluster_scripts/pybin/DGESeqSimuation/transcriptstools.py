@@ -38,6 +38,7 @@ class Transcript:
     """object that holds information for each transcript"""
     def __init__(self):
         self.name = None
+        self.num_id = 0 # used for easier plotting
         self.chromosome = None
         self.direction = None
         self.exon_starts = []
@@ -61,12 +62,14 @@ class Transcript:
         self.start = self.end - 250
         if self.start < 0:
             print('Length Error: gene starts at negative position')
-def buildList(exon, transcript_list):
+def buildList(exon, transcript_list, transcript_count):
     """adds transcripts to hash table with no duplicates"""
     in_list = exon.name in transcript_list
     if in_list is False:
         transcript = Transcript()
         transcript.name = exon.name
+        transcript.num_id = transcript_count
+        transcript_count += 1
         transcript.chromosome = exon.chromosome
         transcript.direction = exon.direction
         transcript.exon_starts.append(exon.start)
@@ -81,4 +84,4 @@ def buildList(exon, transcript_list):
         transcript_stored.exon_ends.append(exon.end)
         ##transcript_stored.end.sort()
         transcript_list[exon.name] = transcript_stored
-    return transcript_list
+    return transcript_list, transcript_count

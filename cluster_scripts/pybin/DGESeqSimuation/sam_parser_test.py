@@ -104,7 +104,7 @@ def outputMatches(output_filename, transcript_list):
     old_dir = os.getcwd()
     os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
     output = open(output_filename, 'w')
-    output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\n')
+    output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\tTranscript Number ID\n')
     #book = xlsx.Workbook(output_filename + '.xls')
     #sheet = book.add_worksheet('Expression Levels')
     #sheet.write(0, 0, 'Transcript Name')
@@ -124,7 +124,7 @@ def outputMatches(output_filename, transcript_list):
             #sheet.write(rowscount, 1, transcript.num_exons)
             #sheet.write(rowscount, 2, transcript.expression_count)
             #output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-            output.write('%s\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count))
+            output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
         if rowscount == rowslimit:
             break
         rowscount += 1
