@@ -23,7 +23,7 @@ class Exon:
             ##exon.correct_input = True
             self.name = line[check_format_index + 1]
             if line[0].find('chr') != -1:
-                self.chromosome = line[0][2]
+                self.chromosome = (line[0])[3:]
             else:
                 self.chromosome = line[0]
             self.direction = line[6]
