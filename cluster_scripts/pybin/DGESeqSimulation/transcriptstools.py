@@ -27,6 +27,9 @@ class Exon:
             else:
                 self.chromosome = line[0]
             self.direction = line[6]
+            self.start = line[3] # start is always left side of exon whether forward or reverse
+            self.end = line[4]
+            '''
             if self.direction == '+':
                 self.start = line[3]
                 self.end = line[4]
@@ -35,6 +38,7 @@ class Exon:
                 self.end = line[4]
             else:
                 raise SyntaxError('Data incorrectly states whether exon is forward/reverse read\n')
+            '''
         else:
             raise IOError('transcript_id is not in the correct column\n')
 class Transcript:
@@ -53,16 +57,29 @@ class Transcript:
         #self.expression_positions = [] # positions in BAM file 
         self.read_names = []
         self.read_quality = []
-    def setGeneEnd(self):
-        """determines 3' end of entire gene based on read direction and ends of individual exons"""
+    def setGeneEnd(self, simulation_length):
+        """determines stable segment of entire transcript based on read direction and individual exons"""
+        self.exon_starts.sort()
         self.exon_ends.sort()
         if self.direction == '+':
-            last_element = self.exon_ends[-1]
+            exon_index = -1 # counts backward from the right most exon
+            last_element = self.exon_ends[exon_index]
             self.end = int(last_element)
+            self.start = self.end - simulation_length
+            print self.exons_starts[exon_index] ##debugging
+            while self.start < self.exons_starts[exon_index]: # account for intron area if end exon is shorter than desired read length
+                intron_area = self.exon_ends[exon_index - 1] - self.exon_starts[exon_index]
+                self.start = self.start - intron_area
+                exon_index -= 1 # check next exon
         elif self.direction == '-':
-            first_element = self.exon_ends[0]
-            self.end = int(first_element)
-        self.start = self.end - 250
+            exon_index = 0
+            first_element = self.start_ends[exon_index]
+            self.start = int(first_element)
+            self.end = self.start + simulation_length
+            while self.end > self.exon_ends[exon_index]:
+                intron_area = self.exon_ends[exon_index + 1] - self.exon_starts[exon_index]
+                self.end = self.end + intron_area
+                exon_index += 1 # check next exon
         if self.start < 0:
             print('Length Error: gene starts at negative position')
 def buildList(exon, transcript_list, transcript_count):

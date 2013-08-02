@@ -8,7 +8,7 @@ Version 2013.07.24
 import os, pickle
 import transcriptstools as ttools
 
-def processGTF(input_directory, filename):
+def processGTF(input_directory, filename, simulation_length):
     # set and initialize variables
     ##input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     ##filename = 'test.gtf'
@@ -48,7 +48,7 @@ def processGTF(input_directory, filename):
     # print frequency of each transcript + calculate 3' end of gene
     for key in transcript_list:
         instance = transcript_list[key]
-        instance.setGeneEnd()
+        instance.setGeneEnd(simulation_length)
         transcript_list[key] = instance
         ##print('%s contains %s exons and ends at %s on %s' % (instance.name, instance.num_exons, instance.threeprimeloc, instance.chromosome))
     

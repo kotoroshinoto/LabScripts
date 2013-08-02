@@ -76,7 +76,7 @@ def inputTranscriptList(gtf_filename):
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
-def processSAMFile(sam_filename, transcript_list):
+def processSAMFile(sam_filename, transcript_list, simulation_length):
     # SAM file IO
     input = open(sam_filename,'r')
     
@@ -134,11 +134,13 @@ def outputMatches(output_filename, transcript_list):
 
 # START of script
 # define command line argument input
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     sys.stderr.write("script must be given 2 arguments: input and output filenames")
-input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename
+input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename 200
 output_file = sys.argv[2]
+simulation_length = int(sys.argv[3])
+
 transcript_list = inputTranscriptList('genes.gtf')
-transcript_list = processSAMFile(input_file, transcript_list)
+transcript_list = processSAMFile(input_file, transcript_list, simulation_length)
 outputMatches(output_file, transcript_list)
 print('Job is Finished!')
