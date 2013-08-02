@@ -1,6 +1,6 @@
 """
 transcriptstools.py module
-Version 2013.07.24
+Version 2013.08.02
 
 @author: Bing
 
@@ -29,16 +29,6 @@ class Exon:
             self.direction = line[6]
             self.start = line[3] # start is always left side of exon whether forward or reverse
             self.end = line[4]
-            '''
-            if self.direction == '+':
-                self.start = line[3]
-                self.end = line[4]
-            elif self.direction == '-':
-                self.start = line[3]
-                self.end = line[4]
-            else:
-                raise SyntaxError('Data incorrectly states whether exon is forward/reverse read\n')
-            '''
         else:
             raise IOError('transcript_id is not in the correct column\n')
 class Transcript:
@@ -67,43 +57,29 @@ class Transcript:
             self.end = int(last_element)
             self.start = self.end - simulation_length
             while self.start < int(self.exon_starts[exon_index]): # account for intron area if end exon is shorter than desired read length
+                print('Compensating for introns...')
                 try:
                     intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
                 except:
                     print('Simulation sequence length is longer than transcript length')
-                    print('Script will continue...')
+                    print('Compensation is skipped')
                     break
-                print('\n')
-                print(self.exon_starts[exon_index])
-                print(self.start)
-                print(exon_index - 1)
-                '''
-                try:
-                    print(self.exon_ends[exon_index - 1])
-                except:
-                    print('error print %r' % self.exon_ends)
-                finally:
-                    print('error print %r' % self.exon_ends)
-                '''
+                print('Compensated for %d introns' % (1 - exon_index))
                 intron_area = 10
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
-            '''
-            num_introns = 0
-            for start in self.exon_starts:
-                if self.start < start:
-                    num_introns += 1
-            for start_index in num_introns
-            intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
-            '''
         elif self.direction == '-':
             exon_index = 0
             first_element = self.exon_starts[exon_index]
             self.start = int(first_element)
             self.end = self.start + simulation_length
             while self.end > self.exon_ends[exon_index]:
-                intron_area = 10
-                #intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
+                try:
+                    intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
+                except:
+                    print('Simulation sequence length is longer than transcript length')
+                    print('Script will continue...')
+                    break
                 self.end = self.end + intron_area
                 exon_index += 1 # check next exon
         if self.start < 0:
