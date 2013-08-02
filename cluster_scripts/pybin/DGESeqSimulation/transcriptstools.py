@@ -72,16 +72,25 @@ class Transcript:
                 print(self.exon_starts[exon_index])
                 print(exon_index - 1)
                 print(self.exon_ends[exon_index - 1])
-                intron_area = 100
+                intron_area = 10
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
+            '''
+            num_introns = 0
+            for start in self.exon_starts:
+                if self.start < start:
+                    num_introns += 1
+            for start_index in num_introns
+            intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
+            '''
         elif self.direction == '-':
             exon_index = 0
             first_element = self.exon_starts[exon_index]
             self.start = int(first_element)
             self.end = self.start + simulation_length
             while self.end > self.exon_ends[exon_index]:
-                intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
+                intron_area = 10
+                #intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
                 self.end = self.end + intron_area
                 exon_index += 1 # check next exon
         if self.start < 0:
