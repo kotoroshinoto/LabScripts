@@ -1,6 +1,6 @@
 """
 sam_parser.py script
-Version 2013.07.26
+Version 2013.08.02
 
 @author: Bing
 run location: ssh mgooch@sig2-glx.cam.uchc.edu
