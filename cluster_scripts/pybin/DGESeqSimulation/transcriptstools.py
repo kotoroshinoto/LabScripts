@@ -67,18 +67,24 @@ class Transcript:
             self.end = int(last_element)
             self.start = self.end - simulation_length
             while self.start < int(self.exon_starts[exon_index]): # account for intron area if end exon is shorter than desired read length
-                #intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
+                try:
+                    intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
+                except:
+                    print('Simulation sequence length is longer than transcript length')
+                    print('Script will continue...')
+                    break
                 print('\n')
                 print(self.exon_starts[exon_index])
                 print(self.start)
                 print(exon_index - 1)
-                
+                '''
                 try:
                     print(self.exon_ends[exon_index - 1])
                 except:
                     print('error print %r' % self.exon_ends)
                 finally:
                     print('error print %r' % self.exon_ends)
+                '''
                 intron_area = 10
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
