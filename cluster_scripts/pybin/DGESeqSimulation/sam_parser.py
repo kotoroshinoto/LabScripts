@@ -35,7 +35,7 @@ class SAMInstance:
         line = line.split('\t')
         self.read_name = line[0]
         self.flag = line[1]
-        self.chromosome = line[2]
+        self.chromosome = int(line[2][3:]) # read line 2 starting from the 3rd position
         self.start = int(line[3]) # 1-based index starting at left end of read
         self.end = int(line[3]) + 100
         #self.mapq = line[4]
@@ -72,7 +72,7 @@ def inputTranscriptList(gtf_filename, simulation_length):
     else:
         print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 3 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
-    print('Loading Transcript List...')
+    print('Loading transcript list...')
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
@@ -135,7 +135,7 @@ def outputMatches(output_filename, transcript_list):
 # START of script
 # define command line argument input
 if len(sys.argv) != 4:
-    sys.stderr.write("script must be given 3 arguments: input and output filenames")
+    sys.stderr.write("\nScript must be given 3 arguments: input and output filenames")
 input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename 200
 output_file = sys.argv[2]
 simulation_length = int(sys.argv[3])
