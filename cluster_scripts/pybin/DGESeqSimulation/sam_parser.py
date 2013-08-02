@@ -140,7 +140,7 @@ input_file = sys.argv[1] # when using from samtools view: samtools view filename
 output_file = sys.argv[2]
 simulation_length = int(sys.argv[3])
 
-print('\nStarting Script...')
+print('\nStarting the script...')
 transcript_list = inputTranscriptList('genes.gtf', simulation_length)
 transcript_list = processSAMFile(input_file, transcript_list)
 outputMatches(output_file, transcript_list)

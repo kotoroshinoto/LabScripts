@@ -67,7 +67,7 @@ class Transcript:
             self.end = int(last_element)
             self.start = self.end - simulation_length
             print self.exons_starts[exon_index] ##debugging
-            while self.start < self.exons_starts[exon_index]: # account for intron area if end exon is shorter than desired read length
+            while self.start < self.exon_starts[exon_index]: # account for intron area if end exon is shorter than desired read length
                 intron_area = self.exon_ends[exon_index - 1] - self.exon_starts[exon_index]
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
