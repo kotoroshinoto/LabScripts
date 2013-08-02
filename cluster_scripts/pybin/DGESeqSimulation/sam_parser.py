@@ -87,7 +87,7 @@ def processSAMFile(sam_filename, transcript_list):
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     #readlimit = 1000
-    findcount = ''
+    findcount = '0'
     findlimit = 8
     print('Reading...')
     for line in input:
