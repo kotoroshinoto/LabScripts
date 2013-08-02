@@ -92,16 +92,8 @@ def processSAMFile(sam_filename, transcript_list):
         transcript_list, readcount = sam.compareToGTF(transcript_list, readcount)
         if readcount == readlimit:
             break
-    for key in transcript_list:
-        #print('Writing line %d' % rowscount)
-        transcript = transcript_list[key]
-        if transcript.expression_count > 0:
-            #sheet.write(rowscount, 0, transcript.name)
-            #sheet.write(rowscount, 1, transcript.num_exons)
-            #sheet.write(rowscount, 2, transcript.expression_count)
-            #output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-            print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
     input.close()
+    return transcript_list
 def outputMatches(output_filename, transcript_list):
     #import xlsxwriter.workbook as xlsx
     print('Writing...')
