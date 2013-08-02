@@ -63,7 +63,6 @@ class SAMInstance:
                 #transcript.read_quality.append(self.read_quality)
                 print('Found match on line %d1' % readcount)
                 transcript_list[key] = transcript
-                return findcount
         return transcript_list, readcount, findcount
 def inputTranscriptList(gtf_filename, simulation_length):
     """reads existing transcript list or generates new list if needed from GTF file"""
