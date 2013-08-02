@@ -22,10 +22,13 @@ class Exon:
         if line[check_format_index] == 'transcript_id':
             ##exon.correct_input = True
             self.name = line[check_format_index + 1]
+            self.chromosome = line[0]
+            '''
             if line[0].find('chr') != -1:
                 self.chromosome = int(line[0][3:]) # read line starting from the 3rd position
             else:
                 self.chromosome = int(line[0])
+            '''
             self.direction = line[6]
             self.start = line[3] # start is always left side of exon whether forward or reverse
             self.end = line[4]
@@ -65,7 +68,6 @@ class Transcript:
                     print('Compensation is skipped')
                     break
                 print('Compensated for %d intronic regions' % (1 - exon_index))
-                intron_area = 10
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
         elif self.direction == '-':
