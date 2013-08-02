@@ -90,8 +90,8 @@ def processSAMFile(sam_filename, transcript_list):
         #print('Reading line %d' % readcount)
         sam = SAMInstance(line)
         transcript_list, readcount = sam.compareToGTF(transcript_list, readcount)
-        if readcount == readlimit:
-            break
+        #if readcount == readlimit:
+        #    break
     input.close()
     return transcript_list
 def outputMatches(output_filename, transcript_list):
