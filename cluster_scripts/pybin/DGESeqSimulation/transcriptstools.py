@@ -64,7 +64,7 @@ class Transcript:
                     print('Simulation sequence length is longer than transcript length')
                     print('Compensation is skipped')
                     break
-                print('Compensated for %d introns' % (1 - exon_index))
+                print('Compensated for %d intronic regions' % (1 - exon_index))
                 intron_area = 10
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
