@@ -72,7 +72,8 @@ class Transcript:
                 print(self.exon_starts[exon_index])
                 print(exon_index - 1)
                 print(self.exon_ends[exon_index - 1])
-                #self.start = self.start - intron_area
+                intron_area = 100
+                self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
         elif self.direction == '-':
             exon_index = 0
