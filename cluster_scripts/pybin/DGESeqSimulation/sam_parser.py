@@ -58,6 +58,7 @@ class SAMInstance:
             if transcript.start < self.end and transcript.end > self.start:
                 #transcript.read_names.append(self.read_name)
                 #transcript.read_quality.append(self.read_quality)
+                transcript.expression_count += 1
                 print('Found match on line %d' % readcount)
                 transcript_list[key] = transcript
         return transcript_list, readcount
@@ -92,7 +93,6 @@ def processSAMFile(sam_filename, transcript_list):
         if readcount == readlimit:
             break
     input.close()
-    return transcript_list
 def outputMatches(output_filename, transcript_list):
     #import xlsxwriter.workbook as xlsx
     print('Writing...')
@@ -115,13 +115,12 @@ def outputMatches(output_filename, transcript_list):
     for key in transcript_list:
         #print('Writing line %d' % rowscount)
         transcript = transcript_list[key]
-        output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-        #if transcript.expression_count > 0:
+        if transcript.expression_count > 0:
             #sheet.write(rowscount, 0, transcript.name)
             #sheet.write(rowscount, 1, transcript.num_exons)
             #sheet.write(rowscount, 2, transcript.expression_count)
             #output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-        #    output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
+            output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
         if rowscount == rowslimit:
             break
         rowscount += 1
