@@ -89,7 +89,7 @@ class Transcript:
             self.start = int(first_element)
             self.end = self.start + simulation_length
             while self.end > self.exon_ends[exon_index]:
-                intron_area = 10
+                intron_area = 10 
                 #intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
                 self.end = self.end + intron_area
                 exon_index += 1 # check next exon
