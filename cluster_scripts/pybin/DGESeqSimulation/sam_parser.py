@@ -57,7 +57,8 @@ class SAMInstance:
             #    print('Chromosomes match!')
             if transcript.start < self.end and transcript.end > self.start:
                 transcript.expression_count += 1
-                findcount += 1
+                newcount = int(findcount) + 1
+                findcount = str(newcount)
                 #transcript.read_names.append(self.read_name)
                 #transcript.read_quality.append(self.read_quality)
                 print('Found match on line %d1' % readcount)
@@ -86,7 +87,7 @@ def processSAMFile(sam_filename, transcript_list):
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     #readlimit = 1000
-    findcount = 0
+    findcount = None
     findlimit = 8
     print('Reading...')
     for line in input:
@@ -96,7 +97,7 @@ def processSAMFile(sam_filename, transcript_list):
         transcript_list, readcount, findcount = sam.compareToGTF(transcript_list, readcount, findcount)
         #if readcount == readlimit:
         #    break
-        if findcount == findlimit:
+        if int(findcount) == findlimit:
             break
     input.close()
     return transcript_list
