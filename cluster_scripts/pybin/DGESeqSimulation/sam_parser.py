@@ -4,8 +4,8 @@ Version 2013.07.26
 
 @author: Bing
 run location: ssh mgooch@sig2-glx.cam.uchc.edu
-run command: samtools view /UCHC/Everson/umar/cluster/align_bam/RNA_Pt5/NC5R_aligned_clean.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin testresults.txt
-or command: samtools view /UCHC/Everson/umar/Patient5A/BAM_aligned_GATK_Hg19_Galaxy_FASTQ/NF5A.4gatk.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/sam_parser.py /dev/stdin gatktestresults.txt
+run command: samtools view /UCHC/Everson/umar/cluster/align_bam/RNA_Pt5/NC5R_aligned_clean.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin testresults.txt 200
+or command: samtools view /UCHC/Everson/umar/Patient5A/BAM_aligned_GATK_Hg19_Galaxy_FASTQ/NF5A.4gatk.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin gatktestresults.txt 200
 
 """
 import os, sys, pickle
@@ -61,14 +61,14 @@ class SAMInstance:
                     transcript_list[key] = transcript
                     break
         return transcript_list, readcount
-def inputTranscriptList(gtf_filename):
+def inputTranscriptList(gtf_filename, simulation_length):
     """reads existing transcript list or generates new list if needed from GTF file"""
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     old_dir = os.getcwd()
     os.chdir(input_directory)
     if not os.path.exists('transcript_list.csv'):
         print('Building new transcript list...')
-        greader.processGTF(input_directory, gtf_filename)
+        greader.processGTF(input_directory, gtf_filename, simulation_length)
     else:
         print('\n######\n\nThe transcript list already exists and does not need to be created. You have just saved 3 minutes of your life! Delete the old list if you wish to build a new transcript list.\n\n######\n')
     list_file = open('transcript_list.csv', 'rb')
@@ -76,7 +76,7 @@ def inputTranscriptList(gtf_filename):
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
-def processSAMFile(sam_filename, transcript_list, simulation_length):
+def processSAMFile(sam_filename, transcript_list):
     # SAM file IO
     input = open(sam_filename,'r')
     
@@ -135,12 +135,12 @@ def outputMatches(output_filename, transcript_list):
 # START of script
 # define command line argument input
 if len(sys.argv) != 4:
-    sys.stderr.write("script must be given 2 arguments: input and output filenames")
+    sys.stderr.write("script must be given 3 arguments: input and output filenames")
 input_file = sys.argv[1] # when using from samtools view: samtools view filename.bam | sam_parser.py /dev/stdin output_filename 200
 output_file = sys.argv[2]
 simulation_length = int(sys.argv[3])
 
-transcript_list = inputTranscriptList('genes.gtf')
-transcript_list = processSAMFile(input_file, transcript_list, simulation_length)
+transcript_list = inputTranscriptList('genes.gtf', simulation_length)
+transcript_list = processSAMFile(input_file, transcript_list)
 outputMatches(output_file, transcript_list)
 print('Job is Finished!')
