@@ -3,7 +3,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt5_TC_results.txt 200"		
 job_end
 job_begin
@@ -11,7 +11,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091714TFBL5_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt5_TF_results.txt 200"		
 job_end
 job_begin
@@ -19,7 +19,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091715NCBL5_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt5_NC_results.txt 200"		
 job_end
 job_begin
@@ -27,7 +27,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091718NFBL5_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt5_NF_results.txt 200"		
 job_end
 job_begin
@@ -35,7 +35,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09984TCBL4_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt4_TC_results.txt 200"		
 job_end
 job_begin
@@ -43,7 +43,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09987TFBL4_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt4_TF_results.txt 200"		
 job_end
 job_begin
@@ -51,7 +51,7 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09988NCBL4_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt4_NC_results.txt 200"		
 job_end
 job_begin
@@ -59,6 +59,6 @@ job_begin
         memory 50G
         module EversonLabBiotools/1.0
         queue all.q
-        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimuation/
+        directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09991NFBL4_TOPHAT/accepted_hits.bam | python sam_parser.py /dev/stdin Pt4_NF_results.txt 200"		
 job_end
