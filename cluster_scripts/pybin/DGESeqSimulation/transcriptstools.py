@@ -73,7 +73,7 @@ class Transcript:
                 exon_index -= 1 # check next exon
         elif self.direction == '-':
             exon_index = 0
-            first_element = self.start_ends[exon_index]
+            first_element = self.exon_starts[exon_index]
             self.start = int(first_element)
             self.end = self.start + simulation_length
             while self.end > self.exon_ends[exon_index]:
