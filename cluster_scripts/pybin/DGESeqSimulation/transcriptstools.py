@@ -31,8 +31,8 @@ class Exon:
                 self.start = line[3]
                 self.end = line[4]
             elif self.direction == '-':
-                self.start = line[4]
-                self.end = line[3]
+                self.start = line[3]
+                self.end = line[4]
             else:
                 raise SyntaxError('Data incorrectly states whether exon is forward/reverse read\n')
         else:
