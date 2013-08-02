@@ -24,7 +24,6 @@ class Exon:
             self.name = line[check_format_index + 1]
             if line[0].find('chr') != -1:
                 self.chromosome = int(line[0][3:]) # read line starting from the 3rd position
-                print(self.chromosome)
             else:
                 self.chromosome = int(line[0])
             self.direction = line[6]
