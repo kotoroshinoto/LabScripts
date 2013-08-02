@@ -58,7 +58,7 @@ class SAMInstance:
             if transcript.start < self.end and transcript.end > self.start:
                 #transcript.read_names.append(self.read_name)
                 #transcript.read_quality.append(self.read_quality)
-                print('Found match on line %d1' % readcount)
+                print('Found match on line %d' % readcount)
                 transcript_list[key] = transcript
         return transcript_list, readcount
 def inputTranscriptList(gtf_filename, simulation_length):
@@ -82,7 +82,7 @@ def processSAMFile(sam_filename, transcript_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 8000
+    readlimit = 1000
     print('Reading...')
     for line in input:
         readcount += 1
@@ -115,12 +115,13 @@ def outputMatches(output_filename, transcript_list):
     for key in transcript_list:
         #print('Writing line %d' % rowscount)
         transcript = transcript_list[key]
-        if transcript.expression_count > 0:
+        output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
+        #if transcript.expression_count > 0:
             #sheet.write(rowscount, 0, transcript.name)
             #sheet.write(rowscount, 1, transcript.num_exons)
             #sheet.write(rowscount, 2, transcript.expression_count)
             #output.write("%s contains %s exons and %s counts\n" % (transcript.name, transcript.num_exons, transcript.expression_count))
-            output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
+        #    output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
         if rowscount == rowslimit:
             break
         rowscount += 1
