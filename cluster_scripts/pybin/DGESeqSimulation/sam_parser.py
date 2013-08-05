@@ -39,7 +39,7 @@ class SequenceRead:
         self.read_name = line[0]
         self.flag = line[1]
         #self.chromosome = int(line[2][3:]) # OLD LOGIC: read line 2 starting from the 3rd position
-        self.chromosome = line[2]
+        self.chromosome = line[2][3:]
         self.start = int(line[3]) # 1-based index starting at left end of read
         self.end = int(line[3]) + 100
         '''
@@ -78,16 +78,14 @@ def processSAMFile(sam_filename, gtf_list):
     for line in input:
         readcount += 1
         seqread = SequenceRead(line)
-        for chromosome in gtf_list:
-            if seqread.chromosome == chromosome:
-                transcript_same_chromosome = gtf_list[chromosome]
-                for x in range(0, len(transcript_same_chromosome)):
-                    if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
-                        #transcript.read_names.append(seqread.read_name)
-                        #transcript.read_quality.append(seqread.read_quality)
-                        transcript_same_chromosome[x].expression_count += 1
-                        print('Found match on line %d' % readcount) #debugging
-                        gtf_list[chromosome] = transcript_same_chromosome
+        transcript_same_chromosome = gtf_list[seqread.chromosome]
+        for x in range(0, len(transcript_same_chromosome)):
+            if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
+                #transcript.read_names.append(seqread.read_name)
+                #transcript.read_quality.append(seqread.read_quality)
+                transcript_same_chromosome[x].expression_count += 1
+                print('Found match on line %d' % readcount) #debugging
+                gtf_list[seqread.chromosome] = transcript_same_chromosome
         if readcount == readlimit:
             break
     input.close()
@@ -115,7 +113,6 @@ def outputMatches(output_filename, gtf_list):
         rowscount += 1
     output.close()
     os.chdir(old_dir)
-    #book.close()
 
 # START of script
 # define command line argument input

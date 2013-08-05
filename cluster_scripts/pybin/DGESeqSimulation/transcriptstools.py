@@ -24,7 +24,7 @@ class Exon:
             if line[check_format_index] == 'transcript_id':
                 ##exon.correct_input = True
                 self.name = line[check_format_index + 1]
-                self.chromosome = line[0]
+                self.chromosome = line[0][3:] # start reading from 3rd character
                 self.direction = line[6]
                 self.start = line[3] # start is always left side of exon whether forward or reverse
                 self.end = line[4]
@@ -84,8 +84,7 @@ class Transcript:
             print('Length Error: gene starts at negative position')
 def buildTranscriptList(exon, gtf_list, transcript_count):
     """adds transcripts to hash table with no duplicates"""
-    in_list = exon.name in gtf_list
-    if in_list is False:
+    if exon.name in gtf_list is False:
         transcript = Transcript()
         transcript.name = exon.name
         transcript.num_id = transcript_count
@@ -110,8 +109,7 @@ def buildGTFList(transcript_list):
     gtf_list = {}
     for key in transcript_list:
         transcript = transcript_list[key]
-        in_list = transcript.chromosome in gtf_list
-        if in_list is False:
+        if transcript.chromosome in gtf_list is False:
             gtf_list[transcript.chromosome] = [transcript]
         else:
             transcript_same_chromosome = gtf_list[transcript.chromosome]
