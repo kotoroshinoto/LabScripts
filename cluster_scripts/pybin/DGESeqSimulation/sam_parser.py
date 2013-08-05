@@ -123,7 +123,7 @@ output_file = sys.argv[2]
 simulation_length = int(sys.argv[3])
 
 print('\nStarting the script...')
-gtf_list = inputTranscriptList('genes.gtf', output_file[:-11] + 'simlength' + simulation_length + '_transcripts.csv', simulation_length)
+gtf_list = inputTranscriptList('genes.gtf', output_file[:-11] + 'simlength' + str(simulation_length) + '_transcripts.csv', simulation_length)
 gtf_list = processSAMFile(input_file, gtf_list)
 outputMatches(output_file, gtf_list)
 print('Job is Finished!')
