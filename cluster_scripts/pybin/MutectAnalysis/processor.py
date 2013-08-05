@@ -3,7 +3,8 @@ processor.py module
 version 2013.06.26
 
 @author: Bing
-contains functions for processing mutation, nuceotide, and somatic comparisions
+contains functions for processing mutation, nucleotide, and somatic comparisons
+new: rename functions to better differentiate type of analysis
 
 '''
 def processMutect(first_file, second_file , input_directory, output_file, output_directory, lines_skip):

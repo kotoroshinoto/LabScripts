@@ -78,17 +78,17 @@ def processSAMFile(sam_filename, gtf_list):
     for line in input:
         readcount += 1
         seqread = SequenceRead(line)
-        for chromosome in gtf_list:
-            if seqread.chromosome == chromosome:
-                transcript_same_chromosome = gtf_list[chromosome]
-                for x in range(0, len(transcript_same_chromosome)):
-                    if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
-                        #transcript.read_names.append(seqread.read_name)
-                        #transcript.read_quality.append(seqread.read_quality)
-                        transcript_same_chromosome[x].expression_count += 1
-                        print('Found match on line %d' % readcount) #debugging
-                        gtf_list[chromosome] = transcript_same_chromosome
-        if readcount == readlimit:
+		for chromosome in gtf_list:
+			if seqread.chromosome == chromosome:
+				transcript_same_chromosome = gtf_list[chromosome]
+				for x in range(0, len(transcript_same_chromosome)):
+					if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
+						#transcript.read_names.append(seqread.read_name)
+						#transcript.read_quality.append(seqread.read_quality)
+						transcript_same_chromosome[x].expression_count += 1
+						print('Found match on line %d' % readcount) #debugging
+						gtf_list[chromosome] = transcript_same_chromosome
+		if readcount == readlimit:
             break
     input.close()
     return gtf_list

@@ -8,17 +8,15 @@ Version 2013.07.24
 import os, pickle
 import transcriptstools as ttools
 
-def processGTF(input_directory, filename, simulation_length):
+def processGTF(input_directory, gtf_filename, transcript_list_filename, simulation_length):
     # set and initialize variables
-    ##input_directory = os.path.join(os.path.dirname(__file__), 'Input')
-    ##filename = 'test.gtf'
     transcript_list = {}
     transcript_count = 1
     
     # file IO
     old_dir = os.getcwd()
     os.chdir(input_directory)
-    f = open(filename,'r')
+    f = open(gtf_filename,'r')
     
     for line in f:
         # parse and format GTF lines of text
@@ -43,19 +41,21 @@ def processGTF(input_directory, filename, simulation_length):
         # store exon information in object
         exon = ttools.Exon(line)
         # add exon to hash list
-        transcript_list, transcript_count = ttools.buildList(exon, transcript_list, transcript_count)
+        transcript_list, transcript_count = ttools.buildTranscriptList(exon, transcript_list, transcript_count)
     
     # print frequency of each transcript + calculate 3' end of gene
     for key in transcript_list:
         instance = transcript_list[key]
         instance.setGeneEnd(simulation_length)
         transcript_list[key] = instance
-        ##print('%s contains %s exons and ends at %s on %s' % (instance.name, instance.num_exons, instance.threeprimeloc, instance.chromosome))
+    
+    # store transcripts in dictionary with chromosome as key
+    gtf_list = ttools.buildGTFList(transcript_list)
     
     # write transcript list to file
     f.close()
-    output = open('transcript_list.csv', 'wb')
-    pickle.dump(transcript_list, output)
+    output = open(transcript_list_filename, 'wb')
+    pickle.dump(gtf_list, output)
     output.close()
     print('\n\nNew transcript list is made!\n\n')
     os.chdir(old_dir)

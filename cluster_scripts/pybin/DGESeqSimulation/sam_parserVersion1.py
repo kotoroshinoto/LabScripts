@@ -52,6 +52,18 @@ class SequenceRead:
         self.read_quality = line[10]
         self.program_flags = line[11]
         '''
+    def compareToGTF(self, gtf_list, readcount):
+        """finds and counts positions that match to gene transcripts list"""
+        for key in gtf_list:
+            transcript = gtf_list[key]
+            if transcript.start < self.end and transcript.end > self.start:
+                if transcript.chromosome == self.chromosome:
+                    #transcript.read_names.append(self.read_name)
+                    #transcript.read_quality.append(self.read_quality)
+                    transcript.expression_count += 1
+                    print('Found match on line %d' % readcount) #debugging
+                    gtf_list[key] = transcript
+        return gtf_list, readcount
 def inputTranscriptList(gtf_filename, transcript_list_filename, simulation_length):
     """reads existing transcript list or generates new list if needed from GTF file"""
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
@@ -77,17 +89,9 @@ def processSAMFile(sam_filename, gtf_list):
     print('Reading...')
     for line in input:
         readcount += 1
-        seqread = SequenceRead(line)
-        for chromosome in gtf_list:
-            if seqread.chromosome == chromosome:
-                transcript_same_chromosome = gtf_list[chromosome]
-                for x in range(0, len(transcript_same_chromosome)):
-                    if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
-                        #transcript.read_names.append(seqread.read_name)
-                        #transcript.read_quality.append(seqread.read_quality)
-                        transcript_same_chromosome[x].expression_count += 1
-                        print('Found match on line %d' % readcount) #debugging
-                        gtf_list[chromosome] = transcript_same_chromosome
+        print('Reading line %d' % readcount)
+        read = SequenceRead(line)
+        gtf_list, readcount = read.compareToGTF(gtf_list, readcount)
         if readcount == readlimit:
             break
     input.close()
