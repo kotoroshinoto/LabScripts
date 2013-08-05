@@ -82,9 +82,9 @@ class Transcript:
                 exon_index += 1 # check next exon
         if self.start < 0:
             print('Length Error: gene starts at negative position')
-def buildTranscriptList(exon, gtf_list, transcript_count):
+def buildTranscriptList(exon, transcript_list, transcript_count):
     """adds transcripts to hash table with no duplicates"""
-    if exon.name in gtf_list is False:
+    if exon.name in transcript_list is False:
         transcript = Transcript()
         transcript.name = exon.name
         transcript.num_id = transcript_count
@@ -94,16 +94,16 @@ def buildTranscriptList(exon, gtf_list, transcript_count):
         transcript.exon_starts.append(exon.start)
         transcript.exon_ends.append(exon.end)
         transcript.num_exons += 1
-        gtf_list[transcript.name] = transcript
+        transcript_list[transcript.name] = transcript
         ##print('Added new %s to transcript list' % exon.name)
     else:
-        transcript_stored = gtf_list[exon.name]
+        transcript_stored = transcript_list[exon.name]
         transcript_stored.num_exons += 1
         transcript_stored.exon_starts.append(exon.start)
         transcript_stored.exon_ends.append(exon.end)
         ##transcript_stored.end.sort()
-        gtf_list[exon.name] = transcript_stored
-    return gtf_list, transcript_count
+        transcript_list[exon.name] = transcript_stored
+    return transcript_list, transcript_count
 def buildGTFList(transcript_list):
     """adds transcripts to hash table with chromosome as key"""
     gtf_list = {}
