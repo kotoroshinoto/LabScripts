@@ -109,7 +109,8 @@ def buildGTFList(transcript_list):
     gtf_list = {}
     for key in transcript_list:
         transcript = transcript_list[key]
-        if transcript.chromosome in gtf_list is False:
+        in_list = transcript.chromosome in gtf_list
+        if in_list is False:
             gtf_list[transcript.chromosome] = [transcript]
         else:
             transcript_same_chromosome = gtf_list[transcript.chromosome]
