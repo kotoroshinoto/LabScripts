@@ -9,11 +9,11 @@ run location: ssh mgooch@sig2-glx.cam.uchc.edu
 sample command: samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin Pt5_TC_results.txt 200
 
 """
-import os, sys, pickle
+import os, sys, pickle, datetime
 import gtf_reader as greader
 import pysam
 
-is_debug = False
+is_debug = True
 
 # class SequenceRead:
 #     """class that holds information about each SAM read"""
@@ -109,13 +109,15 @@ def processSAMFile(sam_filename, gtf_list):
                 transcript.expression_count += 1
                 if is_debug is True:
                     print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
+                    print(datetime.datetime.utcnow())
         '''
         there should not be any reason to store this back again, 
         its already stored in gtf_list, data type is mutable,
         all changes should already be reflected in original location
         '''
         #gtf_list[seqread.chromosome] = transcripts_at_chromosome
-        if readcount % 100000 == 0:
+        if is_debug is False and readcount % 100000 == 0:
+            print(datetime.datetime.utcnow())
             print('Read line %d' % readcount)
         if is_debug is True:
             if readcount == readlimit:
