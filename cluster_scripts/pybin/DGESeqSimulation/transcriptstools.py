@@ -75,8 +75,8 @@ class Transcript:
                 try:
                     intron_area = self.exon_ends[exon_index + 1] - self.exon_starts[exon_index]
                 except:
-                    print('Simulation sequence length is longer than transcript length')
-                    print('Script will continue...')
+                    #print('Simulation sequence length is longer than transcript length')
+                    #print('Script will continue...')
                     break
                 self.end = self.end + intron_area
                 exon_index += 1 # check next exon

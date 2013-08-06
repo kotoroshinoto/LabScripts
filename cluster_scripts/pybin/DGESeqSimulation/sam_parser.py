@@ -101,7 +101,7 @@ def processSAMFile(sam_filename, gtf_list):
             or on first fetch (and then retains it for later use)
             '''
             read_end=seqread.pos+(seqread.qend-seqread.qstart)
-            print ("read start: %d, read end %d" %(seqread.pos,read_end))
+#            print ("read start: %d, read end %d" %(seqread.pos,read_end))
             if transcript.start <= read_end and transcript.end >= seqread.pos:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
