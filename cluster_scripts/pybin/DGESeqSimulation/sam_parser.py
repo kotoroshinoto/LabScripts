@@ -87,7 +87,7 @@ def processSAMFile(sam_filename, gtf_list):
         so I modified to show you pythonic method
         '''
         for transcript in transcripts_at_chromosome:
-            print(transcript)
+#            print(transcript)
             '''
             TODO:
             could possibly iterate over transcripts and use 
@@ -100,6 +100,7 @@ def processSAMFile(sam_filename, gtf_list):
             would only benefit if pysam reads entire samfile ahead of time 
             or on first fetch (and then retains it for later use)
             '''
+            print ("qstart: %d, qend %d" %(seqread.qstart,seqread.qend))
             if transcript.start <= seqread.qend and transcript.end >= seqread.qstart:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
