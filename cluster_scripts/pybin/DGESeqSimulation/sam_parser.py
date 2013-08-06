@@ -76,7 +76,7 @@ def processSAMFile(sam_filename, gtf_list):
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     if is_debug is True:
-        readlimit = 10000 # debugging
+        readlimit = 100000 # debugging
     print('Reading...')
     for seqread in seqinput.fetch():
         readcount += 1
