@@ -85,7 +85,7 @@ def processSAMFile(sam_filename, gtf_list):
                 #transcript.read_quality.append(seqread.read_quality)
                 transcript_same_chromosome[x].expression_count += 1
                 print('Found match on line %d' % readcount) #debugging
-                gtf_list[seqread.chromosome] = transcript_same_chromosome
+        gtf_list[seqread.chromosome] = transcript_same_chromosome
         if readcount == readlimit:
             break
     input.close()
@@ -97,10 +97,8 @@ def outputMatches(output_filename, gtf_list):
     os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
     output = open(output_filename, 'w')
     output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\tTranscript Number ID\n')
-    #rowscount = 1
     try:
-        rows = len(gtf_list)
-        print('Output table has %r transcripts' % rows)
+        len(gtf_list)
     except IndexError:
         print('Cannot output an empty table')
     for chromosome in gtf_list:
@@ -110,9 +108,6 @@ def outputMatches(output_filename, gtf_list):
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
                 print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-            #if rowscount == rowslimit:
-            #    break
-            #rowscount += 1
     '''
     for chromosome in gtf_list:
         #print('Writing line %d' % rowscount)
