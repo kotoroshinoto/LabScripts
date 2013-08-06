@@ -1,5 +1,5 @@
 job_begin
-        name New_DGESeqSim_Pt5_TC
+        name DGESeqSim_Pt5_TC
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -7,7 +7,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt5_TC_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt5_TF
+        name DGESeqSim_Pt5_TF
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -15,7 +15,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091714TFBL5_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt5_TF_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt5_NC
+        name DGESeqSim_Pt5_NC
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -23,7 +23,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091715NCBL5_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt5_NC_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt5_NF
+        name DGESeqSim_Pt5_NF
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -31,7 +31,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091718NFBL5_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt5_NF_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt4_TC
+        name DGESeqSim_Pt4_TC
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -39,7 +39,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09984TCBL4_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt4_TC_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt4_TF
+        name DGESeqSim_Pt4_TF
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -47,7 +47,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09987TFBL4_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt4_TF_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt4_NC
+        name DGESeqSim_Pt4_NC
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
@@ -55,7 +55,7 @@ job_begin
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "samtools view /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09988NCBL4_TOPHAT/accepted_hits.bam | python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /dev/stdin SeqSim_Pt4_NC_results.txt 200"		
 job_end
 job_begin
-        name New_DGESeqSim_Pt4_NF
+        name DGESeqSim_Pt4_NF
         memory 100G
         module EversonLabBiotools/1.0
         queue all.q
