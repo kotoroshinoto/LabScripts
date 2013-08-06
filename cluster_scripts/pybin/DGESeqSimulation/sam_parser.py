@@ -73,7 +73,7 @@ def processSAMFile(sam_filename, gtf_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 500 # debugging
+    readlimit = 1000 # debugging
     print('Reading...')
     for line in input:
         readcount += 1
@@ -84,7 +84,7 @@ def processSAMFile(sam_filename, gtf_list):
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
                 transcript_same_chromosome[x].expression_count += 1
-                print('Found match on line %d' % readcount) #debugging
+                print('Found match on line %d for %r' % (readcount, transcript_same_chromosome[x].name)) #debugging
         gtf_list[seqread.chromosome] = transcript_same_chromosome
         if readcount == readlimit:
             break
