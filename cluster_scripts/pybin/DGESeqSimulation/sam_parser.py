@@ -95,6 +95,13 @@ def processSAMFile(sam_filename, gtf_list):
             TODO:
             could possibly iterate over transcripts and use 
             pysam.Samfile.count(reference="chr#',start=#,end=#) > 0
+            
+            or
+            
+            could potentially fetch once per reference sequence (chromosome) 
+            and only compare reads agaisnt transcripts from same chromosome
+            would only benefit if pysam reads entire samfile ahead of time 
+            or on first fetch (and then retains it for later use)
             '''
             if transcript.start < (seqread.qend+1) and transcript.end > (seqread.qstart+1):
                 #transcript.read_names.append(seqread.read_name)
