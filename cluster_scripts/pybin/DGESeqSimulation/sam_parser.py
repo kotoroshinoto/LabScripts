@@ -97,24 +97,23 @@ def outputMatches(output_filename, gtf_list):
     os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
     output = open(output_filename, 'w')
     output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\tTranscript Number ID\n')
-    rowscount = 1
+    #rowscount = 1
     try:
-        rowslimit = len(gtf_list)
-        print('Output table has %r transcripts' % rowslimit)
+        rows = len(gtf_list)
+        print('Output table has %r transcripts' % rows)
     except IndexError:
         print('Cannot output an empty table')
     for chromosome in gtf_list:
-        print('open chromosome key')
         transcript_same_chromosome = gtf_list[chromosome]
         for x in range(0, len(transcript_same_chromosome)):
-            print('iterate transcript list')
             transcript = transcript_same_chromosome[x]
+            print(transcript)
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
                 print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-            if rowscount == rowslimit:
-                break
-            rowscount += 1
+            #if rowscount == rowslimit:
+            #    break
+            #rowscount += 1
     '''
     for chromosome in gtf_list:
         #print('Writing line %d' % rowscount)
