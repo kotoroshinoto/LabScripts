@@ -1,4 +1,4 @@
-#!/usr/bin/env sjm
+#!/UCHC/HPC/Everson_HPC/SimpleJobManager/bin/sjm
 job_begin
         name DGESeqSim_Pt5_TC
         memory 200G
