@@ -87,8 +87,11 @@ def processSAMFile(sam_filename, gtf_list):
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
                 transcripts_at_chromosome[x].expression_count += 1
-                print('Found match on line %d for %r' % (readcount, transcripts_at_chromosome[x].name)) #debugging
+                if is_debug is True:
+                    print('Found match on line %d for %r' % (readcount, transcripts_at_chromosome[x].name)) #debugging
         gtf_list[seqread.chromosome] = transcripts_at_chromosome
+        if readcount % 100000 == 0:
+            print('Read line %d' % readcount)
         if is_debug is True:
             if readcount == readlimit:
                 break
