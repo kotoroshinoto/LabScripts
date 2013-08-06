@@ -122,7 +122,7 @@ def processSAMFile(sam_filename, gtf_list):
         if is_debug is True:
             if readcount == readlimit:
                 break
-    input.close()
+    seqinput.close()
     '''
     don't need to return lists, 
     since they're mutable, 
