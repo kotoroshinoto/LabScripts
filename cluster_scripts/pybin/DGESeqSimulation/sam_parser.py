@@ -76,7 +76,7 @@ def processSAMFile(sam_filename, gtf_list):
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     if is_debug is True:
-        readlimit = 100000 # debugging
+        readlimit = 1000000 # debugging
     print('Reading...')
     for seqread in seqinput.fetch(until_eof=True):
         readcount += 1
@@ -108,16 +108,15 @@ def processSAMFile(sam_filename, gtf_list):
                 transcript.expression_count += 1
                 if is_debug is True:
                     print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
-                    print(datetime.datetime.utcnow())
         '''
         there should not be any reason to store this back again, 
         its already stored in gtf_list, data type is mutable,
         all changes should already be reflected in original location
         '''
         #gtf_list[seqread.chromosome] = transcripts_at_chromosome
-        if is_debug is False and readcount % 100000 == 0:
+        if readcount % 10000 == 0:
             print(datetime.datetime.utcnow())
-            print('Read line %d' % readcount)
+            print('Processed %d reads @ %s' % (readcount,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         if is_debug is True:
             if readcount == readlimit:
                 break
