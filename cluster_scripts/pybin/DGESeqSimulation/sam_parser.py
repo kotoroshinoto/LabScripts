@@ -87,11 +87,7 @@ def processSAMFile(sam_filename, gtf_list):
         so I modified to show you pythonic method
         '''
         for transcript in transcripts_at_chromosome:
-            '''
-            adding 1 to start & end so they match up properly to GTF's 1-based indices
-            could save operations if you converted to zero-based indices 
-            in the transcript object ahead of time
-            
+            '''            
             TODO:
             could possibly iterate over transcripts and use 
             pysam.Samfile.count(reference="chr#',start=#,end=#) > 0
@@ -103,7 +99,7 @@ def processSAMFile(sam_filename, gtf_list):
             would only benefit if pysam reads entire samfile ahead of time 
             or on first fetch (and then retains it for later use)
             '''
-            if transcript.start <= (seqread.qend+1) and transcript.end >= (seqread.qstart+1):
+            if transcript.start <= seqread.qend and transcript.end >= seqread.qstart:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
                 transcript.expression_count += 1
