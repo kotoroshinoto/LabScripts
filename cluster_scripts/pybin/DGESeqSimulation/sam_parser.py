@@ -80,7 +80,8 @@ def processSAMFile(sam_filename, gtf_list):
     print('Reading...')
     for seqread in seqinput.fetch():
         readcount += 1
-        transcripts_at_chromosome = gtf_list[seqread.chromosome]
+        transcripts_at_chromosome = gtf_list[seqinput.getrname(seqread.tid)]
+        print ("reference name: %s" (seqinput.getrname(seqread.tid)))
         '''
         There is no need to use indices here,
         since you dont use them for anything other than accessing the list, 
