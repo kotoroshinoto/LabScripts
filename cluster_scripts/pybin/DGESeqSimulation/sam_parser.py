@@ -108,16 +108,6 @@ def outputMatches(output_filename, gtf_list):
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
                 print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-    '''
-    for chromosome in gtf_list:
-        #print('Writing line %d' % rowscount)
-        transcript = gtf_list[key]
-        if transcript.expression_count > 0:
-            output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-        if rowscount == rowslimit:
-            break
-        rowscount += 1
-    '''
     output.close()
     os.chdir(old_dir)
 
