@@ -87,7 +87,8 @@ def processSAMFile(sam_filename, gtf_list):
         so I modified to show you pythonic method
         '''
         for transcript in transcripts_at_chromosome:
-            '''            
+            print(transcript)
+            '''
             TODO:
             could possibly iterate over transcripts and use 
             pysam.Samfile.count(reference="chr#',start=#,end=#) > 0
