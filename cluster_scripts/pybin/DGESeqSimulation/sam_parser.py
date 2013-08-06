@@ -100,8 +100,9 @@ def processSAMFile(sam_filename, gtf_list):
             would only benefit if pysam reads entire samfile ahead of time 
             or on first fetch (and then retains it for later use)
             '''
-            print ("qstart: %d, qend %d" %(seqread.qstart,seqread.qend))
-            if transcript.start <= seqread.qend and transcript.end >= seqread.qstart:
+            read_end=seqread.pos+(seqread.qend-seqread.qstart)
+            print ("read start: %d, read end %d" %(seqread.pos,read_end))
+            if transcript.start <= read_end and transcript.end >= seqread.pos:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
                 transcript.expression_count += 1
