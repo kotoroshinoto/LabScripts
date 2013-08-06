@@ -73,7 +73,7 @@ def processSAMFile(sam_filename, gtf_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 10000 # debugging
+    readlimit = 500 # debugging
     print('Reading...')
     for line in input:
         readcount += 1
@@ -100,12 +100,14 @@ def outputMatches(output_filename, gtf_list):
     rowscount = 1
     try:
         rowslimit = len(gtf_list)
-        ##print('Output table has %r transcripts' % rowslimit)
+        print('Output table has %r transcripts' % rowslimit)
     except IndexError:
         print('Cannot output an empty table')
     for chromosome in gtf_list:
+        print('open chromosome key')
         transcript_same_chromosome = gtf_list[chromosome]
         for x in range(0, len(transcript_same_chromosome)):
+            print('iterate transcript list')
             transcript = transcript_same_chromosome[x]
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
