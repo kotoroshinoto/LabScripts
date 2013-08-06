@@ -11,6 +11,7 @@ sample command: samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711
 """
 import os, sys, pickle
 import gtf_reader as greader
+import pysam
 
 is_debug = False
 
@@ -71,32 +72,54 @@ def inputTranscriptList(gtf_filename, transcript_list_filename, simulation_lengt
     return gtf_list
 def processSAMFile(sam_filename, gtf_list):
     # SAM file IO
-    input = open(sam_filename,'r')
-    
+    seqinput = pysam.Samfile(sam_filename)#automatically checks for 'rb' and then 'r' modes
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     if is_debug is True:
         readlimit = 10000 # debugging
     print('Reading...')
-    for line in input:
+    for seqread in seqinput.fetch():
         readcount += 1
-        seqread = SequenceRead(line)
         transcripts_at_chromosome = gtf_list[seqread.chromosome]
-        for x in range(0, len(transcripts_at_chromosome)):
-            if transcripts_at_chromosome[x].start < seqread.end and transcripts_at_chromosome[x].end > seqread.start:
+        '''
+        There is no need to use indices here,
+        since you dont use them for anything other than accessing the list, 
+        so I modified to show you pythonic method
+        '''
+        for transcript in transcripts_at_chromosome:
+            '''
+            adding 1 to start & end so they match up properly to GTF's 1-based indices
+            could save operations if you converted to zero-based indices 
+            in the transcript object ahead of time
+            
+            TODO:
+            could possibly iterate over transcripts and use 
+            pysam.Samfile.count(reference="chr#',start=#,end=#) > 0
+            '''
+            if transcript.start < (seqread.qend+1) and transcript.end > (seqread.qstart+1):
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
-                transcripts_at_chromosome[x].expression_count += 1
+                transcript.expression_count += 1
                 if is_debug is True:
-                    print('Found match on line %d for %r' % (readcount, transcripts_at_chromosome[x].name)) #debugging
-        gtf_list[seqread.chromosome] = transcripts_at_chromosome
+                    print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
+        '''
+        there should not be any reason to store this back again, 
+        its already stored in gtf_list, data type is mutable,
+        all changes should already be reflected in original location
+        '''
+        #gtf_list[seqread.chromosome] = transcripts_at_chromosome
         if readcount % 100000 == 0:
             print('Read line %d' % readcount)
         if is_debug is True:
             if readcount == readlimit:
                 break
     input.close()
+    '''
+    don't need to return lists, 
+    since they're mutable, 
+    original list should reflect all modifications
     return gtf_list
+    '''
 def outputMatches(output_filename, gtf_list):
     print('Writing...')
     
@@ -128,6 +151,6 @@ simulation_length = int(sys.argv[3])
 
 print('\nStarting the script...')
 gtf_list = inputTranscriptList('genes.gtf', output_file[:-11] + 'simlength' + str(simulation_length) + '_transcripts.csv', simulation_length)
-gtf_list = processSAMFile(input_file, gtf_list)
+processSAMFile(input_file, gtf_list)#reflecting fact that gtf_list is modified, no reason to return/store it again
 outputMatches(output_file, gtf_list)
 print('Job is Finished!')
