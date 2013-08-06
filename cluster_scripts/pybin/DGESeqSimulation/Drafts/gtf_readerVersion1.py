@@ -7,7 +7,7 @@ parses GTF file and stores information into exon and transcript objects
 
 """
 import os, pickle
-import transcriptstools as ttools
+import transcriptstoolsVersion1 as ttools
 
 def processGTF(input_directory, gtf_filename, transcript_list_filename, simulation_length):
     # set and initialize variables
@@ -42,7 +42,7 @@ def processGTF(input_directory, gtf_filename, transcript_list_filename, simulati
         # store exon information in object
         exon = ttools.Exon(line)
         # add exon to hash list
-        transcript_list, transcript_count = ttools.buildTranscriptList(exon, transcript_list, transcript_count)
+        transcript_list, transcript_count = ttools.buildList(exon, transcript_list, transcript_count)
     
     # print frequency of each transcript + calculate 3' end of gene
     for key in transcript_list:
@@ -50,13 +50,10 @@ def processGTF(input_directory, gtf_filename, transcript_list_filename, simulati
         instance.setGeneEnd(simulation_length)
         transcript_list[key] = instance
     
-    # store transcripts in dictionary with chromosome as key
-    gtf_list = ttools.buildGTFList(transcript_list)
-    
     # write transcript list to file
     f.close()
     output = open(transcript_list_filename, 'wb')
-    pickle.dump(gtf_list, output)
+    pickle.dump(transcript_list, output)
     output.close()
     print('\n\nNew transcript list is made!\n\n')
     os.chdir(old_dir)

@@ -1,6 +1,6 @@
 """
 transcriptstools.py module
-version 2013.08.02
+version 2013.08.05
 
 @author: Bing
 methods and objects that store and manipulate exon and transcript information
@@ -85,7 +85,7 @@ class Transcript:
 def buildTranscriptList(exon, transcript_list, transcript_count):
     """adds transcripts to hash table with no duplicates"""
     in_list = exon.name in transcript_list
-    if in_list is False: 
+    if in_list is False:
         transcript = Transcript()
         transcript.name = exon.name
         transcript.num_id = transcript_count

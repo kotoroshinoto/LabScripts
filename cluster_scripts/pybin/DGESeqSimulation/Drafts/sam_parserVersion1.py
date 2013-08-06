@@ -10,7 +10,7 @@ sample command: samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711
 
 """
 import os, sys, pickle
-import gtf_reader as greader
+import gtf_readerVersion1 as greader
 
 class SequenceRead:
     """class that holds information about each SAM read"""
@@ -85,7 +85,7 @@ def processSAMFile(sam_filename, gtf_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 500 # debugging
+    readlimit = 1000 # debugging
     print('Reading...')
     for line in input:
         readcount += 1
