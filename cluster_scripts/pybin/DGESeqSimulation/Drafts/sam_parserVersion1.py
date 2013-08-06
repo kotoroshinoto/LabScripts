@@ -1,6 +1,6 @@
 """
 sam_parser.py script
-version 2013.08.02
+version 2013.08.02 
 
 @author: Bing
 takes input from gene list file and sequence alignment map file and compares sequence reads to calculated stable regions of transcripts
