@@ -73,7 +73,7 @@ def processSAMFile(sam_filename, gtf_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 1000000 # debugging
+    readlimit = 10000 # debugging
     print('Reading...')
     for line in input:
         readcount += 1
@@ -109,6 +109,7 @@ def outputMatches(output_filename, gtf_list):
             transcript = transcript_same_chromosome[x]
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
+                print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
             if rowscount == rowslimit:
                 break
             rowscount += 1
