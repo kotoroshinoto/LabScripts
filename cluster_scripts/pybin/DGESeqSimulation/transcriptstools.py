@@ -26,8 +26,8 @@ class Exon:
                 self.name = line[check_format_index + 1]
                 self.chromosome = line[0]
                 self.direction = line[6]
-                self.start = line[3] # start is always left side of exon whether forward or reverse
-                self.end = line[4]
+                self.start = int(line[3]) - 1 # start is always left side of exon whether forward or reverse
+                self.end = int(line[4]) - 1
             else:
                 raise IOError('transcript_id is not in the correct column\n')
 class Transcript:
@@ -53,12 +53,12 @@ class Transcript:
         if self.direction == '+':
             exon_index = -1 # counts backward from the right most exon
             last_element = self.exon_ends[exon_index]
-            self.end = int(last_element)
+            self.end = last_element
             self.start = self.end - simulation_length
-            while self.start < int(self.exon_starts[exon_index]): # account for intron area if end exon is shorter than desired read length
+            while self.start < self.exon_starts[exon_index]: # account for intron area if end exon is shorter than desired read length
                 print('Compensating for introns...')
                 try:
-                    intron_area = int(self.exon_ends[exon_index - 1]) - int(self.exon_starts[exon_index])
+                    intron_area = self.exon_ends[exon_index - 1] - self.exon_starts[exon_index]
                 except:
                     print('Simulation sequence length is longer than transcript length')
                     print('Compensation is skipped')
@@ -69,11 +69,11 @@ class Transcript:
         elif self.direction == '-':
             exon_index = 0
             first_element = self.exon_starts[exon_index]
-            self.start = int(first_element)
+            self.start = first_element
             self.end = self.start + simulation_length
             while self.end > self.exon_ends[exon_index]:
                 try:
-                    intron_area = int(self.exon_ends[exon_index + 1]) - int(self.exon_starts[exon_index])
+                    intron_area = self.exon_ends[exon_index + 1] - self.exon_starts[exon_index]
                 except:
                     print('Simulation sequence length is longer than transcript length')
                     print('Script will continue...')
