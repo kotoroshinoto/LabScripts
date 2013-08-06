@@ -107,7 +107,6 @@ def outputMatches(output_filename, gtf_list):
         transcript_same_chromosome = gtf_list[chromosome]
         for x in range(0, len(transcript_same_chromosome)):
             transcript = transcript_same_chromosome[x]
-            print(transcript)
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
                 print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
