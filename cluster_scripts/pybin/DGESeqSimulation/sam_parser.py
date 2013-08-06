@@ -12,6 +12,8 @@ sample command: samtools view /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711
 import os, sys, pickle
 import gtf_reader as greader
 
+is_debug = False
+
 class SequenceRead:
     """class that holds information about each SAM read"""
     def __init__(self, line = None):
@@ -73,7 +75,8 @@ def processSAMFile(sam_filename, gtf_list):
     
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
-    readlimit = 10000 # debugging
+    if is_debug is True:
+        readlimit = 10000 # debugging
     print('Reading...')
     for line in input:
         readcount += 1
@@ -86,8 +89,9 @@ def processSAMFile(sam_filename, gtf_list):
                 transcripts_at_chromosome[x].expression_count += 1
                 print('Found match on line %d for %r' % (readcount, transcripts_at_chromosome[x].name)) #debugging
         gtf_list[seqread.chromosome] = transcripts_at_chromosome
-        if readcount == readlimit:
-            break
+        if is_debug is True:
+            if readcount == readlimit:
+                break
     input.close()
     return gtf_list
 def outputMatches(output_filename, gtf_list):
