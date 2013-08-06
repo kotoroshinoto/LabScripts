@@ -38,6 +38,7 @@ def processSAMFile(sam_filename, gtf_list):
     if is_debug:
         readlimit = 10000 # debugging
     print('Reading...')
+    print('Processed 0 reads @ %s' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     for seqread in seqinput.fetch(until_eof=True):
         readcount += 1
         transcripts_at_chromosome = gtf_list[seqinput.getrname(seqread.tid)]
