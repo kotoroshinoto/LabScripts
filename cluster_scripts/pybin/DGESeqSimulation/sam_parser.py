@@ -15,46 +15,46 @@ import pysam
 
 is_debug = False
 
-class SequenceRead:
-    """class that holds information about each SAM read"""
-    def __init__(self, line = None):
-        """default constructor"""
-        self.read_name = None
-        self.flag = None
-        self.chromosome = None
-        self.start = 0 # 1-based index starting at left end of read
-        self.end = 0
-        '''
-        self.mapq = None
-        self.cigar = None
-        self.mate_name = None
-        self.mate_position = None
-        self.template_length = None
-        self.read_sequence = None
-        self.read_quality = None
-        self.program_flags = None
-        '''
-        if line is not None:
-            self.__parseSAMLine(line)
-    def __parseSAMLine(self, line):
-        """split SAM line and assign values to variables"""
-        line = line.split('\t')
-        self.read_name = line[0]
-        self.flag = line[1]
-        #self.chromosome = int(line[2][3:]) # OLD LOGIC: read line 2 starting from the 3rd position
-        self.chromosome = line[2][3:]
-        self.start = int(line[3]) # 1-based index starting at left end of read
-        self.end = int(line[3]) + 100
-        '''
-        self.mapq = line[4]
-        self.cigar = line[5]
-        self.mate_name = line[6]
-        self.mate_position = line[7]
-        self.template_length = line[8]
-        self.read_sequence = line[9]
-        self.read_quality = line[10]
-        self.program_flags = line[11]
-        '''
+# class SequenceRead:
+#     """class that holds information about each SAM read"""
+#     def __init__(self, line = None):
+#         """default constructor"""
+#         self.read_name = None
+#         self.flag = None
+#         self.chromosome = None
+#         self.start = 0 # 1-based index starting at left end of read
+#         self.end = 0
+#         '''
+#         self.mapq = None
+#         self.cigar = None
+#         self.mate_name = None
+#         self.mate_position = None
+#         self.template_length = None
+#         self.read_sequence = None
+#         self.read_quality = None
+#         self.program_flags = None
+#         '''
+#         if line is not None:
+#             self.__parseSAMLine(line)
+#     def __parseSAMLine(self, line):
+#         """split SAM line and assign values to variables"""
+#         line = line.split('\t')
+#         self.read_name = line[0]
+#         self.flag = line[1]
+#         #self.chromosome = int(line[2][3:]) # OLD LOGIC: read line 2 starting from the 3rd position
+#         self.chromosome = line[2][3:]
+#         self.start = int(line[3]) # 1-based index starting at left end of read
+#         self.end = int(line[3]) + 100
+#         '''
+#         self.mapq = line[4]
+#         self.cigar = line[5]
+#         self.mate_name = line[6]
+#         self.mate_position = line[7]
+#         self.template_length = line[8]
+#         self.read_sequence = line[9]
+#         self.read_quality = line[10]
+#         self.program_flags = line[11]
+#         '''
 def inputTranscriptList(gtf_filename, transcript_list_filename, simulation_length):
     """reads existing transcript list or generates new list if needed from GTF file"""
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
