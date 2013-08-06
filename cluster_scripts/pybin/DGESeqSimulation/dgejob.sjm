@@ -1,3 +1,4 @@
+#!/usr/bin/env sjm
 job_begin
         name DGESeqSim_Pt5_TC
         memory 200G
