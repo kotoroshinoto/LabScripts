@@ -56,14 +56,14 @@ class Transcript:
             self.end = last_element
             self.start = self.end - simulation_length
             while self.start < self.exon_starts[exon_index]: # account for intron area if end exon is shorter than desired read length
-                print('Compensating for introns...')
+                #print('Compensating for introns...')
                 try:
                     intron_area = self.exon_ends[exon_index - 1] - self.exon_starts[exon_index]
                 except:
-                    print('Simulation sequence length is longer than transcript length')
-                    print('Compensation is skipped')
+                    #print('Simulation sequence length is longer than transcript length')
+                    #print('Compensation is skipped')
                     break
-                print('Compensated for %d intronic regions' % (1 - exon_index))
+                #print('Compensated for %d intronic regions' % (1 - exon_index))
                 self.start = self.start - intron_area
                 exon_index -= 1 # check next exon
         elif self.direction == '-':
