@@ -15,46 +15,6 @@ import pysam
 
 is_debug = True
 
-# class SequenceRead:
-#     """class that holds information about each SAM read"""
-#     def __init__(self, line = None):
-#         """default constructor"""
-#         self.read_name = None
-#         self.flag = None
-#         self.chromosome = None
-#         self.start = 0 # 1-based index starting at left end of read
-#         self.end = 0
-#         '''
-#         self.mapq = None
-#         self.cigar = None
-#         self.mate_name = None
-#         self.mate_position = None
-#         self.template_length = None
-#         self.read_sequence = None
-#         self.read_quality = None
-#         self.program_flags = None
-#         '''
-#         if line is not None:
-#             self.__parseSAMLine(line)
-#     def __parseSAMLine(self, line):
-#         """split SAM line and assign values to variables"""
-#         line = line.split('\t')
-#         self.read_name = line[0]
-#         self.flag = line[1]
-#         #self.chromosome = int(line[2][3:]) # OLD LOGIC: read line 2 starting from the 3rd position
-#         self.chromosome = line[2][3:]
-#         self.start = int(line[3]) # 1-based index starting at left end of read
-#         self.end = int(line[3]) + 100
-#         '''
-#         self.mapq = line[4]
-#         self.cigar = line[5]
-#         self.mate_name = line[6]
-#         self.mate_position = line[7]
-#         self.template_length = line[8]
-#         self.read_sequence = line[9]
-#         self.read_quality = line[10]
-#         self.program_flags = line[11]
-#         '''
 def inputTranscriptList(gtf_filename, transcript_list_filename, simulation_length):
     """reads existing transcript list or generates new list if needed from GTF file"""
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
@@ -76,7 +36,7 @@ def processSAMFile(sam_filename, gtf_list):
     # read SAM file up to limit and run comparisons to transcript list
     readcount = 0
     if is_debug is True:
-        readlimit = 1000000 # debugging
+        readlimit = 10000 # debugging
     print('Reading...')
     for seqread in seqinput.fetch(until_eof=True):
         readcount += 1
@@ -100,14 +60,14 @@ def processSAMFile(sam_filename, gtf_list):
             would only benefit if pysam reads entire samfile ahead of time 
             or on first fetch (and then retains it for later use)
             '''
-            read_end=seqread.pos+(seqread.qend-seqread.qstart)
+            read_end = seqread.pos+(seqread.qend-seqread.qstart)
 #            print ("read start: %d, read end %d" %(seqread.pos,read_end))
             if transcript.start <= read_end and transcript.end >= seqread.pos:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
                 transcript.expression_count += 1
-                if is_debug is True:
-                    print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
+                #if is_debug is True:
+                    #print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
         '''
         there should not be any reason to store this back again, 
         its already stored in gtf_list, data type is mutable,
@@ -115,7 +75,6 @@ def processSAMFile(sam_filename, gtf_list):
         '''
         #gtf_list[seqread.chromosome] = transcripts_at_chromosome
         if readcount % 10000 == 0:
-            print(datetime.datetime.utcnow())
             print('Processed %d reads @ %s' % (readcount,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         if is_debug is True:
             if readcount == readlimit:
@@ -140,11 +99,11 @@ def outputMatches(output_filename, gtf_list):
         print('Cannot output an empty table')
     for chromosome in gtf_list:
         transcripts_at_chromosome = gtf_list[chromosome]
-        for x in range(0, len(transcripts_at_chromosome)):
-            transcript = transcripts_at_chromosome[x]
+        for transcript in transcripts_at_chromosome:
             if transcript.expression_count > 0:
-                output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
-                print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
+                output_string = '%s\t%d\t%d\t%d' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id)
+                output.write(output_string + '\n')
+                print(output_string)
     output.close()
     os.chdir(old_dir)
 
