@@ -113,7 +113,7 @@ def buildGTFList(transcript_list):
         if in_list is False:
             gtf_list[transcript.chromosome] = [transcript]
         else:
-            transcript_same_chromosome = gtf_list[transcript.chromosome]
-            transcript_same_chromosome.append(transcript)
-            gtf_list[transcript.chromosome] = transcript_same_chromosome
+            transcripts_at_chromosome = gtf_list[transcript.chromosome]
+            transcripts_at_chromosome.append(transcript)
+            gtf_list[transcript.chromosome] = transcripts_at_chromosome
     return gtf_list

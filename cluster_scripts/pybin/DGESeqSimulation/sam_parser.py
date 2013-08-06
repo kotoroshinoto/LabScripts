@@ -78,14 +78,14 @@ def processSAMFile(sam_filename, gtf_list):
     for line in input:
         readcount += 1
         seqread = SequenceRead(line)
-        transcript_same_chromosome = gtf_list[seqread.chromosome]
-        for x in range(0, len(transcript_same_chromosome)):
-            if transcript_same_chromosome[x].start < seqread.end and transcript_same_chromosome[x].end > seqread.start:
+        transcripts_at_chromosome = gtf_list[seqread.chromosome]
+        for x in range(0, len(transcripts_at_chromosome)):
+            if transcripts_at_chromosome[x].start < seqread.end and transcripts_at_chromosome[x].end > seqread.start:
                 #transcript.read_names.append(seqread.read_name)
                 #transcript.read_quality.append(seqread.read_quality)
-                transcript_same_chromosome[x].expression_count += 1
-                print('Found match on line %d for %r' % (readcount, transcript_same_chromosome[x].name)) #debugging
-        gtf_list[seqread.chromosome] = transcript_same_chromosome
+                transcripts_at_chromosome[x].expression_count += 1
+                print('Found match on line %d for %r' % (readcount, transcripts_at_chromosome[x].name)) #debugging
+        gtf_list[seqread.chromosome] = transcripts_at_chromosome
         if readcount == readlimit:
             break
     input.close()
@@ -102,9 +102,9 @@ def outputMatches(output_filename, gtf_list):
     except IndexError:
         print('Cannot output an empty table')
     for chromosome in gtf_list:
-        transcript_same_chromosome = gtf_list[chromosome]
-        for x in range(0, len(transcript_same_chromosome)):
-            transcript = transcript_same_chromosome[x]
+        transcripts_at_chromosome = gtf_list[chromosome]
+        for x in range(0, len(transcripts_at_chromosome)):
+            transcript = transcripts_at_chromosome[x]
             if transcript.expression_count > 0:
                 output.write('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
                 print('%s\t%d\t%d\t%d\n' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id))
