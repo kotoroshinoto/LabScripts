@@ -9,7 +9,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt5_TC
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -17,7 +17,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt5_TF
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -25,7 +25,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt5_NC
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -33,7 +33,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt5_NF
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -41,7 +41,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt4_TC
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -49,7 +49,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt4_TF
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -57,7 +57,7 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt4_NC
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
@@ -65,10 +65,18 @@ job_begin
 job_end
 job_begin
         name DGESeqSim_Pt4_NF
-        memory 200G
+        memory 100G
         module EversonLabBiotools/1.0
         queue all.q
         directory /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/
         cmd perl /UCHC/HPC/Everson_HPC/SimpleJobManager/bin/run_with_env --verbose --module /UCHC/HPC/Everson_HPC/cluster_scripts/modulefiles/EversonLabBiotools/1.0 "python3 /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /UCHC/Everson/Projects/Bladder/Pt4/RNA/SKU09991NFBL4_TOPHAT/accepted_hits.bam transcripts_simlength200.csv SeqSim_Pt4_NF_results.txt"		
 job_end
+order DGESeqSim_Pt4_NC after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt4_NF after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt4_TC after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt4_TF after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt5_NC after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt5_NF after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt5_TC after DGESeqSim_Build_Transcript_List
+order DGESeqSim_Pt5_TF after DGESeqSim_Build_Transcript_List
 log_dir /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sjm_logs
