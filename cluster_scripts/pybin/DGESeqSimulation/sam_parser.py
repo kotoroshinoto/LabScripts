@@ -12,7 +12,7 @@ sample command: python3 /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/D
 import os, sys, pickle, datetime
 import pysam
 
-is_debug = True
+is_debug = False
 
 def inputTranscriptList(transcriptlist_filename):
     """reads transcript list file"""
