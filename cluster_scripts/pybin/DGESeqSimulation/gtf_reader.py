@@ -78,7 +78,8 @@ simulation_length = int(sys.argv[2])
 
 # file IO
 old_dir = os.getcwd()
-os.chdir(input_directory = os.path.join(os.path.dirname(__file__), 'Input'))
+input_directory = os.path.join(os.path.dirname(__file__), 'Input')
+os.chdir(input_directory)
 isListExistant = checkListExistance(input_filename, output_filename, simulation_length)
 if not isListExistant:
     processGTF(input_filename, output_filename, simulation_length)
