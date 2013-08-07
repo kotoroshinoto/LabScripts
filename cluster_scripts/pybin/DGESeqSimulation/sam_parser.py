@@ -15,7 +15,7 @@ import pysam
 is_debug = False
 
 def inputTranscriptList(transcriptlist_filename):
-    """reads existing transcript list or generates new list if needed from GTF file"""
+    """reads transcript list file"""
     print('Loading transcript list...')
     input_directory = os.path.join(os.path.dirname(__file__), 'Input')
     old_dir = os.getcwd()
@@ -28,6 +28,7 @@ def inputTranscriptList(transcriptlist_filename):
     os.chdir(old_dir)
     return transcript_list
 def processSAMFile(sam_filename, transcript_list):
+    """reads sequences from SAM file and calculate gene expression level by comparing to transcript list"""
     # SAM file IO
     seqinput = pysam.Samfile(sam_filename) # automatically checks for 'rb' and then 'r' modes
     
@@ -65,6 +66,7 @@ def processSAMFile(sam_filename, transcript_list):
                 break
     seqinput.close()
 def outputMatches(output_filename, transcript_list):
+    """writes transcript lists with expression level counts to file"""
     print('Writing...')
     old_dir = os.getcwd()
     os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
