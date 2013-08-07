@@ -51,8 +51,8 @@ class Transcript:
         try:
             self.exon_starts.sort()
         except:
-            print(self.exon_starts)
-            print(self.name)
+            if self.name == None:
+                pass
         self.exon_ends.sort()
         if self.direction == '+':
             exon_index = -1 # counts backward from the right most exon
