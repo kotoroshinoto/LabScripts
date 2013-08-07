@@ -85,7 +85,7 @@ def outputMatches(output_filename, transcript_list):
 
 # START OF SCRIPT
 # define argument input
-if len(sys.argv) != 5:
+if len(sys.argv) != 4:
     sys.stderr.write('\nScript must be given 3 arguments: sam filename, transcript list filename, and comparison output filename')
 sam_filename = sys.argv[1]
 transcriptlist_filename = sys.argv[2]
