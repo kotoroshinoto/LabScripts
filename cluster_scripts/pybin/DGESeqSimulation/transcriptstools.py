@@ -50,10 +50,10 @@ class Transcript:
         """determines stable segment of entire transcript based on read direction and individual exons"""
         try:
             self.exon_starts.sort()
+            self.exon_ends.sort()
         except:
             if self.name == None:
                 pass
-        self.exon_ends.sort()
         if self.direction == '+':
             exon_index = -1 # counts backward from the right most exon
             last_element = self.exon_ends[exon_index]
