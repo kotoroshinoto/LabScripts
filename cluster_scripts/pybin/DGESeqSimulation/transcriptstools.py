@@ -52,6 +52,7 @@ class Transcript:
             self.exon_starts.sort()
         except:
             print(self.exon_starts)
+            print(self.name)
         self.exon_ends.sort()
         if self.direction == '+':
             exon_index = -1 # counts backward from the right most exon
