@@ -5,6 +5,8 @@ version 2013.08.06
 @author: Bing
 parses GTF file and stores information into exon and transcript objects
 
+command: python3 /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/gtf_reader.py genes.gtf 200
+
 """
 import os, sys, pickle
 import transcriptstools as ttools

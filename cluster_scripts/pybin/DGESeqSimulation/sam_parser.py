@@ -6,7 +6,7 @@ version 2013.08.06
 takes input from gene list file and sequence alignment map file and compares sequence reads to calculated stable regions of transcripts
 
 run location: ssh mgooch@sig2-glx.cam.uchc.edu
-sample command: python /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam pysam_Pt5_TC_results.txt 200
+sample command: python3 /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam transcripts_simlength200.csv SeqSim_Pt5_TC_results.txt
 
 """
 import os, sys, pickle, datetime
