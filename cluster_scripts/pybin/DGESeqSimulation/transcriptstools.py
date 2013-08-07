@@ -48,7 +48,7 @@ class Transcript:
         self.read_quality = []
     def setGeneEnd(self, simulation_length):
         """determines stable segment of entire transcript based on read direction and individual exons"""
-        try:
+        try: # TODO figure out why there is an exon with name and positions = NONE
             self.exon_starts.sort()
             self.exon_ends.sort()
         except:
