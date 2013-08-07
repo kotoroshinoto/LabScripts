@@ -70,7 +70,7 @@ def checkListExistance(gtf_filename, transcriptlist_filename, simulation_length)
 # START OF SCRIPT
 # define argument input
 # example: gtf_reader.py genes.gtf 200
-if len(sys.argv) != 3:
+if len(sys.argv) != 3: 
     sys.stderr.write("\nScript must be given 2 arguments: input gtf filename and simulation sequence length")
 input_filename = sys.argv[1]
 output_filename = 'transcripts_simlength' + sys.argv[2] + '.csv'
