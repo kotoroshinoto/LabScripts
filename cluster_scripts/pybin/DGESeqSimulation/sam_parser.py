@@ -40,7 +40,9 @@ def processSAMFile(sam_filename, transcript_list):
     print('Processed 0 reads @ %s' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     for seqread in seqinput.fetch(until_eof=True):
         readcount += 1
-        transcripts_at_chromosome = transcript_list[seqinput.getrname(seqread.tid)]
+        transcripts_at_chromosome = transcript_list.get(seqinput.getrname(seqread.tid))
+        if transcripts_at_chromosome == None:
+            continue
         for transcript in transcripts_at_chromosome:
             '''
             TODO:
