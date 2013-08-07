@@ -82,9 +82,9 @@ class Transcript:
                 exon_index += 1 # check next exon
         if self.start < 0:
             print('Length Error: gene starts at negative position')
-def buildTranscriptList(exon, transcript_list, transcript_count):
+def buildTranscriptDictionary(exon, transcript_dict, transcript_count):
     """adds transcripts to hash table with no duplicates"""
-    in_list = exon.name in transcript_list
+    in_list = exon.name in transcript_dict
     if in_list is False:
         transcript = Transcript()
         transcript.name = exon.name
@@ -95,25 +95,25 @@ def buildTranscriptList(exon, transcript_list, transcript_count):
         transcript.exon_starts.append(exon.start)
         transcript.exon_ends.append(exon.end)
         transcript.num_exons += 1
-        transcript_list[transcript.name] = transcript
+        transcript_dict[transcript.name] = transcript
         ##print('Added new %s to transcript list' % exon.name)
     else:
-        transcript_stored = transcript_list[exon.name]
+        transcript_stored = transcript_dict[exon.name]
         transcript_stored.num_exons += 1
         transcript_stored.exon_starts.append(exon.start)
         transcript_stored.exon_ends.append(exon.end)
-        transcript_list[exon.name] = transcript_stored
-    return transcript_list, transcript_count
-def buildGTFList(transcript_list):
+        transcript_dict[exon.name] = transcript_stored
+    return transcript_dict, transcript_count
+def buildTranscriptList(transcript_dict):
     """adds transcripts to hash table with chromosome as key"""
-    gtf_list = {}
-    for key in transcript_list:
-        transcript = transcript_list[key]
-        in_list = transcript.chromosome in gtf_list
+    transcript_list = {}
+    for key in transcript_dict:
+        transcript = transcript_dict[key]
+        in_list = transcript.chromosome in transcript_list
         if in_list is False:
-            gtf_list[transcript.chromosome] = [transcript]
+            transcript_list[transcript.chromosome] = [transcript]
         else:
-            transcripts_at_chromosome = gtf_list[transcript.chromosome]
+            transcripts_at_chromosome = transcript_list[transcript.chromosome]
             transcripts_at_chromosome.append(transcript)
-            gtf_list[transcript.chromosome] = transcripts_at_chromosome
-    return gtf_list
+            transcript_list[transcript.chromosome] = transcripts_at_chromosome
+    return transcript_list
