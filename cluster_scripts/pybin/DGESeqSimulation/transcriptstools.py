@@ -48,7 +48,10 @@ class Transcript:
         self.read_quality = []
     def setGeneEnd(self, simulation_length):
         """determines stable segment of entire transcript based on read direction and individual exons"""
-        self.exon_starts.sort()
+        try:
+            self.exon_starts.sort()
+        except:
+            print(self.exon_starts)
         self.exon_ends.sort()
         if self.direction == '+':
             exon_index = -1 # counts backward from the right most exon
