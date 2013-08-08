@@ -1,23 +1,27 @@
 """
 sam_parser.py script
-version 2013.08.06
+version 2013.08.08
 
 @author: Bing
 takes input from gene list file and sequence alignment map file and compares sequence reads to calculated stable regions of transcripts
 
 run location: ssh mgooch@sig2-glx.cam.uchc.edu
-sample command: python3 /UCHC/HPC/Everson_HPC/LabScripts/cluster_scripts/pybin/DGESeqSimulation/sam_parser.py /UCHC/Everson/Projects/Bladder/Pt5/RNA/TSRNA091711TCBL5_TOPHAT/accepted_hits.bam transcripts_simlength200.csv SeqSim_Pt5_TC_results.txt
-
+new: generates BAM file with sequences from stable transcript regions
 """
 import os, sys, pickle, datetime
 import pysam
 
 is_debug = False
+is_capture_sequence = False
 
 def inputTranscriptList(transcriptlist_filename):
     """reads transcript list file"""
     print('Loading transcript list...')
-    input_directory = os.path.join(os.path.dirname(__file__), 'Input')
+    try:
+        input_directory = os.path.join(os.path.dirname(__file__), 'Input')
+    except:
+        os.mkdir(os.path.join(os.path.dirname(__file__), 'Input'))
+        print('Error: transcript list file and input folder do not exist. Please place transcript file into newly generated input folder.')
     old_dir = os.getcwd()
     os.chdir(input_directory)
     try:
@@ -27,16 +31,19 @@ def inputTranscriptList(transcriptlist_filename):
     transcript_list = pickle.load(list_file)
     os.chdir(old_dir)
     return transcript_list
-def processSAMFile(sam_filename, transcript_list):
+def processSAMFile(input_bam_filename, transcript_list, output_bam_filename=None):
     """reads sequences from SAM file and calculate gene expression level by comparing to transcript list"""
     # SAM file IO
-    seqinput = pysam.Samfile(sam_filename) # automatically checks for 'rb' and then 'r' modes
-    
+    print('Reading...')
+    seqinput = pysam.Samfile(input_bam_filename) # automatically checks for 'rb' and then 'r' modes
+    if is_capture_sequence:
+        seqoutput = pysam.Samfile(output_bam_filename, 'wb', template=seqinput)
+        print('Copying specific sequences while reading...')
+        
     # read SAM file and run comparisons to transcript list
     readcount = 0
     if is_debug:
-        readlimit = 10000 # debugging
-    print('Reading...')
+        readlimit = 10000
     print('Processed 0 reads @ %s' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     for seqread in seqinput.fetch(until_eof=True):
         readcount += 1
@@ -56,22 +63,30 @@ def processSAMFile(sam_filename, transcript_list):
             would only benefit if pysam reads entire samfile ahead of time 
             or on first fetch (and then retains it for later use)
             '''
-            read_end = seqread.pos + (seqread.qend - seqread.qstart)
-            if transcript.start <= read_end and transcript.end >= seqread.pos:
+            seqread_start = seqread.pos
+            seqread_end = seqread.pos + (seqread.qend - seqread.qstart)
+            if transcript.start <= seqread_start and transcript.end >= seqread_end:
                 transcript.expression_count += 1
-                #if is_debug is True:
-                    #print('Found match on line %d for %r' % (readcount, transcript.name)) #debugging
+                if is_capture_sequence:
+                    seqoutput.write(seqread)
+                if is_debug:
+                    print('Found match on line %d for %r' % (readcount, transcript.name))
         if readcount % 100000 == 0:
             print('Processed %d reads @ %s' % (readcount,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         if is_debug:
             if readcount == readlimit:
                 break
     seqinput.close()
+    if is_capture_sequence:
+        seqoutput.close()
 def outputMatches(output_filename, transcript_list):
     """writes transcript lists with expression level counts to file"""
     print('Writing...')
     old_dir = os.getcwd()
-    os.chdir(os.path.join(os.path.dirname(__file__), 'Output'))
+    output_dir = os.path.join(os.path.dirname(__file__), 'Output')
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    os.chdir(output_dir)
     output = open(output_filename, 'w')
     output.write('Transcript Name\tNumber of Exons\tNumber of Expressions\tTranscript Number ID\n')
     for chromosome in transcript_list:
@@ -80,8 +95,8 @@ def outputMatches(output_filename, transcript_list):
             if transcript.expression_count > 0:
                 output_string = '%s\t%d\t%d\t%d' % (transcript.name, transcript.num_exons, transcript.expression_count, transcript.num_id)
                 if is_debug:
-                    output.write(output_string + '\n')
-                print(output_string)
+                    print(output_string)
+                output.write(output_string + '\n')
     output.close()
     os.chdir(old_dir)
 
