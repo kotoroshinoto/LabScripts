@@ -1,9 +1,16 @@
 '''
-Created on Aug 9, 2013
+fill_blanks.py script
+version 2013.08.09
 
-@author: mgooch, bing
+@author: mgooch, Bing
+fills in transcripts (with a zero value for expression) that are not expressed in specific samples to allow spreadsheet comparisons
+
 '''
-import sys
+import os, sys
+
+input_dir = os.path.join(os.path.dirname(__file__), 'Output')
+old_dir = os.getcwd()
+os.chdir(input_dir)
 
 files=[]
 data=[]
@@ -26,12 +33,11 @@ for x in range(0, len(files)):
                     transcript.append(splitline[0])
                     transcript.append(splitline[2])
                     data[y][splitline[0]]=transcript
-                else:#data is from another file, add missing entries
+                else: # data is from another file, add missing entries
                     if splitline[0] not in data[y]:
                         transcript=[]
                         transcript.append(splitline[0])
                         transcript.append('0')
-                        #TODO add values like zeroes or blanks to appropriate columns
                         data[y][splitline[0]]=transcript
     inputfile.close()
 
@@ -47,3 +53,5 @@ for x in range(0, len(files)):
     for geneLabel in geneLabels:
         outputfile.write("\t".join(data[x][geneLabel]) + "\n")
     outputfile.close()
+    
+os.chdir(old_dir)
