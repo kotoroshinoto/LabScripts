@@ -26,8 +26,8 @@ for x in range(0, len(files)):
                     transcript.append(splitline[0])
                     transcript.append(splitline[2])
                     data[x][splitline[0]]=transcript
-            else:#data is from another file, add missings entries
-                if not data.has_key(splitline[0]):
+            else:#data is from another file, add missing entries
+                if not splitline[0] in data:
                     transcript=[]
                     transcript.append(splitline[0])
                     transcript.append('0')
