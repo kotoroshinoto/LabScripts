@@ -41,6 +41,6 @@ print('Writing results...')
 for x in range(0, len(files)):
     outputfilename=files[x]
     outputfile=open("merged_" + outputfilename, "w")
-    for geneLabel in data[x].keys().sorted():
+    for geneLabel in data[x].keys().sort():
         outputfile.write("\t".join(data[x][geneLabel]) + "\n")
     outputfile.close()
