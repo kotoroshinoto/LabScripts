@@ -9,10 +9,12 @@ files=[]
 data=[]
 if len(sys.argv) <= 1:
     sys.stderr.write('Error: please input at least two files\n')
+print('Generating file databases...')
 for item in sys.argv:
     files.append(item)
     data.append(dict())
 
+print('Examining files...')
 for x in range(0, len(files)):
     inputfile=open(files[x],"r")
     for line in inputfile:
@@ -32,6 +34,7 @@ for x in range(0, len(files)):
                     data[y][splitline[0]]=transcript
     inputfile.close()
 
+print('Writing results...')
 for x in range(0, len(files)):
     outputfilename=files[x]
     outputfile=open("merged_" + outputfilename, "w")
