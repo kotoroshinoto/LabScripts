@@ -1,7 +1,7 @@
 '''
 Created on Aug 9, 2013
 
-@author: mgooch
+@author: mgooch, bing
 '''
 import sys
 
