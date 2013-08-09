@@ -21,11 +21,11 @@ for x in range(0, len(files)):
         splitline=line.split("\t")
         for y in range(0, len(data)):
             if x == y: # data corresponds to file
-                print(splitline)
-                transcript=[]
-                transcript.append(splitline[0])
-                transcript.append(splitline[2])
-                data[x][splitline[0]]=transcript
+                if splitline != ["'''\n"]:
+                    transcript=[]
+                    transcript.append(splitline[0])
+                    transcript.append(splitline[2])
+                    data[x][splitline[0]]=transcript
             else:#data is from another file, add missings entries
                 if not data.has_key(splitline[0]):
                     transcript=[]
