@@ -21,11 +21,13 @@ for x in range(0, len(files)):
         splitline=line.split("\t")
         for y in range(0, len(data)):
             if x == y: # data corresponds to file
-                if splitline != ["'''\n"]:
-                    transcript=[]
-                    transcript.append(splitline[0])
+                transcript=[]
+                transcript.append(splitline[0])
+                try:
                     transcript.append(splitline[2])
-                    data[x][splitline[0]]=transcript
+                except: #some lines are not formated with 4 columns
+                    continue
+                data[x][splitline[0]]=transcript
             else:#data is from another file, add missing entries
                 if not splitline[0] in data:
                     transcript=[]
