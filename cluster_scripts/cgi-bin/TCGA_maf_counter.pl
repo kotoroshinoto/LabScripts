@@ -5,6 +5,117 @@ use Cwd 'abs_path';
 use File::Basename;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use List::MoreUtils qw(uniq);
+
+#define object types used in this process:
+package MAFentry;
+our %col2index;
+_initializeVars();
+sub _initializeVars{
+	my @columns;
+	my $i;
+	push(@columns,'Hugo_Symbol','hEntrez_Gene_Id','Center','Ncbi_Build','Chrom','Start_Position','End_Position','Strand','Variant_Classification','Variant_Type','Reference_Allele','Tumor_Seq_Allele1','Tumor_Seq_Allele2','Dbsnp_Rs','Dbsnp_Val_Status','Tumor_Sample_Barcode','Matched_Norm_Sample_Barcode','Match_Norm_Seq_Allele1','Match_Norm_Seq_Allele2','Tumor_Validation_Allele1','Tumor_Validation_Allele2','Match_Norm_Validation_Allele1','Match_Norm_Validation_Allele2','Verification_Status','Validation_Status','Mutation_Status','Sequencing_Phase','Sequence_Source','Validation_Method','Score','Bam_File','Sequencer','Tumor_Sample_UUID','Matched_Norm_Sample_UUID','File_Name','Archive_Name','Line_Number');
+	$i=0;
+	foreach my $col(@columns){
+		$MAFentry::col2index{$col}=$i;
+		$i++;
+	}
+#	GetIndex('Hugo_Symbol');
+}
+sub GetIndex{
+#	my $class=shift;
+	my $colname=shift;
+	if(defined($col2index{$colname})){
+		my $retval=$col2index{$colname};
+#		print "$colname : $retval\n";
+		return $retval;
+	} else {
+#		print "$colname not a defined column\n";
+		return undef;
+	}
+}
+sub new{
+	my $class = shift;
+	my $self = {
+		Hugo_Symbol=>"",
+		Entrez_Gene_Id=>"",
+		Center=>"",
+		Ncbi_Build=>"",
+		Chrom=>"",
+		Start_Position=>"",
+		End_Position=>"",
+		Strand=>"",
+		Variant_Classification=>"",
+		Variant_Type=>"",
+		Reference_Allele=>"",
+		Tumor_Seq_Allele1=>"",
+		Tumor_Seq_Allele2=>"",
+		Dbsnp_Rs=>"",
+		Dbsnp_Val_Status=>"",
+		Tumor_Sample_Barcode=>"",
+		Matched_Norm_Sample_Barcode=>"",
+		Match_Norm_Seq_Allele1=>"",
+		Match_Norm_Seq_Allele2=>"",
+		Tumor_Validation_Allele1=>"",
+		Tumor_Validation_Allele2=>"",
+		Match_Norm_Validation_Allele1=>"",
+		Match_Norm_Validation_Allele2=>"",
+		Verification_Status=>"",
+		Validation_Status=>"",
+		Mutation_Status=>"",
+		Sequencing_Phase=>"",
+		Sequence_Source=>"",
+		Validation_Method=>"",
+		Score=>"",
+		Bam_File=>"",
+		Sequencer=>"",
+		Tumor_Sample_UUID=>"",
+		Matched_Norm_Sample_UUID=>"",
+		File_Name=>"",
+		Archive_Name=>"",
+		Line_Number=>""
+	};
+	return bless $self, $class;
+}
+sub processline{
+	#TODO finish this
+}
+1;
+package FeatureCounter;
+sub new{
+	my $class = shift;
+	my $self = {
+		count=>0
+		#TODO, change this into a hash, give interaction methods
+	};
+	return bless $self, $class;
+}
+1;
+package GeneMutCounter;
+use parent -norequire, 'FeatureCounter';
+sub count{
+	my $self=shift;
+	#TODO take a MAF entry and append count where appropriate
+	$self->{count}++
+}
+1;
+package SampMutCounter;
+use parent -norequire, 'FeatureCounter';
+sub count{
+	my $self=shift;
+	#TODO take a MAF entry and append count where appropriate
+	$self->{count}++
+}
+1;
+package MutTypeCounter;
+use parent -norequire, 'FeatureCounter';
+sub count{
+	my $self=shift;
+	#TODO take a MAF entry and append count where appropriate
+	$self->{count}++
+}
+1;
+
+package main;
 my $help=0;#indicates usage should be shown and nothing should be done
 my ($illuminaFile,$solidFile,$opts);
 my ($countGene,$countPatient,$countMutType)= (0) x 3;
@@ -16,16 +127,6 @@ $opts = GetOptions ("Illumina|f=s" => \$illuminaFile,	# path to illumina data
 						"countMutType|M" => \$countMutType,
 						"help|h" =>\$help);
 #print "$joinSOLO, $joinSTEPS, $splitCROSS\n";
-if($help){
-	ShowUsage();
-	exit (0);#being asked to show help isn't an error
-}
-if(((not defined($illuminaFile)) and (not defined($solidFile))) or (length($illuminaFile) == 0 and length($solidFile) == 0)){
-	ShowUsage("must provide at least one of the MAF files");
-}
-if (not($countGene or $countPatient or $countMutType)){
-	ShowUsage("must choose at least one of the count options");
-}
 sub ShowUsage {
 	my $errmsg=shift;
 	my $scriptname=basename($0);
@@ -38,3 +139,20 @@ sub ShowUsage {
 	print STDERR "$errmsg$usage\n";
 	exit(1);
 }
+if($help){
+	ShowUsage();
+	exit (0);#being asked to show help isn't an error
+}
+if(((not defined($illuminaFile)) and (not defined($solidFile))) or (length($illuminaFile) == 0 and length($solidFile) == 0)){
+	ShowUsage("must provide at least one of the MAF files");
+}
+if (not($countGene or $countPatient or $countMutType)){
+	ShowUsage("must choose at least one of the count options");
+}
+#create count objects and store as references
+my @Counters;
+push(@Counters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
+foreach my $counter(@Counters){
+	$counter->count();
+}
+#TODO load files
