@@ -85,7 +85,7 @@ sub new{
 	my $class = shift;
 	my $self = {
 		counts=>{}
-		#TODO, change this into a hash, give interaction methods
+		#TODO provide interaction methods
 	};
 	return bless $self, $class;
 }
