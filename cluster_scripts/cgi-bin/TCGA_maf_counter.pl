@@ -84,34 +84,64 @@ package FeatureCounter;
 sub new{
 	my $class = shift;
 	my $self = {
-		count=>0
+		counts=>{}
 		#TODO, change this into a hash, give interaction methods
 	};
 	return bless $self, $class;
+}
+sub toString{
+#	print "toString run\n";
+	my $self=shift;
+	my @keys=sort(keys($self->{counts}));
+	my $retval='';
+	foreach my $key(@keys){
+		$retval.="$key\t$self->{counts}{$key}\n";
+	}
+	return $retval;
 }
 1;
 package GeneMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
+	print "Gene  mutationcount run\n";
 	my $self=shift;
+	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
-	$self->{count}++
+	if (defined($self->{counts}{$_[0]})){
+		$self->{counts}{$_[0]}++;
+	} else {
+		$self->{counts}{$_[0]}=1;
+	}
 }
 1;
 package SampMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
+	print "Sample mutation count run\n";
 	my $self=shift;
+	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
-	$self->{count}++
+	
+	if (defined($self->{counts}{$_[1]})){
+		$self->{counts}{$_[1]}++;
+	} else {
+		$self->{counts}{$_[1]}=1;
+	}
 }
 1;
 package MutTypeCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
+	print "Mutation type count run\n";
 	my $self=shift;
+	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
-	$self->{count}++
+	$self->{count}++;
+	if (defined($self->{counts}{$_[2]})){
+		$self->{counts}{$_[2]}++;
+	} else {
+		$self->{counts}{$_[2]}=1;
+	}
 }
 1;
 
@@ -152,7 +182,12 @@ if (not($countGene or $countPatient or $countMutType)){
 #create count objects and store as references
 my @Counters;
 push(@Counters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
+my @maf;
+push (@maf,'gene','samp','type');
 foreach my $counter(@Counters){
-	$counter->count();
+	$counter->count(@maf);
+}
+foreach my $counter(@Counters){
+	print ($counter->toString());
 }
 #TODO load files
