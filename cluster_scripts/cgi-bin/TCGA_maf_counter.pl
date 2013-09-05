@@ -78,7 +78,7 @@ sub new{
 }
 sub processline{
 	my ($class,@params)= @_;
-	die "used as an object method" if ref $class;
+	if (Scalar::Util::blessed($class)){die "used as an object method";}
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my @columns=split('\t',$params[0]);
 	if (scalar(@columns) != 37){die "line does not have correct # of columns (37)"}
@@ -133,6 +133,22 @@ sub new{
 	};
 	return bless $self, $class;
 }
+sub __appendcount{
+	my ($self,@params)= @_;
+	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
+	if(defined($self->{counts}{$params[0]})){
+		$self->{counts}{$params[0]}++;
+	} else {
+		$self->{counts}{$params[0]}=1;
+	}
+}
+sub __countIf{
+	my ($self,@params)= @_;
+	if (scalar(@params) != 2){die "method takes 2 and only 2 arguments";}
+	if($params[1]){
+		$self->__appendcount($params[0]);
+	}
+}
 sub toString{
 #	print "toString run\n";
 	my $self=shift;
@@ -148,7 +164,9 @@ package GeneMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
 	print "Gene  mutationcount run\n";
-	my $self=shift;
+	my ($self,@params)= @_;
+	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
+	my $maf=$params[0];
 	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
 	if (defined($self->{counts}{$_[0]})){
@@ -162,7 +180,9 @@ package SampMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
 	print "Sample mutation count run\n";
-	my $self=shift;
+	my ($self,@params)= @_;
+	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
+	my $maf=$params[0];
 	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
 	
@@ -177,7 +197,9 @@ package MutTypeCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
 	print "Mutation type count run\n";
-	my $self=shift;
+	my ($self,@params)= @_;
+	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
+	my $maf=$params[0];
 	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
 	$self->{count}++;
