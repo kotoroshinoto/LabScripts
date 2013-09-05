@@ -259,7 +259,6 @@ sub CountMafFile{
 	if($countMutType){
 		push(@counters,MutTypeCounter->new());
 	}
-	#TODO load files
 	my $maf=FileHandle->new($mafFile,'r');
 	unless(defined($maf)){die "Could not open maf file: $mafFile"};
 	#count line-by-line
@@ -268,12 +267,16 @@ sub CountMafFile{
 		#skip first line (its the header)
 		if($linecount){
 			my $entry=MAFentry->processline($line);
+			#TODO counts/maf entry pre-conditionals here
+			foreach my $counter(@counters){
+				$counter->count($entry);
+			}
 		}
 		$linecount++;       
 	}
 	$maf->close();
 }
-#TODO use method to replicate functionality without having 2 copies of same code:
+
 my @IlluminaCounters;
 if(defined($illuminaFile) and length($illuminaFile) > 0){
 	@IlluminaCounters=CountMafFile($illuminaFile);
