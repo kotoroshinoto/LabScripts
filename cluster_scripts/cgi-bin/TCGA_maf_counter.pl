@@ -5,6 +5,7 @@ use Cwd 'abs_path';
 use File::Basename;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use List::MoreUtils qw(uniq);
+use FileHandle;
 
 #define object types used in this process:
 package MAFentry;
@@ -214,7 +215,7 @@ sub count{
 package main;
 my $help=0;#indicates usage should be shown and nothing should be done
 my ($illuminaFile,$solidFile,$opts);
-my ($countGene,$countPatient,$countMutType)= (0) x 3;
+our ($countGene,$countPatient,$countMutType)= (0) x 3;
 
 $opts = GetOptions ("Illumina|f=s" => \$illuminaFile,	# path to illumina data
 						"Solid|F=s"   => \$solidFile,	# path to solid data
@@ -246,7 +247,40 @@ if (not($countGene or $countPatient or $countMutType)){
 	ShowUsage("must choose at least one of the count options");
 }
 #create count objects and store as references
-my (@IlluminaCounters, @SOLiDCounters);
-push(@IlluminaCounters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
-push(@SOLiDCounters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
-#TODO load files
+sub CountMafFile{
+	my @counters;
+	my $mafFile=$_[0];
+	if($countGene){
+		push(@counters,GeneMutCounter->new());
+	}
+	if($countPatient){
+		push(@counters,SampMutCounter->new());
+	}
+	if($countMutType){
+		push(@counters,MutTypeCounter->new());
+	}
+	#TODO load files
+	my $maf=FileHandle->new($mafFile,'r');
+	unless(defined($maf)){die "Could not open maf file: $mafFile"};
+	#count line-by-line
+	my $linecount=0;
+	foreach my $line (<$maf>){
+		#skip first line (its the header)
+		if($linecount){
+			my $entry=MAFentry->processline($line);
+		}
+		$linecount++;       
+	}
+	$maf->close();
+}
+#TODO use method to replicate functionality without having 2 copies of same code:
+my @IlluminaCounters;
+if(defined($illuminaFile) and length($illuminaFile) > 0){
+	@IlluminaCounters=CountMafFile($illuminaFile);
+}
+
+my @SOLiDCounters;
+if(defined($solidFile) and length($solidFile) > 0){
+	@SOLiDCounters=CountMafFile($solidFile);
+}
+
