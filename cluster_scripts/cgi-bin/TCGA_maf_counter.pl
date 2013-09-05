@@ -246,14 +246,7 @@ if (not($countGene or $countPatient or $countMutType)){
 	ShowUsage("must choose at least one of the count options");
 }
 #create count objects and store as references
-my @Counters;
-push(@Counters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
-my @maf;
-push (@maf,'gene','samp','type');
-foreach my $counter(@Counters){
-	$counter->count(@maf);
-}
-foreach my $counter(@Counters){
-	print ($counter->toString());
-}
+my (@IlluminaCounters, @SOLiDCounters);
+push(@IlluminaCounters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
+push(@SOLiDCounters,GeneMutCounter->new(),SampMutCounter->new(),MutTypeCounter->new());
 #TODO load files
