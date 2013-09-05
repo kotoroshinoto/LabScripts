@@ -6,6 +6,7 @@ use File::Basename;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use List::MoreUtils qw(uniq);
 use FileHandle;
+use Scalar::Util;
 
 #define object types used in this process:
 package MAFentry;
@@ -164,51 +165,51 @@ sub toString{
 package GeneMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
-	print "Gene  mutationcount run\n";
+#	print "Gene  mutationcount run\n";
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-	print (join("\t",@_),"\n");
+#	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
-	if (defined($self->{counts}{$_[0]})){
-		$self->{counts}{$_[0]}++;
-	} else {
-		$self->{counts}{$_[0]}=1;
-	}
+#	if (defined($self->{counts}{$_[0]})){
+#		$self->{counts}{$_[0]}++;
+#	} else {
+#		$self->{counts}{$_[0]}=1;
+#	}
 }
 1;
 package SampMutCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
-	print "Sample mutation count run\n";
+#	print "Sample mutation count run\n";
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-	print (join("\t",@_),"\n");
+#	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
 	
-	if (defined($self->{counts}{$_[1]})){
-		$self->{counts}{$_[1]}++;
-	} else {
-		$self->{counts}{$_[1]}=1;
-	}
+#	if (defined($self->{counts}{$_[1]})){
+#		$self->{counts}{$_[1]}++;
+#	} else {
+#		$self->{counts}{$_[1]}=1;
+#	}
 }
 1;
 package MutTypeCounter;
 use parent -norequire, 'FeatureCounter';
 sub count{
-	print "Mutation type count run\n";
+#	print "Mutation type count run\n";
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-	print (join("\t",@_),"\n");
+#	print (join("\t",@_),"\n");
 	#TODO take a MAF entry and append count where appropriate
-	$self->{count}++;
-	if (defined($self->{counts}{$_[2]})){
-		$self->{counts}{$_[2]}++;
-	} else {
-		$self->{counts}{$_[2]}=1;
-	}
+#	$self->{count}++;
+#	if (defined($self->{counts}{$_[2]})){
+#		$self->{counts}{$_[2]}++;
+#	} else {
+#		$self->{counts}{$_[2]}=1;
+#	}
 }
 1;
 
