@@ -269,13 +269,19 @@ sub CountMafFile{
 		if($linecount){
 			my $entry=MAFentry->processline($line);
 			#TODO counts/maf entry pre-conditionals here
-			foreach my $counter(@counters){
-				$counter->count($entry);
+			if(isCountable($entry)){
+				foreach my $counter(@counters){
+					$counter->count($entry);
+				}
 			}
 		}
 		$linecount++;       
 	}
 	$maf->close();
+}
+sub isCountable{
+	my $maf=$_[0];
+	return 1;
 }
 
 my @IlluminaCounters;
