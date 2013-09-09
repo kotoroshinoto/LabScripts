@@ -169,13 +169,7 @@ sub count{
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-#	print (join("\t",@_),"\n");
-	#TODO take a MAF entry and append count where appropriate
-#	if (defined($self->{counts}{$_[0]})){
-#		$self->{counts}{$_[0]}++;
-#	} else {
-#		$self->{counts}{$_[0]}=1;
-#	}
+	$self->__appendcount($maf->{Hugo_Symbol});
 }
 1;
 package SampMutCounter;
@@ -185,14 +179,7 @@ sub count{
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-#	print (join("\t",@_),"\n");
-	#TODO take a MAF entry and append count where appropriate
-	
-#	if (defined($self->{counts}{$_[1]})){
-#		$self->{counts}{$_[1]}++;
-#	} else {
-#		$self->{counts}{$_[1]}=1;
-#	}
+	$self->__appendcount($maf->{Tumor_Sample_Barcode});
 }
 1;
 package MutTypeCounter;
@@ -202,14 +189,7 @@ sub count{
 	my ($self,@params)= @_;
 	if (scalar(@params) != 1){die "method takes 1 and only 1 argument";}
 	my $maf=$params[0];
-#	print (join("\t",@_),"\n");
-	#TODO take a MAF entry and append count where appropriate
-#	$self->{count}++;
-#	if (defined($self->{counts}{$_[2]})){
-#		$self->{counts}{$_[2]}++;
-#	} else {
-#		$self->{counts}{$_[2]}=1;
-#	}
+#TODO count mutations by type
 }
 1;
 
@@ -268,7 +248,6 @@ sub CountMafFile{
 		#skip first line (its the header)
 		if($linecount){
 			my $entry=MAFentry->processline($line);
-			#TODO counts/maf entry pre-conditionals here
 			if(isCountable($entry)){
 				foreach my $counter(@counters){
 					$counter->count($entry);
@@ -281,6 +260,7 @@ sub CountMafFile{
 }
 sub isCountable{
 	my $maf=$_[0];
+	#TODO logic on whether to keep entry in count
 	return 1;
 }
 
