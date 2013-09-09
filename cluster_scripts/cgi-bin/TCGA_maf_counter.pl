@@ -130,7 +130,8 @@ package FeatureCounter;
 sub new{
 	my $class = shift;
 	my $self = {
-		counts=>{}
+		counts=>{},
+		name=>undef
 		#TODO provide interaction methods
 	};
 	return bless $self, $class;
@@ -160,6 +161,29 @@ sub toString{
 		$retval.="$key\t$self->{counts}{$key}\n";
 	}
 	return $retval;
+}
+sub writeFile{
+	my $self=shift;
+	my $prefix=shift;
+	my $path=shift;
+	if (!defined($path) or length($path)==0){
+		$path=".";
+	}
+#TODO remove trailing slash, or use some other path combination method
+	if (defined($self->{name}) and length($self->{name}) > 0){
+		my $ofname;
+		if(defined($prefix) and length($prefix) > 1){
+			$ofname=$path.'/'.$prefix.'_'.$self->{name}.".txt";			
+		} else {
+			$ofname=$path.'/'.$self->{name}.".txt";
+		}
+#		print "$ofname\n";
+		my $of=FileHandle->new($ofname,'w');
+		$of->write($self->toString());
+		$of->close();
+	}else {
+		die "writeFile used on counter with no name";
+	}
 }
 1;
 package GeneMutCounter;
@@ -232,13 +256,19 @@ sub CountMafFile{
 	my @counters;
 	my $mafFile=$_[0];
 	if($countGene){
-		push(@counters,GeneMutCounter->new());
+		my $tmp=GeneMutCounter->new();
+		$tmp->{name}="Genes";
+		push(@counters,$tmp);
 	}
 	if($countPatient){
-		push(@counters,SampMutCounter->new());
+		my $tmp=SampMutCounter->new();
+		$tmp->{name}="Samples";
+		push(@counters,$tmp);
 	}
 	if($countMutType){
-		push(@counters,MutTypeCounter->new());
+		my $tmp=MutTypeCounter->new();
+		$tmp->{name}="MutationTypes";
+		push(@counters,$tmp);
 	}
 	my $maf=FileHandle->new($mafFile,'r');
 	unless(defined($maf)){die "Could not open maf file: $mafFile"};
@@ -257,6 +287,7 @@ sub CountMafFile{
 		$linecount++;       
 	}
 	$maf->close();
+	return @counters;
 }
 sub isCountable{
 	my $maf=$_[0];
@@ -274,3 +305,12 @@ if(defined($solidFile) and length($solidFile) > 0){
 	@SOLiDCounters=CountMafFile($solidFile);
 }
 
+foreach my $Illuminacounter(@IlluminaCounters){
+#	print ($Illuminacounter->toString());
+	$Illuminacounter->writeFile("Illumina","");
+}
+
+foreach my $SOLiDCounter(@SOLiDCounters){
+#	print ($SOLiDCounter->toString());
+	$SOLiDCounter->writeFile("SOLiD");
+}
