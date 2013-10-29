@@ -20,4 +20,3 @@ chmod -f +x ./configs/genconfig.sh
 chmod -f +x ./bin/embossman
 cd configs
 ./genconfig.sh
-../pybin/pyzip_files/make_pyz.sh
