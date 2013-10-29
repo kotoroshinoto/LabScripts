@@ -1,10 +1,20 @@
 #!/bin/bash
 git fetch --all
 git reset --hard origin/master
-chmod -f +x ./bin/*
-chmod -f +x ./shbin/*.sh
-chmod -f +x ./cgi-bin/*.pl
-chmod -f +x ./pybin/*.py
+function EXPERM{
+	DIR=$1;
+	shift;
+	for EXT in "$@"
+	do 
+	find ./$DIR -type f -path *.$EXT -exec chmod -f +x {} \;
+	done	
+}
+function EXPERMALL{
+	DIR=$1;
+	shift;
+	find ./$DIR -type f -exec chmod -f +x {} \;	
+}
+EXPERMALL ./bin
 chmod -f +x ./update.sh
 chmod -f +x ./configs/genconfig.sh
 chmod -f +x ./bin/embossman
